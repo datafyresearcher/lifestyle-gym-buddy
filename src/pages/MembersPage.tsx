@@ -201,6 +201,12 @@ export default function MembersPage() {
           </table>
         </div>
       )}
+
+      <MemberDetailDialog
+        member={selectedMember}
+        open={selectedMember !== null}
+        onOpenChange={(open) => { if (!open) setSelectedMember(null); }}
+      />
     </PageContainer>
   );
 }
