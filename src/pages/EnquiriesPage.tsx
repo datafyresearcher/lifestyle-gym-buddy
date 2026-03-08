@@ -19,6 +19,7 @@ const mockEnquiries = [
 ];
 
 export default function EnquiriesPage() {
+  const navigate = useNavigate();
   const [searchName, setSearchName] = useState("");
   const [searchMobile, setSearchMobile] = useState("");
 
