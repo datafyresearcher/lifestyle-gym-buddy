@@ -1,6 +1,6 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { Bell, Power } from "lucide-react";
+import { Bell, Power, MessageCircle, Mail } from "lucide-react";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -42,8 +42,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {/* Footer */}
           <footer className="bg-muted border-t border-border py-6 px-4 text-center text-sm text-muted-foreground">
             <p className="font-semibold text-foreground mb-1">Powered By Lifestyle Reset</p>
-            <p className="text-primary">📞 +92-304-2451070</p>
-            <p>Email: researcher@datafyassociates.com</p>
+            <p>
+              <a href="https://wa.me/923042451070" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[hsl(var(--success))] hover:opacity-80">
+                <MessageCircle className="w-4 h-4" /> +92-304-2451070
+              </a>
+            </p>
+            <p>
+              <a href="mailto:researcher@datafyassociates.com" className="inline-flex items-center gap-1 hover:text-primary">
+                <Mail className="w-4 h-4" /> researcher@datafyassociates.com
+              </a>
+            </p>
           </footer>
         </div>
       </div>
