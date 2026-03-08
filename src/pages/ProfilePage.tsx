@@ -145,8 +145,64 @@ export default function ProfilePage() {
     setLeaveTo("");
   };
 
-  const currentBalance = mockPettyCash[mockPettyCash.length - 1]?.newBalance || 0;
+  const currentBalance = pettyCashData[pettyCashData.length - 1]?.newBalance || 0;
 
+  const handleAddPettyCash = () => {
+    const amt = parseInt(addAmount) || 0;
+    if (amt <= 0) { toast.error("Please enter a valid amount"); return; }
+    const newBal = currentBalance + amt;
+    const now = new Date();
+    const dateStr = `${String(now.getDate()).padStart(2, "0")}/${String(now.getMonth() + 1).padStart(2, "0")}/${now.getFullYear()}`;
+    const newTx = {
+      txNo: `T-${now.getMonth()}${now.getFullYear()}-${Math.floor(Math.random() * 9000) + 1000}`,
+      amountAdded: amt,
+      prevBalance: currentBalance,
+      newBalance: newBal,
+      addedOn: dateStr,
+    };
+    setPettyCashData([...pettyCashData, newTx]);
+    setPettyCashOpen(false);
+    setAddAmount("0");
+    toast.success("Petty cash added successfully");
+  };
+
+  const generateAttendanceData = () => {
+    const start = new Date(attStartDate);
+    const end = new Date(attEndDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const rows: { date: string; slotName: string; checkIn: string; checkOut: string; totalWorking: string; totalWorked: string }[] = [];
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      const dateStr = d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+      const isPast = d < today;
+      const isToday = d.getTime() === today.getTime();
+      rows.push({
+        date: dateStr,
+        slotName: "",
+        checkIn: "",
+        checkOut: "",
+        totalWorking: isPast || isToday ? "ABSENT" : "Future Date",
+        totalWorked: "",
+      });
+    }
+    return rows;
+  };
+
+  const handleExportAttendance = () => {
+    const data = generateAttendanceData();
+    const ws = XLSX.utils.json_to_sheet(data.map(r => ({
+      "Date": r.date,
+      "Slot Name": r.slotName,
+      "Check In Time": r.checkIn,
+      "Check out Time": r.checkOut,
+      "Total Working Hours": r.totalWorking,
+      "Total Worked Hours": r.totalWorked,
+    })));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Attendance History");
+    XLSX.writeFile(wb, "Admin_Attendance_History.xlsx");
+    toast.success("Attendance history exported");
+  };
   return (
     <PageContainer title="Admin" breadcrumbs={[{ label: "User Management" }, { label: "All Users" }, { label: "Admin" }]}>
       {/* Top Action Bar */}
