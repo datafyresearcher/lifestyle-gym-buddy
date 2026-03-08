@@ -1,6 +1,6 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { Bell, Power } from "lucide-react";
+import { Bell, Power, MessageCircle, Mail } from "lucide-react";
 
 interface AppLayoutProps {
   children: React.ReactNode;
