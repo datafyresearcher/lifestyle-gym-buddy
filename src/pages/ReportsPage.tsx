@@ -483,8 +483,6 @@ function ReportView({ reportKey }: ReportViewProps) {
           <Button variant="ghost" size="icon" className="h-8 w-8 text-sidebar-accent-foreground" disabled={currentPage === totalPages} onClick={() => setCurrentPage(totalPages)}>⏭</Button>
         </div>
       </div>
-
-      </div>
     </div>
   );
 }
