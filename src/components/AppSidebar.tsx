@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import logoImg from "@/assets/Lifestyle_Reset_Logo.png";
 
 const menuItems = [
   { title: "Members Management", url: "/members", icon: Users },
