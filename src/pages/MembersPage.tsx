@@ -1,4 +1,5 @@
 import PageContainer from "@/components/PageContainer";
+import MemberDetailDialog from "@/components/MemberDetailDialog";
 import { useState } from "react";
 import { XCircle, Edit, Camera, User, Settings, Phone, Plus, List, LayoutGrid } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -21,6 +22,7 @@ export default function MembersPage() {
   const [searchMobile, setSearchMobile] = useState("");
   const [searchEmail, setSearchEmail] = useState("");
   const [searchCard, setSearchCard] = useState("");
+  const [selectedMember, setSelectedMember] = useState<typeof mockMembers[0] | null>(null);
 
   const filtered = mockMembers.filter((m) => {
     if (searchName && !m.name.toLowerCase().includes(searchName.toLowerCase())) return false;
@@ -152,11 +154,11 @@ export default function MembersPage() {
                   <span>Due Dy: <strong>{member.dueDate}</strong></span>
                 </div>
                 <div className="flex items-center gap-2 justify-center">
-                  <button className="action-btn action-btn-danger"><XCircle className="w-3 h-3" /></button>
-                  <button className="action-btn action-btn-primary"><Edit className="w-3 h-3" /></button>
+                  <button className="action-btn action-btn-danger" onClick={() => setSelectedMember(member)}><XCircle className="w-3 h-3" /></button>
+                  <button className="action-btn action-btn-primary" onClick={() => setSelectedMember(member)}><Edit className="w-3 h-3" /></button>
                   <button className="action-btn action-btn-info"><Camera className="w-3 h-3" /></button>
-                  <button className="action-btn" style={{background: "hsl(280, 65%, 50%)", color: "white"}}><User className="w-3 h-3" /></button>
-                  <button className="action-btn action-btn-success"><Settings className="w-3 h-3" /></button>
+                  <button className="action-btn" style={{background: "hsl(280, 65%, 50%)", color: "white"}} onClick={() => setSelectedMember(member)}><User className="w-3 h-3" /></button>
+                  <button className="action-btn action-btn-success" onClick={() => setSelectedMember(member)}><Settings className="w-3 h-3" /></button>
                   <button className="action-btn" style={{background: "hsl(145, 65%, 42%)", color: "white"}}><Phone className="w-3 h-3" /></button>
                 </div>
               </div>
@@ -189,8 +191,8 @@ export default function MembersPage() {
                   <td>{member.dueDate}</td>
                   <td>
                     <div className="flex gap-1">
-                      <button className="action-btn action-btn-danger"><XCircle className="w-3 h-3" /></button>
-                      <button className="action-btn action-btn-primary"><Edit className="w-3 h-3" /></button>
+                      <button className="action-btn action-btn-danger" onClick={() => setSelectedMember(member)}><XCircle className="w-3 h-3" /></button>
+                      <button className="action-btn action-btn-primary" onClick={() => setSelectedMember(member)}><Edit className="w-3 h-3" /></button>
                     </div>
                   </td>
                 </tr>
@@ -199,6 +201,12 @@ export default function MembersPage() {
           </table>
         </div>
       )}
+
+      <MemberDetailDialog
+        member={selectedMember}
+        open={selectedMember !== null}
+        onOpenChange={(open) => { if (!open) setSelectedMember(null); }}
+      />
     </PageContainer>
   );
 }
