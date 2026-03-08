@@ -27,7 +27,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/members" element={<MembersPage />} />
-            <Route path="/inactive-members" element={<PlaceholderPage title="Inactive Members" breadcrumbs={[{ label: "Member Management" }, { label: "Inactive Members" }]} />} />
+            <Route path="/inactive-members" element={<InactiveMembersPage />} />
             <Route path="/visitors" element={<VisitorsPage />} />
             <Route path="/enquiries" element={<PlaceholderPage title="Enquiry Management" breadcrumbs={[{ label: "Enquiry Management" }]} />} />
             <Route path="/activity-logs" element={<PlaceholderPage title="Activity Logs" breadcrumbs={[{ label: "Activity Logs" }]} />} />
