@@ -36,7 +36,7 @@ const App = () => (
             <Route path="/visitors" element={<VisitorsPage />} />
             <Route path="/enquiries" element={<EnquiriesPage />} />
             <Route path="/enquiries/add" element={<AddEnquiryPage />} />
-            <Route path="/activity-logs" element={<PlaceholderPage title="Activity Logs" breadcrumbs={[{ label: "Activity Logs" }]} />} />
+            <Route path="/activity-logs" element={<ActivityLogsPage />} />
             <Route path="/attendance" element={<AttendancePage />} />
             <Route path="/upcoming-dues/*" element={<PlaceholderPage title="Upcoming Dues" breadcrumbs={[{ label: "Upcoming Dues" }]} />} />
             <Route path="/settings/*" element={<PlaceholderPage title="Settings" breadcrumbs={[{ label: "Settings" }]} />} />
