@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { User, Phone, Lock, Eye, EyeOff, Camera, Upload, X, Copy, Wifi, Fingerprint, Plus } from "lucide-react";
+import { User, Phone, Lock, Eye, EyeOff, Camera, Upload, X, Copy, Fingerprint, Plus } from "lucide-react";
 import { toast } from "sonner";
 import adminAvatar from "@/assets/admin-avatar.png";
 
