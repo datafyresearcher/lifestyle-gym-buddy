@@ -324,6 +324,83 @@ const faqs = [
       </div>
     ),
   },
+  {
+    q: "Q21. Why a member is not able to enter in the gym?",
+    content: (
+      <div className="space-y-4">
+        <p><strong>Ans.</strong> There are three possible reasons, why a member might be unable to enter:</p>
+        <ol className="list-decimal pl-6 space-y-2">
+          <li>Member is <strong>In-active</strong>.</li>
+          <li>Member is <strong>Freezed</strong>.</li>
+          <li>Member is <strong>Defaulter</strong>.</li>
+        </ol>
+        <p>If the above conditions are not applicable, please review the following points:</p>
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>Ensure the <strong>Lifestyle Reset Console App</strong> on the desktop is up and running.</li>
+          <li>Confirm that the <strong>Lifestyle Reset Console App</strong> is displaying a green connectivity message.</li>
+          <li>Navigate to the member's detail page and press the <strong>Sync Again</strong> button if the <strong>Access Control Terminal</strong> icon is still red.</li>
+        </ol>
+        <p>If you are facing any problem, please contact the <span className="underline cursor-pointer">support</span> team for further assistance.</p>
+        <p>Click <span className="underline cursor-pointer text-primary">here</span> to watch the video explanation.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q22. Why is the member still able to enter the gym even though they haven't submitted their fee?",
+    content: (
+      <div className="space-y-4">
+        <p>To address this issue, please review the following points:</p>
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>Login to <strong className="underline">lifestylereset.app</strong> and go to <strong>branch details</strong>. Make sure the lock indicates <strong>Yes</strong>. If its <strong>No</strong>, defaulters will be able to enter into the gym.</li>
+          <li>If it is <strong>Yes</strong> then from the left menu, select <strong>Members Management</strong>.</li>
+          <li>This action will display the list of members.</li>
+          <li>Click on the specific member from the list or use the search functionality.</li>
+          <li>On this member's detail page, check the <strong>Access Control Terminal (ACT)</strong> icon. If it's displayed in green, contact the <span className="underline cursor-pointer">support</span> team. If it's red, proceed with the following checks.</li>
+          <li>Ensure the <strong>Lifestyle Reset Console App</strong> on the desktop is up and running.</li>
+          <li>Confirm that the <strong>Lifestyle Reset Console App</strong> is displaying a green connectivity message.</li>
+          <li>Ensure your internet connection is active.</li>
+          <li>From the <strong>Member's Detail</strong> page, click the <strong>Sync Again</strong> button. After a few seconds, the member's entry will be removed from the <strong>Access Control Terminal (ACT)</strong>, and the member won't be able to enter the gym if the gym settings dictate locking the ACT for defaulters.</li>
+        </ol>
+        <p>If you are facing any problem, please contact the <span className="underline cursor-pointer">support</span> team for further assistance.</p>
+        <p>Click <span className="underline cursor-pointer text-primary">here</span> to watch the video explanation.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q23. How do I deactivate a member?",
+    content: (
+      <div className="space-y-4">
+        <p>To deactivate a member, navigate to <strong>Members Management</strong> and select the specific member you want to deactivate. On this page, you will find a <strong>Deactivate</strong> button.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q24. How do I activate a member?",
+    content: (
+      <div className="space-y-4">
+        <p>To activate a member, navigate to <strong>Inactive Members</strong> and select the specific member you want to activate. On this page, you will find a <strong>Activate</strong> button.</p>
+        <p>Click on <strong>Activate</strong> button and a confirmation prompt will appear. To proceed with activation, click <strong>Yes</strong> and the member's account will be activated.</p>
+        <p>Click <span className="underline cursor-pointer text-primary">here</span> to watch the video explanation.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q25. How do I change Next Due Date of member?",
+    content: (
+      <div className="space-y-4">
+        <p>To change the <strong>Next Due Date</strong> of a member, open member's detail and go to <strong>Member Settings</strong>.</p>
+        <p>There, you will see the <strong>Next Due Date</strong> section. From the calendar, you can change the next due date, but don't forget to press the <strong>Update</strong> button; otherwise it will not be changed.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q26. What is the preferred mode of connection between a desktop computer and an Access Control Terminal (ACT)?",
+    content: (
+      <div className="space-y-4">
+        <p>Using <strong>LAN</strong> is the recommended method of connecting your desktop computer and <strong>Access Control Terminal (ACT)</strong>. Additionally, ensure that both your desktop computer and <strong>Access Control Terminal (ACT)</strong> are on the same network. For example, if the IP Address of your computer is 127.16.240.203, then first three groups i.e <strong>127.16.240</strong> should be same on both of your computer and Access Control Terminal (ACT).</p>
+      </div>
+    ),
+  },
 ];
 
 export default function FAQsPage() {
