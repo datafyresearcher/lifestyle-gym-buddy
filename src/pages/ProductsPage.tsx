@@ -469,16 +469,29 @@ export default function ProductsPage() {
             </TabsList>
 
             {/* Product Info Tab */}
-            <TabsContent value="info" className="mt-4 space-y-6">
+             <TabsContent value="info" className="mt-4 space-y-6">
               <div className="flex items-start gap-8">
-                <div className="text-8xl">{selectedProduct?.image}</div>
+                <div className="w-24 h-24 rounded-lg border border-border bg-muted/20 flex items-center justify-center overflow-hidden">
+                  {imagePreview ? (
+                    <img src={imagePreview} alt="Product" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-6xl">{selectedProduct?.image}</span>
+                  )}
+                </div>
                 <div className="flex-1 space-y-4">
                   <div className="bg-sidebar-accent p-3 rounded-lg flex items-center justify-between">
                     <span className="font-semibold text-sidebar-accent-foreground">Product Image</span>
                     <div className="flex gap-2">
-                      <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">📷 Capture</Button>
-                      <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">⬆ Upload Image</Button>
-                      <Button size="sm" variant="destructive">✕ Remove Image</Button>
+                      <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={handleProductCaptureStart}>
+                        <Camera className="w-3 h-3 mr-1" /> Capture
+                      </Button>
+                      <input type="file" ref={productFileRef} accept="image/*" className="hidden" onChange={handleProductFileChange} />
+                      <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white" onClick={handleProductUpload}>
+                        <Upload className="w-3 h-3 mr-1" /> Upload Image
+                      </Button>
+                      <Button size="sm" variant="destructive" onClick={handleProductRemoveImage}>
+                        <X className="w-3 h-3 mr-1" /> Remove Image
+                      </Button>
                     </div>
                   </div>
                 </div>
