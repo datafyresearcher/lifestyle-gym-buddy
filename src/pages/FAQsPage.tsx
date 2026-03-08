@@ -231,6 +231,99 @@ const faqs = [
       </div>
     ),
   },
+  {
+    q: "Q14. How to accept online payment request?",
+    content: (
+      <div className="space-y-4">
+        <p>Follow the below steps:</p>
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>Open <strong>Requests Management</strong> and click on the <strong>Detail</strong> icon of a specific fee submission request you want to accept.</li>
+          <li>Fee request detail will open. Review member and fee details and click on <strong>Approve</strong> button.</li>
+        </ol>
+        <p>If you are facing any problem, please contact the <span className="underline cursor-pointer">support</span> team for further assistance.</p>
+        <p>Click <span className="underline cursor-pointer text-primary">here</span> to watch the video explanation.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q15. How to send online payment link to members who haven't paid their fees?",
+    content: (
+      <div className="space-y-4">
+        <p>It is recommended to open <strong className="underline">lifestylereset.app</strong> on your mobile or install <strong className="underline">WhatsApp for Windows</strong> on your computer and follow the below steps:</p>
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>Navigate to the <strong>Defaulter Report</strong> and click on the <strong>WhatsApp</strong> icon corresponding to a specific member.</li>
+          <li>The WhatsApp application will launch on your mobile device. Proceed to tap the send button.</li>
+        </ol>
+        <p>Click <span className="underline cursor-pointer text-primary">here</span> to watch the video explanation.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q16. How do I send a fees invoice to a member via WhatsApp?",
+    content: (
+      <div className="space-y-4">
+        <p>It is recommended to open <strong className="underline">lifestylereset.app</strong> on your mobile or install <strong className="underline">WhatsApp for Windows</strong> on your computer and follow the below steps:</p>
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>Submit the fees of a member.</li>
+          <li>From the <strong>Fee Details</strong> tab of member, click on the <strong>WhatsApp</strong> icon corresponding to a specific fees.</li>
+          <li>The WhatsApp application will launch on your mobile device. Proceed to tap the send button.</li>
+        </ol>
+        <p>Click <span className="underline cursor-pointer text-primary">here</span> to watch the video explanation.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q17. How do I send fees invoice in pdf format via WhatsApp?",
+    content: (
+      <div className="space-y-4">
+        <p>You should follow the below steps:</p>
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>Navigate to the member's <strong>Fee Details</strong> tab and select the <strong>Print</strong> icon.</li>
+          <li>A fees invoice popup will appear.</li>
+          <li>Press <strong>Ctrl + P</strong> to open the print dialogue.</li>
+          <li>Provide a suitable name and save the file.</li>
+          <li>You can then manually use your <strong>WhatsApp</strong> application to send the file to the desired member.</li>
+        </ol>
+        <p>Click <span className="underline cursor-pointer text-primary">here</span> to watch the video explanation.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q18. Why is the fee invoice pop-up not showing up on fee submission?",
+    content: (
+      <div className="space-y-4">
+        <p>If the fee invoice pop-up is not appearing, it's likely that the browser's pop-up blocker is causing it to be blocked from displaying. To enable pop-ups in your browser, you should follow the instructions provided in this <span className="underline cursor-pointer text-primary">link</span>.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q19. Member is active but he/she is not able to enter into the gym. What should I check?",
+    content: (
+      <div className="space-y-4">
+        <p>You should check the following things:</p>
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>First you should check, member is not in the defaulter list.</li>
+          <li>Navigate to the <strong>Member Settings</strong> and ensure that the <strong>Next Due Date</strong> is set to a future date.</li>
+          <li>Ensure the <strong>Lifestyle Reset Console App</strong> on the desktop is up and running.</li>
+          <li>Confirm that the <strong>Lifestyle Reset Console App</strong> is displaying a green connectivity message.</li>
+          <li>Ensure your internet connection is active.</li>
+          <li>Go to the <strong>Member's Detail</strong> page and click on the <strong>Sync Again</strong> button in the <strong className="underline">lifestylereset.app</strong> and within few seconds <strong>Access Control Terminal (ACT)</strong> icon will change to Green.</li>
+        </ol>
+        <p>If you are facing any problem, please contact the <span className="underline cursor-pointer">support</span> team for further assistance.</p>
+        <p>Click <span className="underline cursor-pointer text-primary">here</span> to watch the video explanation.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q20. The members in the Inactive Members menu are not appearing. What steps should I take to resolve this issue?",
+    content: (
+      <div className="space-y-4">
+        <p>Inactive members are not displayed by default because this data is archived, which may result in slow performance. To view all inactive members, click on the <strong>Search</strong> button.</p>
+        <p>If you wish to find a particular member, enter information in the <strong>Name</strong>, <strong>Membership</strong>, <strong>Mobile</strong>, <strong>Email</strong>, or <strong>Card Number</strong> fields, and then click the <strong>Search</strong> button.</p>
+        <p>Click <span className="underline cursor-pointer text-primary">here</span> to watch the video explanation.</p>
+      </div>
+    ),
+  },
 ];
 
 export default function FAQsPage() {
