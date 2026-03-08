@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { User, Phone, Lock, Eye, EyeOff, Camera, Upload, X, Copy, Wifi, Fingerprint, Plus } from "lucide-react";
+import { User, Phone, Lock, Eye, EyeOff, Camera, Upload, X, Copy, Fingerprint, Plus } from "lucide-react";
 import { toast } from "sonner";
 import adminAvatar from "@/assets/admin-avatar.png";
 
@@ -23,6 +23,10 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("details");
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const streamRef = useRef<MediaStream | null>(null);
 
   // User Details form
   const [name, setName] = useState("Admin");
@@ -67,6 +71,46 @@ export default function ProfilePage() {
   const handleRemovePhoto = () => {
     setAvatarPreview(null);
     toast.success("Profile photo removed");
+  };
+
+  const handleCaptureStart = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+      streamRef.current = stream;
+      setCameraOpen(true);
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          videoRef.current.play();
+        }
+      }, 100);
+    } catch {
+      toast.error("Unable to access camera. Please check permissions.");
+    }
+  };
+
+  const handleCapturePhoto = () => {
+    if (videoRef.current && canvasRef.current) {
+      const canvas = canvasRef.current;
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.drawImage(videoRef.current, 0, 0);
+        const dataUrl = canvas.toDataURL("image/png");
+        setAvatarPreview(dataUrl);
+        toast.success("Photo captured successfully");
+      }
+    }
+    stopCamera();
+  };
+
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
+    }
+    setCameraOpen(false);
   };
 
   const handleUpdate = () => toast.success("Profile updated successfully");
@@ -128,7 +172,7 @@ export default function ProfilePage() {
               />
               <div className="flex items-center gap-3 flex-wrap bg-sidebar text-sidebar-foreground rounded-lg px-6 py-3">
                 <span className="font-medium text-sm">Profile Picture</span>
-                <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">
+                <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={handleCaptureStart}>
                   <Camera className="w-3 h-3 mr-1" /> Capture Photo
                 </Button>
                 <input type="file" ref={fileInputRef} accept="image/*" className="hidden" onChange={handleFileChange} />
@@ -438,6 +482,25 @@ export default function ProfilePage() {
               💾 Save
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Camera Capture Dialog */}
+      <Dialog open={cameraOpen} onOpenChange={(open) => { if (!open) stopCamera(); }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Capture Photo</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col items-center gap-4">
+            <video ref={videoRef} className="w-full rounded-lg border border-border" autoPlay muted playsInline />
+            <canvas ref={canvasRef} className="hidden" />
+            <div className="flex gap-3">
+              <Button onClick={handleCapturePhoto} className="bg-green-600 hover:bg-green-700 text-white">
+                <Camera className="w-4 h-4 mr-1" /> Capture
+              </Button>
+              <Button variant="outline" onClick={stopCamera}>Cancel</Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </PageContainer>
