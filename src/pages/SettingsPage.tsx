@@ -531,59 +531,32 @@ function CompanyManagement() {
 function GlobalSettings() {
   return (
     <div className="space-y-4">
-      <Card>
-        <CardHeader><CardTitle className="text-base">General</CardTitle></CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-foreground text-sm">Enable Notifications</p>
-              <p className="text-xs text-muted-foreground">Send email and SMS notifications</p>
-            </div>
-            <Switch defaultChecked />
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-foreground text-sm">Auto-generate Member ID</p>
-              <p className="text-xs text-muted-foreground">Automatically assign membership numbers</p>
-            </div>
-            <Switch defaultChecked />
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-foreground text-sm">Allow Guest Check-in</p>
-              <p className="text-xs text-muted-foreground">Enable visitors to check in without membership</p>
-            </div>
-            <Switch />
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-foreground text-sm">Maintenance Mode</p>
-              <p className="text-xs text-muted-foreground">Temporarily disable member access</p>
-            </div>
-            <Switch />
-          </div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader><CardTitle className="text-base">Business Hours</CardTitle></CardHeader>
-        <CardContent className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Opening Time</Label>
-            <Input type="time" defaultValue="06:00" />
-          </div>
-          <div className="space-y-2">
-            <Label>Closing Time</Label>
-            <Input type="time" defaultValue="23:00" />
-          </div>
-        </CardContent>
-      </Card>
-      <div className="flex justify-end">
-        <Button>Save Settings</Button>
+      {/* Top bar */}
+      <div className="flex items-center gap-2 bg-sidebar text-sidebar-foreground rounded-lg px-4 py-2">
+        <Button size="sm" variant="outline" className="bg-sidebar-accent text-sidebar-accent-foreground">
+          <ArrowLeft className="w-3 h-3 mr-1" /> Back
+        </Button>
+        <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">
+          <Save className="w-3 h-3 mr-1" /> Update
+        </Button>
       </div>
+      <Card>
+        <CardContent className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label className="font-semibold">Default Due Date</Label>
+              <Input type="date" placeholder="Due Date" />
+            </div>
+            <div className="space-y-2">
+              <Label className="font-semibold">Gym Starting Date</Label>
+              <Input type="date" placeholder="Gym Starting Date" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
-
 // ─── Roles Management ───
 function RolesManagement() {
   const roles = [
