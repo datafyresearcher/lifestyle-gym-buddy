@@ -401,6 +401,98 @@ const faqs = [
       </div>
     ),
   },
+  {
+    q: "Q27. How do I register finger using biometric scanner device?",
+    content: (
+      <div className="space-y-4">
+        <p>After completing the <strong>Add New Member</strong> process on <strong className="underline">lifestylereset.app</strong>, if the Lifestyle Reset Console App on the desktop is up and running, the registered member will be automatically included in the <strong>Access Control Terminal (ACT)</strong> and will subsequently appear within the ZKTimes.net application. To register a fingerprint using a small scanner device, follow these steps:</p>
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>Launch the <strong>ZKTimes.net</strong> application.</li>
+          <li>Navigate to the <strong>Personal</strong> tab located in the top menu.</li>
+          <li>Enter the membership number in search to get the desired member.</li>
+          <li>In the Member details section, there is a <strong>Biometric</strong> icon.</li>
+          <li>Clicking on this icon will open a new window, presenting two options at the top.</li>
+          <li>Choose <strong>Sensor</strong> option and then proceed to select the specific finger for registration.</li>
+          <li>Place the finger you want to register onto the sensor surface.</li>
+          <li>You need to scan your specific fingers 3 times.</li>
+          <li>Upon successful completion, a success message <strong>Biometric is registered</strong> will appear.</li>
+          <li>Additionally, the registered fingerprint will be added into the <strong>Access Control Terminal (ACT)</strong> system.</li>
+        </ol>
+        <p>If you are facing any problem, please contact the <span className="underline cursor-pointer">support</span> team for further assistance.</p>
+        <p>Click <span className="underline cursor-pointer text-primary">here</span> to watch the video explanation.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q28. Despite creating a new member, the user hasn't been added to the Access Control Terminal (ACT) even after 5 minutes. What steps should I take at this point?",
+    content: (
+      <div className="space-y-4">
+        <p>You should verify the following things:</p>
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>Ensure the <strong>Lifestyle Reset Console App</strong> on the desktop is up and running.</li>
+          <li>Confirm that the <strong>Lifestyle Reset Console App</strong> is displaying a green connectivity message.</li>
+          <li>Ensure your internet connection is active.</li>
+          <li>Go to the <strong>Member's Detail</strong> page and click on the <strong>Sync Again</strong> button in the <strong className="underline">lifestylereset.app</strong> and within few seconds <strong>Access Control Terminal (ACT)</strong> icon will change to Green.</li>
+        </ol>
+        <p>If you are facing any problem, please contact the <span className="underline cursor-pointer">support</span> team for further assistance.</p>
+        <p>Click <span className="underline cursor-pointer text-primary">here</span> to watch the video explanation.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q29. A member was in defaulter list and after fee payment, his/her Access Control Terminal (ACT) icon is still Red. What steps should I take to troubleshoot this?",
+    content: (
+      <div className="space-y-4">
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>Ensure the <strong>Lifestyle Reset Console App</strong> on the desktop is up and running.</li>
+          <li>Confirm that the <strong>Lifestyle Reset Console App</strong> is displaying a green connectivity message.</li>
+          <li>Ensure your internet connection is active.</li>
+          <li>Go to the <strong>Member's Detail</strong> page and click on the <strong>Sync Again</strong> button in the <strong className="underline">lifestylereset.app</strong> and within few seconds <strong>Access Control Terminal (ACT)</strong> icon will change to Green.</li>
+        </ol>
+        <p>If you are facing any problem, please contact the <span className="underline cursor-pointer">support</span> team for further assistance.</p>
+        <p>Click <span className="underline cursor-pointer text-primary">here</span> to watch the video explanation.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q30. I have marked a member as Inactive but his/her Access Control Terminal (ACT) is still green. What steps should I take at this point?",
+    content: (
+      <div className="space-y-4">
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>Ensure the <strong>Lifestyle Reset Console App</strong> on the desktop is up and running.</li>
+          <li>Confirm that the <strong>Lifestyle Reset Console App</strong> is displaying a green connectivity message.</li>
+          <li>Ensure your internet connection is active.</li>
+          <li>Go to the <strong>Member's Detail</strong> page and click on the <strong>Sync Again</strong> button in the <strong className="underline">lifestylereset.app</strong> and within few seconds <strong>Access Control Terminal (ACT)</strong> icon will change to Red.</li>
+        </ol>
+        <p>If you are facing any problem, please contact the <span className="underline cursor-pointer">support</span> team for further assistance.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q31. What is Lifestyle Reset Software?",
+    content: (
+      <div className="space-y-4">
+        <p>Lifestyle Reset is a gym management software that provides a complete solution for gym owners to run their gyms smoothly, automate gym operations, and offer 24/7 gym access. Lifestyle Reset is recognized as one of the best and top gym management systems in Pakistan and the U.A.E., offering an end-to-end (e2e) solution for gyms.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q32. Can I purchase gym software online?",
+    content: (
+      <div className="space-y-4">
+        <p>Yes, you can buy gym software online by clicking the link below, and we will contact you shortly to proceed further.</p>
+        <p><a href="#" className="text-primary underline">Contact Us</a></p>
+      </div>
+    ),
+  },
+  {
+    q: "Q33. Why I need gym software?",
+    content: (
+      <div className="space-y-4">
+        <p>It streamlines the management of gyms and fitness centers, offering a wide range of features that benefit both gym owners and members. With 24/7 Mobile Monitoring, you can have control in the palm of your hand. We've got your back when it comes to dues, with friendly reminders through our WhatsApp and SMS services. Enjoy hassle-free check-ins and check-outs with our integrated Biometric and RFID Card System. Stay on track with Real-Time Attendance Recording. Say goodbye to queues and make payments online with just a few clicks. You'll be able to view detailed revenue reports generated by trainers, members, and visitors. Your gym's new members can skip the lines and unlock their fitness adventure in a snap with Self Registration through QR Code and much more!</p>
+      </div>
+    ),
+  },
 ];
 
 export default function FAQsPage() {
