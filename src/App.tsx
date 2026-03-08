@@ -26,6 +26,7 @@ import EnquiriesPage from "@/pages/EnquiriesPage";
 import AddEnquiryPage from "@/pages/AddEnquiryPage";
 import ActivityLogsPage from "@/pages/ActivityLogsPage";
 import UpcomingDuesPage from "@/pages/UpcomingDuesPage";
+import ReportsPage from "@/pages/ReportsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -49,7 +50,7 @@ const App = () => (
             <Route path="/attendance" element={<AttendancePage />} />
             <Route path="/upcoming-dues/*" element={<UpcomingDuesPage />} />
             <Route path="/settings/*" element={<PlaceholderPage title="Settings" breadcrumbs={[{ label: "Settings" }]} />} />
-            <Route path="/reports/*" element={<PlaceholderPage title="Reports" breadcrumbs={[{ label: "Reports" }]} />} />
+            <Route path="/reports/*" element={<ReportsPage />} />
             <Route path="/requests" element={<RequestsPage />} />
             <Route path="/packages" element={<PackagesPage />} />
             <Route path="/petty-cash" element={<PettyCashPage />} />
