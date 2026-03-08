@@ -4,14 +4,14 @@ import { Search, XCircle, Edit, Camera, User, Settings, MessageCircle, Phone, Pl
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const mockMembers = [
-  { id: 122, name: "Ahmed", phone: "+923325685258", dueDate: "08th Apr", membership: "Monthly" },
-  { id: 121, name: "Uzair Ali", phone: "+923437033333", dueDate: "03rd Apr", membership: "Family" },
-  { id: 120, name: "Hifsa Ali", phone: "+923325682852", dueDate: "03rd Apr", membership: "Monthly" },
-  { id: 118, name: "Aman", phone: "+923335852554", dueDate: "25th Apr", membership: "VIP" },
-  { id: 117, name: "Ahmed", phone: "+923355748558", dueDate: "25th Mar", membership: "Monthly" },
-  { id: 116, name: "Ayesha", phone: "+923458547552", dueDate: "20th Mar", membership: "Group" },
-  { id: 115, name: "Hussain Khan", phone: "+923325685258", dueDate: "15th Mar", membership: "Yearly" },
-  { id: 114, name: "Hamza", phone: "+923437033333", dueDate: "10th Mar", membership: "Monthly" },
+  { id: 122, name: "Ahmed", phone: "+923325685258", email: "ahmed@mail.com", cardNo: "C-122", dueDate: "08th Apr", membership: "Monthly" },
+  { id: 121, name: "Uzair Ali", phone: "+923437033333", email: "uzair@mail.com", cardNo: "C-121", dueDate: "03rd Apr", membership: "Family" },
+  { id: 120, name: "Hifsa Ali", phone: "+923325682852", email: "hifsa@mail.com", cardNo: "C-120", dueDate: "03rd Apr", membership: "Monthly" },
+  { id: 118, name: "Aman", phone: "+923335852554", email: "aman@mail.com", cardNo: "C-118", dueDate: "25th Apr", membership: "VIP" },
+  { id: 117, name: "Ahmed", phone: "+923355748558", email: "ahmed2@mail.com", cardNo: "C-117", dueDate: "25th Mar", membership: "Monthly" },
+  { id: 116, name: "Ayesha", phone: "+923458547552", email: "ayesha@mail.com", cardNo: "C-116", dueDate: "20th Mar", membership: "Group" },
+  { id: 115, name: "Hussain Khan", phone: "+923325685258", email: "hussain@mail.com", cardNo: "C-115", dueDate: "15th Mar", membership: "Yearly" },
+  { id: 114, name: "Hamza", phone: "+923437033333", email: "hamza@mail.com", cardNo: "C-114", dueDate: "10th Mar", membership: "Monthly" },
 ];
 
 export default function MembersPage() {
