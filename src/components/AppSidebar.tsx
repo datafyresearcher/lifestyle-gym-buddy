@@ -21,6 +21,9 @@ import {
   CheckCircle,
   HelpCircle,
   ChevronDown,
+  User,
+  Globe,
+  LogOut,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
