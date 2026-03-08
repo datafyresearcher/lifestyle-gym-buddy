@@ -477,12 +477,20 @@ function ReportView({ reportKey }: ReportViewProps) {
                   {config.columns.map((col) => (
                     <TableCell key={col.key}>
                       {isImageCol(col.key) ? (
-                        <Avatar className="h-14 w-14 rounded-full">
-                          <AvatarImage src={String(row[col.key])} className="object-cover" />
-                          <AvatarFallback className="bg-muted text-muted-foreground">{String(row.name || "").charAt(0).toUpperCase()}</AvatarFallback>
-                        </Avatar>
+                        String(row[col.key]) ? (
+                          <Avatar className="h-14 w-14 rounded-full">
+                            <AvatarImage src={String(row[col.key])} className="object-cover" />
+                            <AvatarFallback className="bg-muted text-muted-foreground">{String(row.name || "").charAt(0).toUpperCase()}</AvatarFallback>
+                          </Avatar>
+                        ) : (
+                          <Avatar className="h-14 w-14 rounded-full">
+                            <AvatarFallback className="bg-muted text-muted-foreground">{String(row.name || "").charAt(0).toUpperCase()}</AvatarFallback>
+                          </Avatar>
+                        )
                       ) : isActionCol(col.key) ? (
                         <Button variant="outline" size="sm" className="text-xs">View</Button>
+                      ) : isCommentsCol(col.key) ? (
+                        <MessageCircle className="h-5 w-5 text-muted-foreground" />
                       ) : col.key === "status" ? (
                         <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                           row[col.key] === "Active" || row[col.key] === "Completed" || row[col.key] === "Paid" || row[col.key] === "Received"
