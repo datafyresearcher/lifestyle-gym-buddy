@@ -23,6 +23,10 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("details");
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const streamRef = useRef<MediaStream | null>(null);
 
   // User Details form
   const [name, setName] = useState("Admin");
