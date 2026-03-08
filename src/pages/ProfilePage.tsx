@@ -580,6 +580,93 @@ export default function ProfilePage() {
           </div>
         </DialogContent>
       </Dialog>
+      {/* Add Petty Cash Dialog */}
+      <Dialog open={pettyCashOpen} onOpenChange={setPettyCashOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Add Petty Cash</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Label className="font-bold">Current Balance</Label>
+              <span className="font-bold">{currentBalance.toLocaleString()}</span>
+            </div>
+            <div className="flex items-center justify-between gap-4">
+              <Label className="font-medium">Add Amount</Label>
+              <Input
+                type="number"
+                value={addAmount}
+                onChange={(e) => setAddAmount(e.target.value)}
+                className="w-32 text-right"
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label className="font-bold">New Balance</Label>
+              <span className="font-bold">{(currentBalance + (parseInt(addAmount) || 0)).toLocaleString()}</span>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={handleAddPettyCash} className="bg-green-600 hover:bg-green-700 text-white w-full">
+              Add Petty Cash
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Attendance History View */}
+      <Dialog open={showAttendanceHistory} onOpenChange={setShowAttendanceHistory}>
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold">Admin Attendance History</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-end gap-4">
+              <div>
+                <Label className="text-xs text-muted-foreground">Start Date</Label>
+                <Input type="date" value={attStartDate} onChange={(e) => setAttStartDate(e.target.value)} />
+              </div>
+              <div>
+                <Label className="text-xs text-muted-foreground">End Date</Label>
+                <Input type="date" value={attEndDate} onChange={(e) => setAttEndDate(e.target.value)} />
+              </div>
+              <Button className="bg-green-600 hover:bg-green-700 text-white" size="sm">
+                Get Attendance
+              </Button>
+              <Button className="bg-green-600 hover:bg-green-700 text-white" size="sm" onClick={handleExportAttendance}>
+                <Download className="w-3 h-3 mr-1" /> Export
+              </Button>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="data-table w-full">
+                <thead>
+                  <tr className="bg-sidebar text-sidebar-foreground">
+                    <th className="text-left px-4 py-2">Date</th>
+                    <th className="text-left px-4 py-2">Slot Name</th>
+                    <th className="text-left px-4 py-2">Check In Time</th>
+                    <th className="text-left px-4 py-2">Check out Time</th>
+                    <th className="text-left px-4 py-2">Total Working Hours</th>
+                    <th className="text-left px-4 py-2">Total Worked Hours</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {generateAttendanceData().map((row, i) => (
+                    <tr key={i} className="border-b border-border">
+                      <td className="px-4 py-2 text-sm font-medium">{row.date}</td>
+                      <td className="px-4 py-2 text-sm">{row.slotName}</td>
+                      <td className="px-4 py-2 text-sm">{row.checkIn}</td>
+                      <td className="px-4 py-2 text-sm">{row.checkOut}</td>
+                      <td className={`px-4 py-2 text-sm font-medium ${row.totalWorking === "ABSENT" ? "text-destructive" : "text-muted-foreground"}`}>
+                        {row.totalWorking}
+                      </td>
+                      <td className="px-4 py-2 text-sm">{row.totalWorked}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </PageContainer>
   );
 }
