@@ -253,6 +253,7 @@ export default function ProductsPage() {
     setEditStorageMin(product.storageMin);
     setEditStorageMax(product.storageMax);
     setEditRemarks(product.remarks);
+    setImagePreview(null);
     setDetailTab("info");
     setDetailOpen(true);
   };
