@@ -9,6 +9,12 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import * as XLSX from "xlsx";
 
+interface SummaryRow {
+  label: string;
+  key: string;
+  highlight?: boolean;
+}
+
 interface ReportConfig {
   title: string;
   breadcrumb: string;
@@ -17,6 +23,7 @@ interface ReportConfig {
   filters?: string[];
   extraFilters?: string[];
   emptyMessage?: string;
+  summaryRows?: SummaryRow[];
 }
 
 const reportConfigs: Record<string, ReportConfig> = {
