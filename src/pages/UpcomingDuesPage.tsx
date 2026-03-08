@@ -117,9 +117,14 @@ export default function UpcomingDuesPage() {
                 <td>{m.fees.toLocaleString()}</td>
                 <td>{m.dueDate}</td>
                 <td>
-                  <button className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center hover:bg-green-600">
+                  <a
+                    href={`https://api.whatsapp.com/send/?phone=${m.phone.replace("+", "")}&text=${encodeURIComponent(`*Upcoming Due Reminder*\n\n*Dear Member*,\nThis message is to remind you that your *next fee is due on ${m.dueDate}*. Kindly submit your fees on time to avoid any inconvenience.\n_You may pay online fee by clicking on the following link._`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center hover:bg-green-600 inline-flex"
+                  >
                     <MessageCircle className="w-4 h-4" />
-                  </button>
+                  </a>
                 </td>
               </tr>
             ))}
