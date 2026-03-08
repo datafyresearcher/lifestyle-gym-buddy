@@ -62,9 +62,32 @@ export default function MemberDetailDialog({ member, open, onOpenChange, onDeact
   const afterDiscount = Number(monthlyFee) - Number(monthlyDiscount);
 
   const handleWhatsAppMessage = () => {
+    const rawPhone = member.phone.replace(/[^0-9]/g, "");
+    const phone = rawPhone.startsWith("0") ? "92" + rawPhone.slice(1) : rawPhone.startsWith("92") ? rawPhone : "92" + rawPhone;
     const message = `*Upcoming Payment Reminder*\n\n*Hi ${member.name}*, This is a friendly reminder that your *membership fee for April, 2026* is due soon. To avoid any service interruptions, we recommend completing the payment in advance.\n\nYou may pay online or visit the reception.\n\nThank you!\n*Lifestyle Reset*`;
-    const url = `https://api.whatsapp.com/send/?phone=${member.phone.replace(/[^0-9]/g, "")}&text=${encodeURIComponent(message)}`;
+    const url = `https://api.whatsapp.com/send/?phone=${phone}&text=${encodeURIComponent(message)}`;
     window.open(url, "_blank");
+  };
+
+  const handleUploadPhoto = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setAvatarPreview(ev.target?.result as string);
+        toast({ title: "Photo Updated", description: "Profile photo has been updated." });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemovePhoto = () => {
+    setAvatarPreview(null);
+    toast({ title: "Photo Removed", description: "Profile photo has been removed." });
   };
 
   const handleSaveFee = () => {
