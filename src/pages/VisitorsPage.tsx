@@ -24,9 +24,17 @@ export default function VisitorsPage() {
     return true;
   });
 
-  const clearSearch = () => {
-    setSearchName("");
-    setSearchMobile("");
+  const clearSearch = () => { setSearchName(""); setSearchMobile(""); };
+
+  const exportToExcel = () => {
+    const data = filtered.map((v) => ({
+      Name: v.name, Mobile: v.mobile, Email: v.email, Date: v.date, Time: v.time,
+      "Total Fees": v.totalFees, Discount: v.discount, Tax: v.tax, Paid: v.paid,
+    }));
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Visitors");
+    XLSX.writeFile(wb, "visitors.xlsx");
   };
 
   return (
