@@ -141,7 +141,8 @@ export function AppSidebar() {
         {/* User Profile */}
         {!collapsed && (
           <div className="flex flex-col items-center py-4 border-b border-sidebar-border">
-            <img src={logoImg} alt="Lifestyle Reset Gym" className="w-36 h-36 object-contain mb-3" />
+            <img src={logoImg} alt="Lifestyle Reset Gym" className="w-44 h-44 object-contain" />
+            <span className="text-sidebar-foreground font-heading font-bold text-base tracking-wide">Lifestyle Reset</span>
             <Avatar className="w-16 h-16 mb-1 border-2 border-sidebar-accent">
               <AvatarImage src={adminAvatar} alt="Admin" className="object-cover" />
               <AvatarFallback className="bg-sidebar-accent text-sidebar-accent-foreground text-lg font-bold">
