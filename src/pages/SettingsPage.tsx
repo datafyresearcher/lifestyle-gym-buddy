@@ -719,6 +719,20 @@ function PermissionsManagement() {
     { name: "Branch Management", url: "Setting", type: "/settings/branches" },
   ];
   const filtered = pages.filter(p => !searchPage || p.name.toLowerCase().includes(searchPage.toLowerCase()));
+  const [editPerm, setEditPerm] = useState<typeof pages[0] | null>(null);
+  const [deactivatePerm, setDeactivatePerm] = useState<typeof pages[0] | null>(null);
+  const [editForm, setEditForm] = useState({ name: "", group: "", url: "", sortOrder: "2", pageUrl: "", subSort: "0", type: "basic" });
+
+  const handleEdit = (p: typeof pages[0]) => {
+    setEditPerm(p);
+    setEditForm({ name: p.name, group: "group", url: p.type, sortOrder: "2", pageUrl: p.url, subSort: "0", type: "basic" });
+  };
+
+  const handleDeactivate = () => {
+    toast.success(`Permission "${deactivatePerm?.name}" deactivated`);
+    setDeactivatePerm(null);
+  };
+
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold text-foreground">Users Role Permissions</h3>
@@ -751,8 +765,12 @@ function PermissionsManagement() {
                   <TableCell>{p.url}</TableCell>
                   <TableCell>{p.type}</TableCell>
                   <TableCell className="text-right space-x-1">
-                    <Button variant="ghost" size="icon" className="text-destructive"><X className="w-4 h-4" /></Button>
-                    <Button variant="ghost" size="icon"><Pencil className="w-4 h-4" /></Button>
+                    <Button variant="ghost" size="icon" className="text-destructive" onClick={() => setDeactivatePerm(p)}>
+                      <X className="w-4 h-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => handleEdit(p)}>
+                      <Pencil className="w-4 h-4" />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -760,6 +778,87 @@ function PermissionsManagement() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Edit Permission Dialog */}
+      <Dialog open={!!editPerm} onOpenChange={(o) => { if (!o) setEditPerm(null); }}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Permission</DialogTitle>
+            <DialogDescription>Edit permission details for {editPerm?.name}</DialogDescription>
+          </DialogHeader>
+          <div className="flex items-center gap-2 bg-sidebar text-sidebar-foreground rounded-lg px-4 py-2">
+            <Button size="sm" variant="outline" className="bg-sidebar-accent text-sidebar-accent-foreground">
+              <Plus className="w-3 h-3 mr-1" /> New
+            </Button>
+            <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => { toast.success("Permission updated"); setEditPerm(null); }}>
+              <Save className="w-3 h-3 mr-1" /> Update
+            </Button>
+          </div>
+          <Card>
+            <CardContent className="p-6">
+              <h4 className="font-semibold text-foreground mb-4">Permission</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-muted-foreground" />
+                  <Input value={editForm.name} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} />
+                </div>
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-muted-foreground" />
+                  <Input value={editForm.group} onChange={e => setEditForm(f => ({ ...f, group: e.target.value }))} />
+                </div>
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-muted-foreground" />
+                  <Input value={editForm.url} onChange={e => setEditForm(f => ({ ...f, url: e.target.value }))} />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground text-sm">↕</span>
+                  <Input value={editForm.sortOrder} onChange={e => setEditForm(f => ({ ...f, sortOrder: e.target.value }))} />
+                </div>
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-muted-foreground" />
+                  <Input value={editForm.pageUrl} onChange={e => setEditForm(f => ({ ...f, pageUrl: e.target.value }))} />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground text-sm">↕</span>
+                  <Input value={editForm.subSort} onChange={e => setEditForm(f => ({ ...f, subSort: e.target.value }))} />
+                </div>
+                <div className="flex items-center gap-2 md:col-start-2">
+                  <span className="text-sm text-foreground font-medium">Type</span>
+                  <Select value={editForm.type} onValueChange={v => setEditForm(f => ({ ...f, type: v }))}>
+                    <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="basic">basic</SelectItem>
+                      <SelectItem value="advanced">advanced</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </DialogContent>
+      </Dialog>
+
+      {/* Deactivate Confirmation Dialog */}
+      <Dialog open={!!deactivatePerm} onOpenChange={(o) => { if (!o) setDeactivatePerm(null); }}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Confirmation</DialogTitle>
+            <DialogDescription className="sr-only">Deactivate confirmation</DialogDescription>
+          </DialogHeader>
+          <div className="flex items-start gap-3 py-4">
+            <span className="text-yellow-500 text-lg">⚠</span>
+            <p className="text-sm text-foreground">Are you sure you want to DeActivate Permission ?</p>
+          </div>
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setDeactivatePerm(null)}>
+              <X className="w-3 h-3 mr-1" /> No
+            </Button>
+            <Button className="bg-sidebar text-sidebar-foreground hover:opacity-90" onClick={handleDeactivate}>
+              <CheckCircle className="w-3 h-3 mr-1" /> Yes
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
