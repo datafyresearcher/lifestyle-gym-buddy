@@ -136,7 +136,7 @@ export default function MembersPage() {
             <button onClick={clearSearch} className="bg-sidebar text-sidebar-accent-foreground px-4 py-2 rounded text-sm flex items-center gap-2">
               <XCircle className="w-3 h-3" /> Clear Search
             </button>
-            <button className="bg-primary text-primary-foreground px-4 py-2 rounded text-sm flex items-center gap-2">
+            <button className="bg-primary text-primary-foreground px-4 py-2 rounded text-sm flex items-center gap-2" onClick={() => setAddNewOpen(true)}>
               <Plus className="w-3 h-3" /> Add New (F2)
             </button>
           </div>
