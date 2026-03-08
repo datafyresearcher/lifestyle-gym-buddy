@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import PageContainer from "@/components/PageContainer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Search, X, XCircle, Edit, Plus, ArrowLeft, Package, Tag, Info, FileText, PackagePlus, PackageMinus, Printer, Users } from "lucide-react";
+import { Search, X, XCircle, Edit, Plus, ArrowLeft, Package, Tag, Info, FileText, PackagePlus, PackageMinus, Printer, Users, Camera, Upload } from "lucide-react";
 
 interface Product {
   id: number;
@@ -188,6 +188,44 @@ export default function ProductsPage() {
   const [editStorageMax, setEditStorageMax] = useState(0);
   const [editRemarks, setEditRemarks] = useState("");
 
+  // Photo handling
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const productFileRef = useRef<HTMLInputElement>(null);
+  const productVideoRef = useRef<HTMLVideoElement>(null);
+  const productCanvasRef = useRef<HTMLCanvasElement>(null);
+  const productStreamRef = useRef<MediaStream | null>(null);
+  const [productCameraOpen, setProductCameraOpen] = useState(false);
+
+  const handleProductUpload = () => productFileRef.current?.click();
+  const handleProductFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => { setImagePreview(ev.target?.result as string); toast({ title: "Image uploaded" }); };
+      reader.readAsDataURL(file);
+    }
+  };
+  const handleProductRemoveImage = () => { setImagePreview(null); toast({ title: "Image removed" }); };
+  const handleProductCaptureStart = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+      productStreamRef.current = stream;
+      setProductCameraOpen(true);
+      setTimeout(() => { if (productVideoRef.current) { productVideoRef.current.srcObject = stream; productVideoRef.current.play(); } }, 100);
+    } catch { toast({ title: "Unable to access camera", variant: "destructive" }); }
+  };
+  const handleProductCapture = () => {
+    if (productVideoRef.current && productCanvasRef.current) {
+      const canvas = productCanvasRef.current;
+      canvas.width = productVideoRef.current.videoWidth;
+      canvas.height = productVideoRef.current.videoHeight;
+      const ctx = canvas.getContext("2d");
+      if (ctx) { ctx.drawImage(productVideoRef.current, 0, 0); setImagePreview(canvas.toDataURL("image/png")); toast({ title: "Photo captured" }); }
+    }
+    stopProductCamera();
+  };
+  const stopProductCamera = () => { productStreamRef.current?.getTracks().forEach(t => t.stop()); productStreamRef.current = null; setProductCameraOpen(false); };
+
   const filtered = products.filter((p) => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.code.includes(search);
     const matchTab =
@@ -215,6 +253,7 @@ export default function ProductsPage() {
     setEditStorageMin(product.storageMin);
     setEditStorageMax(product.storageMax);
     setEditRemarks(product.remarks);
+    setImagePreview(null);
     setDetailTab("info");
     setDetailOpen(true);
   };
@@ -430,16 +469,29 @@ export default function ProductsPage() {
             </TabsList>
 
             {/* Product Info Tab */}
-            <TabsContent value="info" className="mt-4 space-y-6">
+             <TabsContent value="info" className="mt-4 space-y-6">
               <div className="flex items-start gap-8">
-                <div className="text-8xl">{selectedProduct?.image}</div>
+                <div className="w-24 h-24 rounded-lg border border-border bg-muted/20 flex items-center justify-center overflow-hidden">
+                  {imagePreview ? (
+                    <img src={imagePreview} alt="Product" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-6xl">{selectedProduct?.image}</span>
+                  )}
+                </div>
                 <div className="flex-1 space-y-4">
                   <div className="bg-sidebar-accent p-3 rounded-lg flex items-center justify-between">
                     <span className="font-semibold text-sidebar-accent-foreground">Product Image</span>
                     <div className="flex gap-2">
-                      <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">📷 Capture</Button>
-                      <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">⬆ Upload Image</Button>
-                      <Button size="sm" variant="destructive">✕ Remove Image</Button>
+                      <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={handleProductCaptureStart}>
+                        <Camera className="w-3 h-3 mr-1" /> Capture
+                      </Button>
+                      <input type="file" ref={productFileRef} accept="image/*" className="hidden" onChange={handleProductFileChange} />
+                      <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white" onClick={handleProductUpload}>
+                        <Upload className="w-3 h-3 mr-1" /> Upload Image
+                      </Button>
+                      <Button size="sm" variant="destructive" onClick={handleProductRemoveImage}>
+                        <X className="w-3 h-3 mr-1" /> Remove Image
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -598,6 +650,26 @@ export default function ProductsPage() {
               </div>
             </TabsContent>
           </Tabs>
+        </DialogContent>
+      </Dialog>
+
+      {/* Camera Dialog */}
+      <Dialog open={productCameraOpen} onOpenChange={(o) => { if (!o) stopProductCamera(); }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Capture Photo</DialogTitle>
+            <DialogDescription>Position the product and click Capture</DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col items-center gap-4">
+            <video ref={productVideoRef} className="w-full rounded-lg border border-border" autoPlay muted playsInline />
+            <canvas ref={productCanvasRef} className="hidden" />
+            <div className="flex gap-3">
+              <Button onClick={handleProductCapture} className="bg-green-600 hover:bg-green-700 text-white">
+                <Camera className="w-4 h-4 mr-1" /> Capture
+              </Button>
+              <Button variant="outline" onClick={stopProductCamera}>Cancel</Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </PageContainer>
