@@ -14,6 +14,7 @@ import PettyCashPage from "@/pages/PettyCashPage";
 import AttendancePage from "@/pages/AttendancePage";
 import ServicesPage from "@/pages/ServicesPage";
 import PlaceholderPage from "@/pages/PlaceholderPage";
+import TrainingSessionsPage from "@/pages/TrainingSessionsPage";
 import ProductsPage from "@/pages/ProductsPage";
 import SuppliersPage from "@/pages/SuppliersPage";
 import PurchaseOrderPage from "@/pages/PurchaseOrderPage";
