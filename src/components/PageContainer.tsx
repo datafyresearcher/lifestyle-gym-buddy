@@ -37,6 +37,13 @@ export default function PageContainer({ title, breadcrumbs, children }: PageCont
         <h1 className="text-2xl font-heading font-bold mb-6">{title}</h1>
         {children}
       </div>
+
+      {/* Footer */}
+      <div className="mt-8 border-t border-border bg-card px-6 py-4 text-center text-sm text-muted-foreground">
+        <p className="font-semibold text-foreground">Powered By Lifestyle Reset</p>
+        <p className="mt-1">+92-304-2451070</p>
+        <p>Email: researcher@datafyassociates.com</p>
+      </div>
     </div>
   );
 }
