@@ -19,6 +19,7 @@ import SuppliersPage from "@/pages/SuppliersPage";
 import PurchaseOrderPage from "@/pages/PurchaseOrderPage";
 import PurchaseOrdersPage from "@/pages/PurchaseOrdersPage";
 import PointOfSalePage from "@/pages/PointOfSalePage";
+import SaleOrdersPage from "@/pages/SaleOrdersPage";
 import EnquiriesPage from "@/pages/EnquiriesPage";
 import AddEnquiryPage from "@/pages/AddEnquiryPage";
 import ActivityLogsPage from "@/pages/ActivityLogsPage";
