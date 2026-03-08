@@ -172,7 +172,7 @@ export default function ProfilePage() {
               />
               <div className="flex items-center gap-3 flex-wrap bg-sidebar text-sidebar-foreground rounded-lg px-6 py-3">
                 <span className="font-medium text-sm">Profile Picture</span>
-                <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">
+                <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={handleCaptureStart}>
                   <Camera className="w-3 h-3 mr-1" /> Capture Photo
                 </Button>
                 <input type="file" ref={fileInputRef} accept="image/*" className="hidden" onChange={handleFileChange} />
