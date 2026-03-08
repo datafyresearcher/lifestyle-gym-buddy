@@ -167,6 +167,7 @@ export function AppSidebar() {
     // For now just redirect to root; replace with auth logout when backend is connected
     window.location.href = "/";
   };
+  const languages = [
     { label: "English", value: "English" },
     { label: "عربی", value: "عربی" },
     { label: "اردو", value: "اردو" },
