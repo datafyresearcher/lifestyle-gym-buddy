@@ -3,27 +3,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { XCircle, Edit, X, UserPlus, Printer, Download } from "lucide-react";
 import * as XLSX from "xlsx";
-
-const mockEnquiries = [
-  { name: "Ali khan", mobile: "+923335855855", enquiryDate: "Mar 7, 2026, 5:10:19 PM", status: "Contacted", email: "---" },
-  { name: "Shehzad Khan", mobile: "3354545892", enquiryDate: "Mar 3, 2026, 1:26:22 PM", status: "Contacted", email: "---" },
-  { name: "Hussain", mobile: "3354626237", enquiryDate: "Mar 3, 2026, 1:05:26 PM", status: "Contacted", email: "---" },
-  { name: "Alii", mobile: "+923558558555", enquiryDate: "Feb 17, 2026, 5:30:19 PM", status: "Contacted", email: "---" },
-  { name: "adeel", mobile: "+923333333333", enquiryDate: "Jan 8, 2026, 5:55:44 PM", status: "Contacted", email: "---" },
-  { name: "shahana", mobile: "+92553637377", enquiryDate: "Jan 8, 2026, 2:16:58 PM", status: "Contacted", email: "---" },
-  { name: "sana", mobile: "+92243566879", enquiryDate: "Dec 11, 2025, 5:25:37 PM", status: "Contacted", email: "---" },
-  { name: "ahsan", mobile: "+92788888888", enquiryDate: "Dec 9, 2025, 11:13:59 AM", status: "Contacted", email: "---" },
-  { name: "Ali Hamza", mobile: "+923432521212", enquiryDate: "Jul 25, 2025, 4:33:54 PM", status: "Contacted", email: "ali_hamza@gmail.com" },
-  { name: "Sana Khan", mobile: "03437068981", enquiryDate: "Jul 25, 2025, 4:33:31 PM", status: "Contacted", email: "sanakhan@gmail.com" },
-  { name: "Palwasha Khan", mobile: "+923338745216", enquiryDate: "Jul 16, 2025, 11:25:27 AM", status: "Contacted", email: "palwasha@gmail.com" },
-];
+import { useEnquiries } from "@/context/EnquiriesContext";
 
 export default function EnquiriesPage() {
   const navigate = useNavigate();
+  const { enquiries, removeEnquiry } = useEnquiries();
   const [searchName, setSearchName] = useState("");
   const [searchMobile, setSearchMobile] = useState("");
 
-  const filtered = mockEnquiries.filter((e) => {
+  const filtered = enquiries.filter((e) => {
     if (searchName && !e.name.toLowerCase().includes(searchName.toLowerCase())) return false;
     if (searchMobile && !e.mobile.includes(searchMobile)) return false;
     return true;
@@ -85,7 +73,7 @@ export default function EnquiriesPage() {
                 <td>{e.email}</td>
                 <td>
                   <div className="flex gap-1">
-                    <button className="action-btn action-btn-danger"><XCircle className="w-3 h-3" /></button>
+                    <button className="action-btn action-btn-danger" onClick={() => removeEnquiry(i)}><XCircle className="w-3 h-3" /></button>
                     <button className="action-btn action-btn-primary"><Edit className="w-3 h-3" /></button>
                   </div>
                 </td>
