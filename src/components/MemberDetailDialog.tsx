@@ -30,6 +30,8 @@ interface MemberDetailDialogProps {
 export default function MemberDetailDialog({ member, open, onOpenChange, onDeactivate, onFreeze }: MemberDetailDialogProps) {
   const [activeTab, setActiveTab] = useState("details");
   const [confirmDialog, setConfirmDialog] = useState<"deactivate" | "freeze" | "sync" | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Fee form state
   const [feeMonth, setFeeMonth] = useState("March");
