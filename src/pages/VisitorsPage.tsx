@@ -1,6 +1,7 @@
 import PageContainer from "@/components/PageContainer";
 import { useState } from "react";
-import { Edit, Download, Search, X, UserPlus } from "lucide-react";
+import { Edit, Download, X, UserPlus } from "lucide-react";
+import * as XLSX from "xlsx";
 
 const mockVisitors = [
   { name: "Ali", mobile: "+923325658545", email: "---", date: "Saturday, March 7, 2026", time: "5:08 PM", totalFees: 400, discount: 0, tax: 0, paid: 400 },
