@@ -28,6 +28,7 @@ import {
   Building,
   Shield,
   Lock,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
