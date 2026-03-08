@@ -50,6 +50,7 @@ const App = () => (
             <Route path="/requests" element={<PlaceholderPage title="Requests Management" breadcrumbs={[{ label: "Requests Management" }]} />} />
             <Route path="/packages" element={<PackagesPage />} />
             <Route path="/petty-cash" element={<PettyCashPage />} />
+            <Route path="/sales/pos" element={<PointOfSalePage />} />
             <Route path="/sales/*" element={<PlaceholderPage title="Sales" breadcrumbs={[{ label: "Sales" }]} />} />
             <Route path="/purchasing/suppliers" element={<SuppliersPage />} />
             <Route path="/purchasing/order" element={<PurchaseOrderPage />} />
