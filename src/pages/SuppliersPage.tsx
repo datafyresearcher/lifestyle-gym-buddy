@@ -48,6 +48,44 @@ export default function SuppliersPage() {
   const [editGender, setEditGender] = useState<"Male" | "Female">("Male");
   const [editDate, setEditDate] = useState("");
 
+  // Photo handling
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
+
+  const handleUploadPhoto = () => fileInputRef.current?.click();
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => { setAvatarPreview(ev.target?.result as string); toast({ title: "Photo uploaded" }); };
+      reader.readAsDataURL(file);
+    }
+  };
+  const handleRemovePhoto = () => { setAvatarPreview(null); toast({ title: "Photo removed" }); };
+  const handleCaptureStart = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+      streamRef.current = stream;
+      setCameraOpen(true);
+      setTimeout(() => { if (videoRef.current) { videoRef.current.srcObject = stream; videoRef.current.play(); } }, 100);
+    } catch { toast({ title: "Unable to access camera", variant: "destructive" }); }
+  };
+  const handleCapturePhoto = () => {
+    if (videoRef.current && canvasRef.current) {
+      const canvas = canvasRef.current;
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      const ctx = canvas.getContext("2d");
+      if (ctx) { ctx.drawImage(videoRef.current, 0, 0); setAvatarPreview(canvas.toDataURL("image/png")); toast({ title: "Photo captured" }); }
+    }
+    stopCamera();
+  };
+  const stopCamera = () => { streamRef.current?.getTracks().forEach(t => t.stop()); streamRef.current = null; setCameraOpen(false); };
+
   const filtered = suppliers.filter((s) =>
     s.active && s.name.toLowerCase().includes(search.toLowerCase())
   );
