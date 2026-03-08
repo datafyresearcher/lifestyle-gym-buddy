@@ -155,6 +155,14 @@ export function AppSidebar() {
   const navigate = useNavigate();
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const [selectedLang, setSelectedLang] = useState("English");
+  const languages = [
+    { label: "English", value: "English" },
+    { label: "عربی", value: "عربی" },
+    { label: "اردو", value: "اردو" },
+    { label: "پشتو", value: "پشتو" },
+  ];
 
   const isActive = (url: string) => location.pathname === url || location.pathname.startsWith(url + "/");
 
@@ -191,11 +199,26 @@ export function AppSidebar() {
                     <User className="w-4 h-4" />
                     <span>Profile</span>
                   </button>
-                  <button className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
-                    <Globe className="w-4 h-4" />
-                    <span>English</span>
-                    <ChevronDown className="w-3 h-3 ml-auto" />
-                  </button>
+                  <div className="relative">
+                    <button onClick={() => setLangMenuOpen(!langMenuOpen)} className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+                      <Globe className="w-4 h-4" />
+                      <span>{selectedLang}</span>
+                      <ChevronDown className={`w-3 h-3 ml-auto transition-transform ${langMenuOpen ? "rotate-180" : ""}`} />
+                    </button>
+                    {langMenuOpen && (
+                      <div className="bg-sidebar border border-sidebar-border rounded-md mx-2 py-1">
+                        {languages.map((lang) => (
+                          <button
+                            key={lang.value}
+                            onClick={() => { setSelectedLang(lang.label); setLangMenuOpen(false); }}
+                            className={`w-full px-4 py-2 text-sm text-left hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors ${selectedLang === lang.label ? "font-bold text-sidebar-accent-foreground" : "text-sidebar-foreground"}`}
+                          >
+                            {lang.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                   <button className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
                     <LogOut className="w-4 h-4" />
                     <span>Logout</span>
