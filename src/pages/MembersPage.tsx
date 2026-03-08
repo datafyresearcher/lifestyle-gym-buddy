@@ -44,6 +44,7 @@ export default function MembersPage() {
   const [selectedMember, setSelectedMember] = useState<typeof mockMembers[0] | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [addNewOpen, setAddNewOpen] = useState(false);
 
   const filtered = mockMembers.filter((m) => {
     if (searchName && !m.name.toLowerCase().includes(searchName.toLowerCase())) return false;
