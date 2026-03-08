@@ -38,6 +38,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <main className="flex-1 overflow-auto">
             {children}
           </main>
+
+          {/* Footer */}
+          <footer className="bg-muted border-t border-border py-6 px-4 text-center text-sm text-muted-foreground">
+            <p className="font-semibold text-foreground mb-1">Powered By Lifestyle Reset</p>
+            <p className="text-primary">📞 +92-304-2451070</p>
+            <p>Email: researcher@datafyassociates.com</p>
+          </footer>
         </div>
       </div>
     </SidebarProvider>
