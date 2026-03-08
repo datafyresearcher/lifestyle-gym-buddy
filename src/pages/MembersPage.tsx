@@ -1,5 +1,6 @@
 import PageContainer from "@/components/PageContainer";
 import MemberDetailDialog from "@/components/MemberDetailDialog";
+import AddNewMemberDialog from "@/components/AddNewMemberDialog";
 import { useState } from "react";
 import { XCircle, Edit, Camera, User, Settings, Phone, Plus, List, LayoutGrid, CreditCard, Snowflake, RefreshCw, MessageCircle, X, CheckCircle, AlertTriangle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -43,6 +44,7 @@ export default function MembersPage() {
   const [selectedMember, setSelectedMember] = useState<typeof mockMembers[0] | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [addNewOpen, setAddNewOpen] = useState(false);
 
   const filtered = mockMembers.filter((m) => {
     if (searchName && !m.name.toLowerCase().includes(searchName.toLowerCase())) return false;
@@ -134,7 +136,7 @@ export default function MembersPage() {
             <button onClick={clearSearch} className="bg-sidebar text-sidebar-accent-foreground px-4 py-2 rounded text-sm flex items-center gap-2">
               <XCircle className="w-3 h-3" /> Clear Search
             </button>
-            <button className="bg-primary text-primary-foreground px-4 py-2 rounded text-sm flex items-center gap-2">
+            <button className="bg-primary text-primary-foreground px-4 py-2 rounded text-sm flex items-center gap-2" onClick={() => setAddNewOpen(true)}>
               <Plus className="w-3 h-3" /> Add New (F2)
             </button>
           </div>
@@ -229,6 +231,12 @@ export default function MembersPage() {
         member={selectedMember}
         open={selectedMember !== null}
         onOpenChange={(open) => { if (!open) setSelectedMember(null); }}
+      />
+
+      <AddNewMemberDialog
+        open={addNewOpen}
+        onOpenChange={setAddNewOpen}
+        onMemberAdded={() => toast({ title: "Success", description: "New member has been registered." })}
       />
 
       {/* Confirmation Dialog */}
