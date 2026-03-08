@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import PageContainer from "@/components/PageContainer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, Building2, Building, Settings, Shield, Lock, ClipboardCheck, Plus, Pencil, Trash2, Search } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Users, Building2, Building, Settings, Shield, Lock, ClipboardCheck, Plus, Pencil, Trash2, Search, Camera, Upload, X, User, Phone, Eye, EyeOff, Save, ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 
 // ─── User Management ───
 function UserManagement() {
