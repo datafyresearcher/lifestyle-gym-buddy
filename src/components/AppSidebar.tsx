@@ -40,7 +40,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import logoImg from "@/assets/Transparent_logo.png";
+import logoImg from "@/assets/lifestyle_reset_logo_new.png";
 import adminAvatar from "@/assets/admin-avatar.png";
 
 const menuItems = [
