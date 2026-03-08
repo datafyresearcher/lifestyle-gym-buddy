@@ -472,55 +472,61 @@ function BranchManagement() {
 }
 // ─── Company Management ───
 function CompanyManagement() {
+  const [searchName, setSearchName] = useState("");
+  const companies = [
+    { id: 1, name: "Lifestyle Reset Gym", contact: "Admin", mobile: "+92-304-2451070", email: "admin@gmail.com" },
+  ];
+  const filtered = companies.filter(c => !searchName || c.name.toLowerCase().includes(searchName.toLowerCase()));
   return (
     <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-foreground">Companies</h3>
+      {/* Search bar */}
+      <div className="flex items-center gap-2 bg-sidebar text-sidebar-foreground rounded-t-lg px-4 py-2">
+        <div className="space-y-0.5">
+          <span className="text-xs text-sidebar-foreground/70">Search By Name</span>
+          <Input placeholder="Search here!" value={searchName} onChange={e => setSearchName(e.target.value)} className="h-7 w-40 bg-transparent border-b border-sidebar-foreground/30 rounded-none text-sidebar-foreground placeholder:text-sidebar-foreground/50 text-sm px-0 focus-visible:ring-0" />
+        </div>
+        <Button variant="ghost" size="icon" className="text-sidebar-foreground"><Search className="w-4 h-4" /></Button>
+      </div>
       <Card>
-        <CardHeader><CardTitle className="text-base">Company Information</CardTitle></CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Company Name</Label>
-            <Input defaultValue="Lifestyle Reset Gym" />
-          </div>
-          <div className="space-y-2">
-            <Label>Registration Number</Label>
-            <Input defaultValue="REG-2024-001" />
-          </div>
-          <div className="space-y-2">
-            <Label>Email</Label>
-            <Input defaultValue="info@lifestylereset.com" />
-          </div>
-          <div className="space-y-2">
-            <Label>Phone</Label>
-            <Input defaultValue="+92-304-2451070" />
-          </div>
-          <div className="space-y-2 md:col-span-2">
-            <Label>Address</Label>
-            <Input defaultValue="123 Fitness Street, Karachi, Pakistan" />
-          </div>
-          <div className="space-y-2">
-            <Label>Tax ID / NTN</Label>
-            <Input defaultValue="1234567-8" />
-          </div>
-          <div className="space-y-2">
-            <Label>Currency</Label>
-            <Select defaultValue="PKR">
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="PKR">PKR - Pakistani Rupee</SelectItem>
-                <SelectItem value="USD">USD - US Dollar</SelectItem>
-                <SelectItem value="AED">AED - UAE Dirham</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-sidebar">
+                <TableHead className="text-sidebar-foreground">Company Name</TableHead>
+                <TableHead className="text-sidebar-foreground">Contact Person</TableHead>
+                <TableHead className="text-sidebar-foreground">Mobile</TableHead>
+                <TableHead className="text-sidebar-foreground">Email</TableHead>
+                <TableHead className="text-sidebar-foreground text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.map(c => (
+                <TableRow key={c.id}>
+                  <TableCell>{c.name}</TableCell>
+                  <TableCell>{c.contact}</TableCell>
+                  <TableCell>{c.mobile}</TableCell>
+                  <TableCell>{c.email}</TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="ghost" size="icon"><Pencil className="w-4 h-4" /></Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
-      <div className="flex justify-end">
-        <Button>Save Changes</Button>
+      {/* Pagination */}
+      <div className="flex items-center justify-center gap-2 bg-sidebar text-sidebar-foreground rounded py-2">
+        <button className="text-sidebar-foreground/60 hover:text-sidebar-foreground text-sm">⏮</button>
+        <button className="text-sidebar-foreground/60 hover:text-sidebar-foreground text-sm">◀</button>
+        <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">1</span>
+        <button className="text-sidebar-foreground/60 hover:text-sidebar-foreground text-sm">▶</button>
+        <button className="text-sidebar-foreground/60 hover:text-sidebar-foreground text-sm">⏭</button>
       </div>
     </div>
   );
 }
-
 // ─── Global Settings ───
 function GlobalSettings() {
   return (
