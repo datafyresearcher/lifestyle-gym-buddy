@@ -148,6 +148,89 @@ const faqs = [
       </div>
     ),
   },
+  {
+    q: "Q9. I am not able to upload photo. What should I check?",
+    content: (
+      <div className="space-y-4">
+        <p>If you're facing issues with uploading a photo, here are a few steps you can take to troubleshoot:</p>
+        <ol className="list-decimal pl-6 space-y-3">
+          <li><strong>File Format and Size:</strong> Ensure that the photo you're trying to upload is in a supported format (such as JPEG, PNG) and that it doesn't exceed size limit of <strong>10MB</strong>.</li>
+          <li><strong>Internet Connection:</strong> Ensure your internet connection is active. A slow or intermittent connection might hinder the upload process.</li>
+          <li><strong>Browser Compatibility:</strong> Try using a different web browser. Sometimes, certain browsers may have compatibility issues with certain websites or platforms. It is recommended to use Google Chrome browser for <strong className="underline">lifestylereset.app</strong>. 🌐</li>
+        </ol>
+        <p>If you are facing any problem, please contact the <span className="underline cursor-pointer">support</span> team for further assistance.</p>
+        <p>Click <span className="underline cursor-pointer text-primary">here</span> to watch the video explanation.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q10. How to update the member's package?",
+    content: (
+      <div className="space-y-4">
+        <p>To update a member's package, please follow these steps:</p>
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>Login to <strong className="underline">lifestylereset.app</strong> and from the left menu, select <strong>Members Management</strong>.</li>
+          <li>This action will open the list of members.</li>
+          <li>Click on the specific member from the list or use search functionality.</li>
+          <li>On this member's detail page, the current Package Name will be prominently displayed.</li>
+          <li>Click on the dropdown menu adjacent to the current package name and proceed to select the desired new package.</li>
+          <li>A confirmation popup will appear; kindly click the <strong>Yes</strong> button to confirm.</li>
+          <li>A success message will subsequently appear.</li>
+        </ol>
+        <p>If you are facing any problem, please contact the <span className="underline cursor-pointer">support</span> team for further assistance.</p>
+        <p>Click <span className="underline cursor-pointer text-primary">here</span> to watch the video explanation.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q11. How to add fees of a member?",
+    content: (
+      <div className="space-y-4">
+        <p>Follow the below steps to add fees:</p>
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>Open <strong>Member's Detail</strong> page for the member whose fees you want to add.</li>
+          <li>Locate the <strong>Add Fee</strong> button.</li>
+          <li>You will see a popup.</li>
+          <li>Verify the member's <strong>Package</strong>. You can also assign or update member's package from dropdown.</li>
+          <li>Now, please select the month and year for the fees. Check the <strong>Next Due Date</strong>; after fee payment, the member will be valid until this date. You can also add a comment.</li>
+          <li>Click on <strong>Save</strong>. If you receive a success message, you're all set. However, if you encounter an error message such as <strong>Fees already paid</strong>, it means that the fees for that particular month have already been paid.</li>
+        </ol>
+        <p>If you are facing any problem, please contact the <span className="underline cursor-pointer">support</span> team for further assistance.</p>
+        <p>Click <span className="underline cursor-pointer text-primary">here</span> to watch the video explanation.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q12. How to send link to a member for online payment?",
+    content: (
+      <div className="space-y-4">
+        <p>Follow the below steps for sending link to a member:</p>
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>Open <strong>Members Management</strong> and click on the <strong>WhatsApp</strong> icon for the specific member.</li>
+          <li>After clicking, you will see the screen. Press <strong>Continue to Chat</strong>. If you have <strong className="underline">WhatsApp for Windows</strong>, then it will automatically open and from there, you can send the online payment link to the member.</li>
+        </ol>
+        <p>If you are facing any problem, please contact the <span className="underline cursor-pointer">support</span> team for further assistance.</p>
+      </div>
+    ),
+  },
+  {
+    q: "Q13. How a gym's member can pay his/her fees online?",
+    content: (
+      <div className="space-y-4">
+        <p>Member can pay the fees online by following the steps below:</p>
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>Member will receive an online payment link from gym on his/her <strong>WhatsApp</strong>.</li>
+          <li>After clicking on the link, member will be directed to the online payment page of <strong className="underline">lifestylereset.app</strong>.</li>
+          <li>After verifying the <strong>Fee Detail</strong>, member will click on <strong>How to pay</strong>, the gym's bank details will appear. Customers can copy the account number and make their fee payments online.</li>
+          <li>After paying, click on <strong>Upload</strong> button and upload the fee invoice that was generated at the time of online payment.</li>
+          <li>At last, press <strong>Submit</strong>.</li>
+          <li>After submitting the invoice, customer can also send confirmation message to gym's owner by clicking on <strong>WhatsApp</strong> icon.</li>
+        </ol>
+        <p>If you are facing any problem, please contact the <span className="underline cursor-pointer">support</span> team for further assistance.</p>
+        <p>Click <span className="underline cursor-pointer text-primary">here</span> to watch the video explanation.</p>
+      </div>
+    ),
+  },
 ];
 
 export default function FAQsPage() {
