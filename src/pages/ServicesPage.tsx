@@ -259,7 +259,12 @@ export default function ServicesPage() {
   ];
 
   return (
-    <PageContainer title="" breadcrumbs={[{ label: "Services Listing", href: "/services" }, { label: selectedService.name }]}>
+    <PageContainer title="" breadcrumbs={[{ label: "Services Listing" }, { label: selectedService.name }]}>
+      <div className="mb-4">
+        <Button variant="outline" size="sm" onClick={() => setSelectedService(null)}>
+          <ChevronLeft className="w-4 h-4 mr-1" /> Back to Services
+        </Button>
+      </div>
       {/* Back navigation handled via breadcrumb click */}
       <Tabs defaultValue="details" className="w-full">
         <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start h-auto p-0 mb-6">
