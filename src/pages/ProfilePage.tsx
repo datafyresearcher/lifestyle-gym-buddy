@@ -394,7 +394,7 @@ export default function ProfilePage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {mockPettyCash.map((tx) => (
+                  {pettyCashData.map((tx) => (
                     <tr key={tx.txNo}>
                       <td>{tx.txNo}</td>
                       <td>{tx.amountAdded.toLocaleString()}</td>
