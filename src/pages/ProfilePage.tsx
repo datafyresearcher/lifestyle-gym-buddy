@@ -484,6 +484,25 @@ export default function ProfilePage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Camera Capture Dialog */}
+      <Dialog open={cameraOpen} onOpenChange={(open) => { if (!open) stopCamera(); }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Capture Photo</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col items-center gap-4">
+            <video ref={videoRef} className="w-full rounded-lg border border-border" autoPlay muted playsInline />
+            <canvas ref={canvasRef} className="hidden" />
+            <div className="flex gap-3">
+              <Button onClick={handleCapturePhoto} className="bg-green-600 hover:bg-green-700 text-white">
+                <Camera className="w-4 h-4 mr-1" /> Capture
+              </Button>
+              <Button variant="outline" onClick={stopCamera}>Cancel</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </PageContainer>
   );
 }
