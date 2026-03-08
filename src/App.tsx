@@ -52,6 +52,7 @@ const App = () => (
             <Route path="/sales/*" element={<PlaceholderPage title="Sales" breadcrumbs={[{ label: "Sales" }]} />} />
             <Route path="/purchasing/suppliers" element={<SuppliersPage />} />
             <Route path="/purchasing/order" element={<PurchaseOrderPage />} />
+            <Route path="/purchasing/orders" element={<PurchaseOrdersPage />} />
             <Route path="/purchasing/*" element={<PlaceholderPage title="Purchasing" breadcrumbs={[{ label: "Purchasing" }]} />} />
             <Route path="/products/*" element={<ProductsPage />} />
             <Route path="/training-sessions" element={<PlaceholderPage title="Training Sessions" breadcrumbs={[{ label: "Training Sessions" }]} />} />
