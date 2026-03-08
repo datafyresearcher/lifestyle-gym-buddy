@@ -233,6 +233,12 @@ export default function MembersPage() {
         onOpenChange={(open) => { if (!open) setSelectedMember(null); }}
       />
 
+      <AddNewMemberDialog
+        open={addNewOpen}
+        onOpenChange={setAddNewOpen}
+        onMemberAdded={() => toast({ title: "Success", description: "New member has been registered." })}
+      />
+
       {/* Confirmation Dialog */}
       <Dialog open={confirmAction !== null} onOpenChange={() => setConfirmAction(null)}>
         <DialogContent className="max-w-sm">
