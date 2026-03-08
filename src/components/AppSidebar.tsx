@@ -40,7 +40,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import logoImg from "@/assets/Lifestyle_Reset_Logo.png";
+import logoImg from "@/assets/Lifestyle_Reset_Logo_Transparent.png";
 
 const menuItems = [
   { title: "Members Management", url: "/members", icon: Users },
@@ -140,7 +140,12 @@ export function AppSidebar() {
         {/* User Profile */}
         {!collapsed && (
           <div className="flex flex-col items-center py-4 border-b border-sidebar-border">
-            <img src={logoImg} alt="Lifestyle Reset Gym" className="w-24 h-24 object-contain mb-2" />
+            <img src={logoImg} alt="Lifestyle Reset Gym" className="w-28 h-28 object-contain mb-2" />
+            <Avatar className="w-14 h-14 mb-1">
+              <AvatarFallback className="bg-sidebar-accent text-sidebar-accent-foreground text-lg font-bold">
+                A
+              </AvatarFallback>
+            </Avatar>
             <div className="flex items-center gap-1 text-sidebar-foreground text-sm">
               <span>Admin</span>
               <ChevronDown className="w-3 h-3" />
