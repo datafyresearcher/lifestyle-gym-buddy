@@ -48,7 +48,7 @@ const App = () => (
             <Route path="/petty-cash" element={<PettyCashPage />} />
             <Route path="/sales/*" element={<PlaceholderPage title="Sales" breadcrumbs={[{ label: "Sales" }]} />} />
             <Route path="/purchasing/*" element={<PlaceholderPage title="Purchasing" breadcrumbs={[{ label: "Purchasing" }]} />} />
-            <Route path="/products/*" element={<PlaceholderPage title="Products" breadcrumbs={[{ label: "Products" }]} />} />
+            <Route path="/products/*" element={<ProductsPage />} />
             <Route path="/training-sessions" element={<PlaceholderPage title="Training Sessions" breadcrumbs={[{ label: "Training Sessions" }]} />} />
             <Route path="/services/*" element={<ServicesPage />} />
             <Route path="/analytics" element={<PlaceholderPage title="Analytics" breadcrumbs={[{ label: "Analytics" }]} />} />
