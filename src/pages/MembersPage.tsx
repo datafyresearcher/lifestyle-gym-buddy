@@ -103,8 +103,12 @@ export default function MembersPage() {
                 </button>
               </div>
               <div className="p-4">
-                <div className="w-full h-32 bg-muted rounded-lg flex items-center justify-center mb-3">
-                  <User className="w-12 h-12 text-muted-foreground" />
+                <div className="w-full flex items-center justify-center mb-3 py-4">
+                  <Avatar className="w-20 h-20">
+                    <AvatarFallback className="text-2xl font-bold bg-muted text-muted-foreground">
+                      {member.name.split(" ").map(n => n[0]).join("").toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
                 </div>
                 <div className="flex items-center justify-between text-sm mb-3">
                   <span className="text-muted-foreground">{member.phone}</span>
