@@ -27,6 +27,7 @@ import AddEnquiryPage from "@/pages/AddEnquiryPage";
 import ActivityLogsPage from "@/pages/ActivityLogsPage";
 import UpcomingDuesPage from "@/pages/UpcomingDuesPage";
 import ReportsPage from "@/pages/ReportsPage";
+import FeesApprovalPage from "@/pages/FeesApprovalPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
