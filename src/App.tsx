@@ -8,6 +8,7 @@ import Dashboard from "@/pages/Dashboard";
 import MembersPage from "@/pages/MembersPage";
 import VisitorsPage from "@/pages/VisitorsPage";
 import PackagesPage from "@/pages/PackagesPage";
+import InactiveMembersPage from "@/pages/InactiveMembersPage";
 import PettyCashPage from "@/pages/PettyCashPage";
 import AttendancePage from "@/pages/AttendancePage";
 import ServicesPage from "@/pages/ServicesPage";
