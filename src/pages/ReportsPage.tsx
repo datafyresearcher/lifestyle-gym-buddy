@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, X, Printer, Download, MessageCircle, Mail, Copy } from "lucide-react";
+import { Search, X, Printer, Download } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import * as XLSX from "xlsx";
@@ -352,10 +352,6 @@ function ReportView({ reportKey }: ReportViewProps) {
     toast({ title: "Exported", description: `${config.title} exported to Excel.` });
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast({ title: "Copied", description: `${text} copied to clipboard.` });
-  };
 
   const isImageCol = (key: string) => key === "photo" || key === "image";
   const isActionCol = (key: string) => key === "action";
@@ -481,22 +477,6 @@ function ReportView({ reportKey }: ReportViewProps) {
           ))}
           <Button variant="ghost" size="icon" className="h-8 w-8 text-sidebar-accent-foreground" disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>▶</Button>
           <Button variant="ghost" size="icon" className="h-8 w-8 text-sidebar-accent-foreground" disabled={currentPage === totalPages} onClick={() => setCurrentPage(totalPages)}>⏭</Button>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="mt-6 text-center text-sm text-muted-foreground space-y-2 border-t border-border pt-4">
-        <p className="font-semibold text-foreground">Powered By Lifestyle Reset</p>
-        <div className="flex items-center justify-center gap-1">
-          <MessageCircle className="h-4 w-4 text-green-500" />
-          <a href="https://wa.me/923042451070" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">+92-304-2451070</a>
-          <button onClick={() => copyToClipboard("+92-304-2451070")} className="ml-1"><Copy className="h-3 w-3 text-muted-foreground hover:text-foreground" /></button>
-        </div>
-        <div className="flex items-center justify-center gap-1">
-          <Mail className="h-4 w-4 text-muted-foreground" />
-          <span>Email: </span>
-          <a href="mailto:researcher@datafyassociates.com" className="text-primary hover:underline">researcher@datafyassociates.com</a>
-          <button onClick={() => copyToClipboard("researcher@datafyassociates.com")} className="ml-1"><Copy className="h-3 w-3 text-muted-foreground hover:text-foreground" /></button>
         </div>
       </div>
     </div>
