@@ -17,6 +17,7 @@ import PlaceholderPage from "@/pages/PlaceholderPage";
 import EnquiriesPage from "@/pages/EnquiriesPage";
 import AddEnquiryPage from "@/pages/AddEnquiryPage";
 import ActivityLogsPage from "@/pages/ActivityLogsPage";
+import UpcomingDuesPage from "@/pages/UpcomingDuesPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,7 +39,7 @@ const App = () => (
             <Route path="/enquiries/add" element={<AddEnquiryPage />} />
             <Route path="/activity-logs" element={<ActivityLogsPage />} />
             <Route path="/attendance" element={<AttendancePage />} />
-            <Route path="/upcoming-dues/*" element={<PlaceholderPage title="Upcoming Dues" breadcrumbs={[{ label: "Upcoming Dues" }]} />} />
+            <Route path="/upcoming-dues/*" element={<UpcomingDuesPage />} />
             <Route path="/settings/*" element={<PlaceholderPage title="Settings" breadcrumbs={[{ label: "Settings" }]} />} />
             <Route path="/reports/*" element={<PlaceholderPage title="Reports" breadcrumbs={[{ label: "Reports" }]} />} />
             <Route path="/requests" element={<PlaceholderPage title="Requests Management" breadcrumbs={[{ label: "Requests Management" }]} />} />
