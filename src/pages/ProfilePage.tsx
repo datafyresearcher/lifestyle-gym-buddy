@@ -213,8 +213,11 @@ export default function ProfilePage() {
         <Button className="bg-green-600 hover:bg-green-700 text-white" onClick={handleUpdate}>
           💾 Update
         </Button>
-        <Button className="bg-green-600 hover:bg-green-700 text-white">
+        <Button className="bg-green-600 hover:bg-green-700 text-white" onClick={() => setPettyCashOpen(true)}>
           💰 Add Petty Cash
+        </Button>
+        <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setShowAttendanceHistory(true)}>
+          + Go To User Attendance History
         </Button>
       </div>
 
