@@ -652,6 +652,26 @@ export default function ProductsPage() {
           </Tabs>
         </DialogContent>
       </Dialog>
+
+      {/* Camera Dialog */}
+      <Dialog open={productCameraOpen} onOpenChange={(o) => { if (!o) stopProductCamera(); }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Capture Photo</DialogTitle>
+            <DialogDescription>Position the product and click Capture</DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col items-center gap-4">
+            <video ref={productVideoRef} className="w-full rounded-lg border border-border" autoPlay muted playsInline />
+            <canvas ref={productCanvasRef} className="hidden" />
+            <div className="flex gap-3">
+              <Button onClick={handleProductCapture} className="bg-green-600 hover:bg-green-700 text-white">
+                <Camera className="w-4 h-4 mr-1" /> Capture
+              </Button>
+              <Button variant="outline" onClick={stopProductCamera}>Cancel</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </PageContainer>
   );
 }
