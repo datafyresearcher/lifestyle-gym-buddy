@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import PageContainer from "@/components/PageContainer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -645,8 +646,8 @@ const reportRoutes: { key: string; path: string }[] = [
 ];
 
 export default function ReportsPage() {
-  const path = window.location.pathname;
-  const segment = path.split("/reports/")[1] || "defaulter";
+  const location = useLocation();
+  const segment = location.pathname.split("/reports/")[1] || "defaulter";
   const reportKey = reportRoutes.find((r) => r.path === segment)?.key || "defaulter";
   const config = reportConfigs[reportKey];
 
