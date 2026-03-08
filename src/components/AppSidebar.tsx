@@ -93,8 +93,9 @@ const menuItems = [
     url: "/purchasing",
     icon: ShoppingBag,
     children: [
-      { title: "All Purchases", url: "/purchasing/all" },
-      { title: "New Purchase", url: "/purchasing/new" },
+      { title: "Suppliers", url: "/purchasing/suppliers" },
+      { title: "Purchase Order", url: "/purchasing/order" },
+      { title: "Purchase Orders", url: "/purchasing/orders" },
     ],
   },
   {
