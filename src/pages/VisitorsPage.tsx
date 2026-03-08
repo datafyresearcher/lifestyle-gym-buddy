@@ -1,6 +1,7 @@
 import PageContainer from "@/components/PageContainer";
 import { useState } from "react";
-import { Edit, Download, Search, X, UserPlus } from "lucide-react";
+import { Edit, Download, X, UserPlus } from "lucide-react";
+import * as XLSX from "xlsx";
 
 const mockVisitors = [
   { name: "Ali", mobile: "+923325658545", email: "---", date: "Saturday, March 7, 2026", time: "5:08 PM", totalFees: 400, discount: 0, tax: 0, paid: 400 },
@@ -23,9 +24,17 @@ export default function VisitorsPage() {
     return true;
   });
 
-  const clearSearch = () => {
-    setSearchName("");
-    setSearchMobile("");
+  const clearSearch = () => { setSearchName(""); setSearchMobile(""); };
+
+  const exportToExcel = () => {
+    const data = filtered.map((v) => ({
+      Name: v.name, Mobile: v.mobile, Email: v.email, Date: v.date, Time: v.time,
+      "Total Fees": v.totalFees, Discount: v.discount, Tax: v.tax, Paid: v.paid,
+    }));
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Visitors");
+    XLSX.writeFile(wb, "visitors.xlsx");
   };
 
   return (
@@ -44,7 +53,7 @@ export default function VisitorsPage() {
           <button className="mt-4" onClick={clearSearch}><X className="w-4 h-4 text-muted-foreground" /></button>
           <button className="mt-4"><UserPlus className="w-4 h-4 text-muted-foreground" /></button>
           <div className="flex-1" />
-          <button className="mt-4"><Download className="w-4 h-4 text-muted-foreground" /></button>
+          <button className="mt-4" onClick={exportToExcel}><Download className="w-4 h-4 text-muted-foreground" /></button>
         </div>
       </div>
 
