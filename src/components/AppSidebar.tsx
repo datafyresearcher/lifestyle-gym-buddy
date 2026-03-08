@@ -235,9 +235,10 @@ export function AppSidebar() {
                             <SidebarMenuSubItem key={child.title}>
                               <NavLink
                                 to={child.url}
-                                className="text-sidebar-foreground hover:text-sidebar-accent-foreground text-sm px-4 py-1.5 block"
+                                className="text-sidebar-foreground hover:text-sidebar-accent-foreground text-sm px-4 py-1.5 flex items-center gap-2"
                                 activeClassName="text-sidebar-primary font-medium"
                               >
+                                {(child as any).icon && <((child as any).icon) className="w-3.5 h-3.5" />}
                                 {child.title}
                               </NavLink>
                             </SidebarMenuSubItem>
