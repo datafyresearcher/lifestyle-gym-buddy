@@ -9,6 +9,12 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import * as XLSX from "xlsx";
 
+interface SummaryRow {
+  label: string;
+  key: string;
+  highlight?: boolean;
+}
+
 interface ReportConfig {
   title: string;
   breadcrumb: string;
@@ -17,6 +23,7 @@ interface ReportConfig {
   filters?: string[];
   extraFilters?: string[];
   emptyMessage?: string;
+  summaryRows?: SummaryRow[];
 }
 
 const reportConfigs: Record<string, ReportConfig> = {
@@ -85,6 +92,20 @@ const reportConfigs: Record<string, ReportConfig> = {
     ],
     filters: ["packageName"],
     extraFilters: ["enteredBy", "mode"],
+    summaryRows: [
+      { label: "Total Count", key: "_count" },
+      { label: "Member Sales", key: "_memberSales" },
+      { label: "Members Total Discount", key: "_memberDiscount" },
+      { label: "Members Total Sales", key: "_memberTotalSales" },
+      { label: "Trainer Sales", key: "_trainerSales" },
+      { label: "Trainer Total Discount", key: "_trainerDiscount" },
+      { label: "Trainer Total Sales", key: "_trainerTotalSales" },
+      { label: "Visitor Sales", key: "_visitorSales" },
+      { label: "Visitor Total Discount", key: "_visitorDiscount" },
+      { label: "Visitor Total Sales", key: "_visitorTotalSales", highlight: true },
+      { label: "Total Tax (Included)", key: "tax" },
+      { label: "Grand Total", key: "totalCollectedFee", highlight: true },
+    ],
   },
   billing: {
     title: "Billing Report",
@@ -124,43 +145,67 @@ const reportConfigs: Record<string, ReportConfig> = {
       { date: "04/03/26", totalSales: 15000, totalCollection: 15000, cashInHand: 10000, bankDeposit: 5000, expense: 1500, netCash: 8500 },
       { date: "05/03/26", totalSales: 28000, totalCollection: 26000, cashInHand: 18000, bankDeposit: 8000, expense: 2000, netCash: 16000 },
     ],
+    summaryRows: [
+      { label: "Total Count", key: "_count" },
+      { label: "Total Sales", key: "totalSales" },
+      { label: "Total Collection", key: "totalCollection" },
+      { label: "Total Expenses", key: "expense" },
+      { label: "Net Cash", key: "netCash", highlight: true },
+    ],
   },
   "pos-sales": {
     title: "POS Sales Report",
     breadcrumb: "POS Sales Report",
     columns: [
-      { key: "invoice", label: "Invoice #" },
-      { key: "date", label: "Date" },
-      { key: "product", label: "Product" },
-      { key: "qty", label: "Quantity" },
-      { key: "unitPrice", label: "Unit Price" },
+      { key: "invoiceNo", label: "Invoice No" },
+      { key: "invoiceDate", label: "Invoice Date" },
+      { key: "products", label: "Products" },
+      { key: "saleAmount", label: "Sale Amount" },
+      { key: "discount", label: "Discount" },
+      { key: "tax", label: "Tax" },
       { key: "total", label: "Total" },
-      { key: "soldBy", label: "Sold By" },
+      { key: "cashPaid", label: "Cash Paid" },
+      { key: "remainingBalance", label: "Remaining Balance" },
+      { key: "enteredBy", label: "Entered By" },
+      { key: "category", label: "Category" },
+      { key: "modeOfPayment", label: "Mode Of Payment" },
     ],
     data: [
-      { invoice: "POS-001", date: "01/03/26", product: "Water Bottle", qty: 5, unitPrice: 150, total: 750, soldBy: "Admin" },
-      { invoice: "POS-002", date: "02/03/26", product: "Red Bull", qty: 10, unitPrice: 300, total: 3000, soldBy: "Admin" },
-      { invoice: "POS-003", date: "03/03/26", product: "Protein Bar", qty: 8, unitPrice: 120, total: 960, soldBy: "Receptionist" },
-      { invoice: "POS-004", date: "04/03/26", product: "Whey Protein", qty: 2, unitPrice: 3500, total: 7000, soldBy: "Admin" },
-      { invoice: "POS-005", date: "05/03/26", product: "Gym Gloves", qty: 3, unitPrice: 500, total: 1500, soldBy: "Receptionist" },
+      { invoiceNo: "Inv#-SO-2026-3-3", invoiceDate: "Mar 6, 2026, 3:45:50 PM", products: "Water Bottles", saleAmount: 150, discount: 0, tax: 0, total: 150, cashPaid: 1000, remainingBalance: 0, enteredBy: "Admin", category: "Drinks", modeOfPayment: "Cash-Reception" },
+      { invoiceNo: "Inv#-SO-2026-3-2", invoiceDate: "Mar 5, 2026, 5:38:56 PM", products: "coke\nssss\nwater\nWater Bottles", saleAmount: 3520, discount: 0, tax: 66, total: 3586, cashPaid: 0, remainingBalance: 3586, enteredBy: "Admin", category: "Drinks", modeOfPayment: "Cash-Reception" },
+      { invoiceNo: "Inv#-SO-2026-3-1", invoiceDate: "Mar 3, 2026, 10:53:53 AM", products: "Apple juice", saleAmount: 100, discount: 50, tax: 5, total: 55, cashPaid: 0, remainingBalance: 55, enteredBy: "Admin", category: "Drinks", modeOfPayment: "Cash-Reception" },
+    ],
+    filters: ["category"],
+    extraFilters: ["enteredBy", "modeOfPayment"],
+    summaryRows: [
+      { label: "Total Count", key: "_count" },
+      { label: "Total Sales", key: "saleAmount" },
+      { label: "Total Discount", key: "discount" },
+      { label: "Total Tax", key: "tax" },
+      { label: "Grand Total", key: "total", highlight: true },
     ],
   },
   "purchase-history": {
     title: "Purchase History Report",
     breadcrumb: "Purchase History",
     columns: [
-      { key: "poNumber", label: "PO Number" },
-      { key: "date", label: "Date" },
+      { key: "orderNumber", label: "Order Number" },
+      { key: "subTotal", label: "Sub Total" },
+      { key: "products", label: "Products" },
+      { key: "createdDate", label: "Created Date" },
+      { key: "updatedBy", label: "Updated By" },
       { key: "supplier", label: "Supplier" },
-      { key: "items", label: "Items" },
-      { key: "total", label: "Total Amount" },
       { key: "status", label: "Status" },
     ],
     data: [
-      { poNumber: "PO-2026-001", date: "01/03/26", supplier: "Nutrition Hub", items: 5, total: 45000, status: "Received" },
-      { poNumber: "PO-2026-002", date: "03/03/26", supplier: "FitGear Co", items: 3, total: 22000, status: "Received" },
-      { poNumber: "PO-2026-003", date: "05/03/26", supplier: "BevCo", items: 10, total: 15000, status: "Pending" },
-      { poNumber: "PO-2026-004", date: "06/03/26", supplier: "Supplement World", items: 2, total: 35000, status: "In Transit" },
+      { orderNumber: "Inv#-PO-2026-3-1", subTotal: 19550, products: 2, createdDate: "5/3/26, 5:43 PM", updatedBy: "Admin", supplier: "Muhammad Aqeel", status: "UNFULFILLED" },
+    ],
+    filters: ["status"],
+    summaryRows: [
+      { label: "Total Count", key: "_count" },
+      { label: "Total Purchased Amount", key: "subTotal" },
+      { label: "Total Fulfilled Orders", key: "_fulfilled" },
+      { label: "Total Unfulfilled Orders", key: "_unfulfilled" },
     ],
   },
   "members-attendance": {
@@ -168,6 +213,7 @@ const reportConfigs: Record<string, ReportConfig> = {
     breadcrumb: "Members Attendance",
     columns: [
       { key: "memberId", label: "Member ID" },
+      { key: "photo", label: "Photo" },
       { key: "name", label: "Name" },
       { key: "package", label: "Package" },
       { key: "totalDays", label: "Total Days" },
@@ -176,13 +222,17 @@ const reportConfigs: Record<string, ReportConfig> = {
       { key: "percentage", label: "Attendance %" },
     ],
     data: [
-      { memberId: "M-1001", name: "Ahmed Khan", package: "Premium", totalDays: 26, present: 22, absent: 4, percentage: "85%" },
-      { memberId: "M-1005", name: "Bilal Shah", package: "Standard", totalDays: 26, present: 18, absent: 8, percentage: "69%" },
-      { memberId: "M-1012", name: "Usman Ali", package: "Basic", totalDays: 26, present: 24, absent: 2, percentage: "92%" },
-      { memberId: "M-1018", name: "Sara Ahmed", package: "Premium", totalDays: 26, present: 20, absent: 6, percentage: "77%" },
-      { memberId: "M-1025", name: "Hamza Tariq", package: "Standard", totalDays: 26, present: 15, absent: 11, percentage: "58%" },
+      { memberId: "M-1001", photo: "/avatars/avatar-1.jpg", name: "Ahmed Khan", package: "Premium", totalDays: 26, present: 22, absent: 4, percentage: "85%" },
+      { memberId: "M-1005", photo: "/avatars/avatar-2.jpg", name: "Bilal Shah", package: "Standard", totalDays: 26, present: 18, absent: 8, percentage: "69%" },
+      { memberId: "M-1012", photo: "/avatars/avatar-3.jpg", name: "Usman Ali", package: "Basic", totalDays: 26, present: 24, absent: 2, percentage: "92%" },
+      { memberId: "M-1018", photo: "/avatars/avatar-4.jpg", name: "Sara Ahmed", package: "Premium", totalDays: 26, present: 20, absent: 6, percentage: "77%" },
+      { memberId: "M-1025", photo: "/avatars/avatar-5.jpg", name: "Hamza Tariq", package: "Standard", totalDays: 26, present: 15, absent: 11, percentage: "58%" },
     ],
     filters: ["package"],
+    summaryRows: [
+      { label: "Total Count", key: "_count" },
+      { label: "Avg Attendance", key: "_avgAttendance" },
+    ],
   },
   "trainers-attendance": {
     title: "Trainers Attendance Report",
@@ -517,12 +567,46 @@ function ReportView({ reportKey }: ReportViewProps) {
         {/* Summary */}
         <div className="flex border-t border-border">
           <div className="flex-1" />
-          <div className="border-l border-border">
-            <div className="px-4 py-2 font-semibold text-center border-b border-border">Summary</div>
-            <div className="flex justify-between px-4 py-2 gap-8">
-              <span className="text-sm">Total Count</span>
-              <span className="font-semibold">{filtered.length}</span>
-            </div>
+          <div className="border-l border-border min-w-[320px]">
+            <div className="px-4 py-2 font-semibold text-center border-b border-border bg-muted/30">Summary</div>
+            {(config.summaryRows || [{ label: "Total Count", key: "_count" }]).map((sr, i) => {
+              let value: number;
+              const isSalesReport = reportKey === "sales";
+              const members = isSalesReport ? filtered.filter((r) => String(r.packageName) !== "Visitor/Day Pass" && String(r.packageName) !== "POS Sales") : [];
+              const visitors = isSalesReport ? filtered.filter((r) => String(r.packageName) === "Visitor/Day Pass") : [];
+              if (sr.key === "_count") {
+                value = filtered.length;
+              } else if (sr.key === "_fulfilled") {
+                value = filtered.filter((r) => String(r.status).toUpperCase() === "FULFILLED" || String(r.status) === "Received").length;
+              } else if (sr.key === "_unfulfilled") {
+                value = filtered.filter((r) => String(r.status).toUpperCase() === "UNFULFILLED" || String(r.status) === "Pending" || String(r.status) === "In Transit").length;
+              } else if (sr.key === "_avgAttendance") {
+                const vals = filtered.map((r) => parseInt(String(r.percentage)) || 0);
+                value = vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : 0;
+              } else if (sr.key === "_memberSales") {
+                value = members.reduce((s, r) => s + (Number(r.totalFees) || 0), 0);
+              } else if (sr.key === "_memberDiscount") {
+                value = members.reduce((s, r) => s + (Number(r.discount) || 0), 0);
+              } else if (sr.key === "_memberTotalSales") {
+                value = members.reduce((s, r) => s + (Number(r.totalCollectedFee) || 0), 0);
+              } else if (sr.key === "_trainerSales" || sr.key === "_trainerDiscount" || sr.key === "_trainerTotalSales") {
+                value = 0;
+              } else if (sr.key === "_visitorSales") {
+                value = visitors.reduce((s, r) => s + (Number(r.totalFees) || 0), 0);
+              } else if (sr.key === "_visitorDiscount") {
+                value = visitors.reduce((s, r) => s + (Number(r.discount) || 0), 0);
+              } else if (sr.key === "_visitorTotalSales") {
+                value = visitors.reduce((s, r) => s + (Number(r.totalCollectedFee) || 0), 0);
+              } else {
+                value = filtered.reduce((s, r) => s + (typeof r[sr.key] === "number" ? Number(r[sr.key]) : 0), 0);
+              }
+              return (
+                <div key={i} className={`flex justify-between px-4 py-2 border-b border-border gap-8 ${sr.highlight ? "bg-muted/40 font-bold" : ""}`}>
+                  <span className="text-sm">{sr.label}</span>
+                  <span className="font-semibold">{sr.key === "_avgAttendance" ? `${value}%` : value.toLocaleString()}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
 
