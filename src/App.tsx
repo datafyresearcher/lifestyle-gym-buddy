@@ -30,7 +30,7 @@ const App = () => (
             <Route path="/members" element={<MembersPage />} />
             <Route path="/inactive-members" element={<InactiveMembersPage />} />
             <Route path="/visitors" element={<VisitorsPage />} />
-            <Route path="/enquiries" element={<PlaceholderPage title="Enquiry Management" breadcrumbs={[{ label: "Enquiry Management" }]} />} />
+            <Route path="/enquiries" element={<EnquiriesPage />} />
             <Route path="/activity-logs" element={<PlaceholderPage title="Activity Logs" breadcrumbs={[{ label: "Activity Logs" }]} />} />
             <Route path="/attendance" element={<AttendancePage />} />
             <Route path="/upcoming-dues/*" element={<PlaceholderPage title="Upcoming Dues" breadcrumbs={[{ label: "Upcoming Dues" }]} />} />
