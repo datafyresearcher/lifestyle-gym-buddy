@@ -53,7 +53,7 @@ const App = () => (
             <Route path="/activity-logs" element={<ActivityLogsPage />} />
             <Route path="/attendance" element={<AttendancePage />} />
             <Route path="/upcoming-dues/*" element={<UpcomingDuesPage />} />
-            <Route path="/settings/*" element={<PlaceholderPage title="Settings" breadcrumbs={[{ label: "Settings" }]} />} />
+            <Route path="/settings/*" element={<SettingsPage />} />
             <Route path="/reports/*" element={<ReportsPage />} />
             <Route path="/requests" element={<RequestsPage />} />
             <Route path="/packages" element={<PackagesPage />} />
