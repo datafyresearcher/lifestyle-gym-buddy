@@ -22,6 +22,7 @@ export default function MembersPage() {
   const [searchMobile, setSearchMobile] = useState("");
   const [searchEmail, setSearchEmail] = useState("");
   const [searchCard, setSearchCard] = useState("");
+  const [selectedMember, setSelectedMember] = useState<typeof mockMembers[0] | null>(null);
 
   const filtered = mockMembers.filter((m) => {
     if (searchName && !m.name.toLowerCase().includes(searchName.toLowerCase())) return false;
