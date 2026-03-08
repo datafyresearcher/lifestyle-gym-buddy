@@ -155,6 +155,14 @@ export function AppSidebar() {
   const navigate = useNavigate();
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const [selectedLang, setSelectedLang] = useState("English");
+  const languages = [
+    { label: "English", value: "English" },
+    { label: "عربی", value: "عربی" },
+    { label: "اردو", value: "اردو" },
+    { label: "پشتو", value: "پشتو" },
+  ];
 
   const isActive = (url: string) => location.pathname === url || location.pathname.startsWith(url + "/");
 
