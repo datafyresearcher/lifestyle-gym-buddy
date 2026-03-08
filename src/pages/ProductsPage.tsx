@@ -188,6 +188,44 @@ export default function ProductsPage() {
   const [editStorageMax, setEditStorageMax] = useState(0);
   const [editRemarks, setEditRemarks] = useState("");
 
+  // Photo handling
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const productFileRef = useRef<HTMLInputElement>(null);
+  const productVideoRef = useRef<HTMLVideoElement>(null);
+  const productCanvasRef = useRef<HTMLCanvasElement>(null);
+  const productStreamRef = useRef<MediaStream | null>(null);
+  const [productCameraOpen, setProductCameraOpen] = useState(false);
+
+  const handleProductUpload = () => productFileRef.current?.click();
+  const handleProductFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => { setImagePreview(ev.target?.result as string); toast({ title: "Image uploaded" }); };
+      reader.readAsDataURL(file);
+    }
+  };
+  const handleProductRemoveImage = () => { setImagePreview(null); toast({ title: "Image removed" }); };
+  const handleProductCaptureStart = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+      productStreamRef.current = stream;
+      setProductCameraOpen(true);
+      setTimeout(() => { if (productVideoRef.current) { productVideoRef.current.srcObject = stream; productVideoRef.current.play(); } }, 100);
+    } catch { toast({ title: "Unable to access camera", variant: "destructive" }); }
+  };
+  const handleProductCapture = () => {
+    if (productVideoRef.current && productCanvasRef.current) {
+      const canvas = productCanvasRef.current;
+      canvas.width = productVideoRef.current.videoWidth;
+      canvas.height = productVideoRef.current.videoHeight;
+      const ctx = canvas.getContext("2d");
+      if (ctx) { ctx.drawImage(productVideoRef.current, 0, 0); setImagePreview(canvas.toDataURL("image/png")); toast({ title: "Photo captured" }); }
+    }
+    stopProductCamera();
+  };
+  const stopProductCamera = () => { productStreamRef.current?.getTracks().forEach(t => t.stop()); productStreamRef.current = null; setProductCameraOpen(false); };
+
   const filtered = products.filter((p) => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.code.includes(search);
     const matchTab =
