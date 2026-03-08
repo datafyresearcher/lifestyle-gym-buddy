@@ -9,6 +9,7 @@ import { toast } from "@/hooks/use-toast";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const mockMembers = [
+  // Page 1
   { id: 122, name: "Ahmed", phone: "+923325685258", email: "ahmed@mail.com", cardNo: "C-122", dueDate: "08th Apr", membership: "Monthly", avatar: "/avatars/avatar-1.jpg" },
   { id: 121, name: "Uzair Ali", phone: "+923437033333", email: "uzair@mail.com", cardNo: "C-121", dueDate: "03rd Apr", membership: "Family", avatar: "/avatars/avatar-8.jpg" },
   { id: 120, name: "Hifsa Ali", phone: "+923325682852", email: "hifsa@mail.com", cardNo: "C-120", dueDate: "03rd Apr", membership: "Monthly", avatar: "/avatars/avatar-2.jpg" },
@@ -17,7 +18,18 @@ const mockMembers = [
   { id: 116, name: "Ayesha", phone: "+923458547552", email: "ayesha@mail.com", cardNo: "C-116", dueDate: "20th Mar", membership: "Group", avatar: "/avatars/avatar-4.jpg" },
   { id: 115, name: "Hussain Khan", phone: "+923325685258", email: "hussain@mail.com", cardNo: "C-115", dueDate: "15th Mar", membership: "Yearly", avatar: "/avatars/avatar-7.jpg" },
   { id: 114, name: "Hamza", phone: "+923437033333", email: "hamza@mail.com", cardNo: "C-114", dueDate: "10th Mar", membership: "Monthly", avatar: "/avatars/avatar-6.jpg" },
+  // Page 2
+  { id: 81, name: "Masood Ali", phone: "+923335585885", email: "masood@mail.com", cardNo: "C-81", dueDate: "12th Jan", membership: "Monthly", avatar: "/avatars/avatar-9.jpg" },
+  { id: 80, name: "Mubbashir", phone: "+923164440333", email: "mubbashir@mail.com", cardNo: "C-80", dueDate: "11th Feb", membership: "Monthly", avatar: "/avatars/avatar-10.jpg" },
+  { id: 79, name: "Moazzam", phone: "+923119877778", email: "moazzam@mail.com", cardNo: "C-79", dueDate: "10th Feb", membership: "VIP", avatar: "/avatars/avatar-11.jpg" },
+  { id: 78, name: "Aftab", phone: "+923216549873", email: "aftab@mail.com", cardNo: "C-78", dueDate: "10th Jan", membership: "Monthly", avatar: "/avatars/avatar-12.jpg" },
+  { id: 77, name: "Wasim", phone: "+923358548555", email: "wasim@mail.com", cardNo: "C-77", dueDate: "09th Jan", membership: "Monthly", avatar: "/avatars/avatar-13.jpg" },
+  { id: 76, name: "Adeel", phone: "+923333585545", email: "adeel@mail.com", cardNo: "C-76", dueDate: "09th Jan", membership: "Monthly", avatar: "/avatars/avatar-14.jpg" },
+  { id: 75, name: "Asad", phone: "+923335558578", email: "asad@mail.com", cardNo: "C-75", dueDate: "09th Feb", membership: "Family", avatar: "/avatars/avatar-15.jpg" },
+  { id: 74, name: "Hamza", phone: "+923458677677", email: "hamza2@mail.com", cardNo: "C-74", dueDate: "09th Jan", membership: "Monthly", avatar: "/avatars/avatar-16.jpg" },
 ];
+
+const ITEMS_PER_PAGE = 8;
 
 type ConfirmAction = { type: "deactivate" | "freeze" | "sync"; member: typeof mockMembers[0] } | null;
 
@@ -30,6 +42,7 @@ export default function MembersPage() {
   const [searchCard, setSearchCard] = useState("");
   const [selectedMember, setSelectedMember] = useState<typeof mockMembers[0] | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filtered = mockMembers.filter((m) => {
     if (searchName && !m.name.toLowerCase().includes(searchName.toLowerCase())) return false;
@@ -39,6 +52,9 @@ export default function MembersPage() {
     if (searchCard && !m.cardNo.toLowerCase().includes(searchCard.toLowerCase())) return false;
     return true;
   });
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const paginatedMembers = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   const clearSearch = () => {
     setSearchName("");
@@ -135,18 +151,25 @@ export default function MembersPage() {
 
       {/* Pagination */}
       <div className="pagination-bar mb-4">
-        <button className="text-xs">|&lt;</button>
-        <button className="text-xs">&lt;</button>
-        <span className="bg-primary text-primary-foreground w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
-        <span className="text-xs">2</span>
-        <button className="text-xs">&gt;</button>
-        <button className="text-xs">&gt;|</button>
+        <button className="text-xs" onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>|&lt;</button>
+        <button className="text-xs" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>&lt;</button>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+          <button
+            key={page}
+            onClick={() => setCurrentPage(page)}
+            className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${currentPage === page ? "bg-primary text-primary-foreground" : ""}`}
+          >
+            {page}
+          </button>
+        ))}
+        <button className="text-xs" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>&gt;</button>
+        <button className="text-xs" onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>&gt;|</button>
       </div>
 
       {/* Card View */}
       {view === "card" ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((member) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {paginatedMembers.map((member) => (
             <div key={member.id} className="member-card">
               <div className="member-card-header">
                 <div className="flex items-center gap-2">
@@ -184,7 +207,7 @@ export default function MembersPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((member) => (
+              {paginatedMembers.map((member) => (
                 <tr key={member.id}>
                   <td>{member.id}</td>
                   <td className="flex items-center gap-2">
