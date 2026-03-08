@@ -191,8 +191,8 @@ export default function MembersPage() {
                   <td>{member.dueDate}</td>
                   <td>
                     <div className="flex gap-1">
-                      <button className="action-btn action-btn-danger"><XCircle className="w-3 h-3" /></button>
-                      <button className="action-btn action-btn-primary"><Edit className="w-3 h-3" /></button>
+                      <button className="action-btn action-btn-danger" onClick={() => setSelectedMember(member)}><XCircle className="w-3 h-3" /></button>
+                      <button className="action-btn action-btn-primary" onClick={() => setSelectedMember(member)}><Edit className="w-3 h-3" /></button>
                     </div>
                   </td>
                 </tr>
