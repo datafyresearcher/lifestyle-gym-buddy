@@ -1,8 +1,12 @@
 import PageContainer from "@/components/PageContainer";
 import MemberDetailDialog from "@/components/MemberDetailDialog";
 import { useState } from "react";
-import { XCircle, Edit, Camera, User, Settings, Phone, Plus, List, LayoutGrid } from "lucide-react";
+import { XCircle, Edit, Camera, User, Settings, Phone, Plus, List, LayoutGrid, CreditCard, Snowflake, RefreshCw, MessageCircle, X, CheckCircle, AlertTriangle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const mockMembers = [
   { id: 122, name: "Ahmed", phone: "+923325685258", email: "ahmed@mail.com", cardNo: "C-122", dueDate: "08th Apr", membership: "Monthly", avatar: "/avatars/avatar-1.jpg" },
@@ -15,6 +19,8 @@ const mockMembers = [
   { id: 114, name: "Hamza", phone: "+923437033333", email: "hamza@mail.com", cardNo: "C-114", dueDate: "10th Mar", membership: "Monthly", avatar: "/avatars/avatar-6.jpg" },
 ];
 
+type ConfirmAction = { type: "deactivate" | "freeze" | "sync"; member: typeof mockMembers[0] } | null;
+
 export default function MembersPage() {
   const [view, setView] = useState<"card" | "list">("card");
   const [searchName, setSearchName] = useState("");
@@ -23,6 +29,7 @@ export default function MembersPage() {
   const [searchEmail, setSearchEmail] = useState("");
   const [searchCard, setSearchCard] = useState("");
   const [selectedMember, setSelectedMember] = useState<typeof mockMembers[0] | null>(null);
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
 
   const filtered = mockMembers.filter((m) => {
     if (searchName && !m.name.toLowerCase().includes(searchName.toLowerCase())) return false;
@@ -41,45 +48,64 @@ export default function MembersPage() {
     setSearchCard("");
   };
 
+  const handleWhatsApp = (member: typeof mockMembers[0]) => {
+    const rawPhone = member.phone.replace(/[^0-9]/g, "");
+    const phone = rawPhone.startsWith("0") ? "92" + rawPhone.slice(1) : rawPhone;
+    const message = `*Upcoming Payment Reminder*\n\n*Hi ${member.name}*, This is a friendly reminder that your *membership fee* is due soon. To avoid any service interruptions, we recommend completing the payment in advance.\n\nYou may pay online or visit the reception.\n\nThank you!\n*Lifestyle Reset*`;
+    window.open(`https://api.whatsapp.com/send/?phone=${phone}&text=${encodeURIComponent(message)}`, "_blank");
+  };
+
+  const handleConfirm = () => {
+    if (!confirmAction) return;
+    const { type, member } = confirmAction;
+    if (type === "deactivate") toast({ title: "Member Deactivated", description: `${member.name} has been deactivated.` });
+    else if (type === "freeze") toast({ title: "Member Frozen", description: `${member.name} membership has been frozen.` });
+    else if (type === "sync") toast({ title: "Synced", description: `${member.name} data has been synced.` });
+    setConfirmAction(null);
+  };
+
+  const actionButtons = (member: typeof mockMembers[0]) => (
+    <TooltipProvider delayDuration={200}>
+      <div className="flex items-center gap-2 justify-center">
+        <Tooltip><TooltipTrigger asChild>
+          <button className="action-btn action-btn-danger" onClick={() => setConfirmAction({ type: "deactivate", member })}><XCircle className="w-3 h-3" /></button>
+        </TooltipTrigger><TooltipContent>Deactivate Member</TooltipContent></Tooltip>
+
+        <Tooltip><TooltipTrigger asChild>
+          <button className="action-btn action-btn-primary" onClick={() => setSelectedMember(member)}><Edit className="w-3 h-3" /></button>
+        </TooltipTrigger><TooltipContent>Edit Member</TooltipContent></Tooltip>
+
+        <Tooltip><TooltipTrigger asChild>
+          <button className="action-btn action-btn-info" onClick={() => setSelectedMember(member)}><CreditCard className="w-3 h-3" /></button>
+        </TooltipTrigger><TooltipContent>Add Member Fee</TooltipContent></Tooltip>
+
+        <Tooltip><TooltipTrigger asChild>
+          <button className="action-btn" style={{ background: "hsl(40, 95%, 50%)", color: "white" }} onClick={() => setConfirmAction({ type: "freeze", member })}><Snowflake className="w-3 h-3" /></button>
+        </TooltipTrigger><TooltipContent>Freeze Member</TooltipContent></Tooltip>
+
+        <Tooltip><TooltipTrigger asChild>
+          <button className="action-btn" style={{ background: "hsl(0, 0%, 75%)", color: "white" }} onClick={() => setConfirmAction({ type: "sync", member })}><RefreshCw className="w-3 h-3" /></button>
+        </TooltipTrigger><TooltipContent>Sync Again</TooltipContent></Tooltip>
+
+        <Tooltip><TooltipTrigger asChild>
+          <button className="action-btn action-btn-success" onClick={() => handleWhatsApp(member)}><MessageCircle className="w-3 h-3" /></button>
+        </TooltipTrigger><TooltipContent>Send WhatsApp Message</TooltipContent></Tooltip>
+      </div>
+    </TooltipProvider>
+  );
+
   return (
     <PageContainer title="Members" breadcrumbs={[{ label: "Member Management" }, { label: "All Members" }]}>
       {/* Search Bar */}
       <div className="bg-card border border-border rounded-lg p-4 mb-4">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-3">
-          <input
-            placeholder="Search By Name"
-            className="search-input"
-            value={searchName}
-            onChange={(e) => setSearchName(e.target.value)}
-          />
-          <input
-            placeholder="Search By Membership"
-            className="search-input"
-            value={searchMembership}
-            onChange={(e) => setSearchMembership(e.target.value)}
-          />
-          <input
-            placeholder="Search By Mobile"
-            className="search-input"
-            value={searchMobile}
-            onChange={(e) => setSearchMobile(e.target.value)}
-          />
-          <input
-            placeholder="Search By Email"
-            className="search-input"
-            value={searchEmail}
-            onChange={(e) => setSearchEmail(e.target.value)}
-          />
-          <input
-            placeholder="Search By Card Number"
-            className="search-input"
-            value={searchCard}
-            onChange={(e) => setSearchCard(e.target.value)}
-          />
+          <input placeholder="Search By Name" className="search-input" value={searchName} onChange={(e) => setSearchName(e.target.value)} />
+          <input placeholder="Search By Membership" className="search-input" value={searchMembership} onChange={(e) => setSearchMembership(e.target.value)} />
+          <input placeholder="Search By Mobile" className="search-input" value={searchMobile} onChange={(e) => setSearchMobile(e.target.value)} />
+          <input placeholder="Search By Email" className="search-input" value={searchEmail} onChange={(e) => setSearchEmail(e.target.value)} />
+          <input placeholder="Search By Card Number" className="search-input" value={searchCard} onChange={(e) => setSearchCard(e.target.value)} />
           <Select>
-            <SelectTrigger>
-              <SelectValue placeholder="Package Type: All" />
-            </SelectTrigger>
+            <SelectTrigger><SelectValue placeholder="Package Type: All" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
               <SelectItem value="monthly">Monthly</SelectItem>
@@ -89,10 +115,7 @@ export default function MembersPage() {
         </div>
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
-            <button
-              onClick={clearSearch}
-              className="bg-sidebar text-sidebar-accent-foreground px-4 py-2 rounded text-sm flex items-center gap-2"
-            >
+            <button onClick={clearSearch} className="bg-sidebar text-sidebar-accent-foreground px-4 py-2 rounded text-sm flex items-center gap-2">
               <XCircle className="w-3 h-3" /> Clear Search
             </button>
             <button className="bg-primary text-primary-foreground px-4 py-2 rounded text-sm flex items-center gap-2">
@@ -100,16 +123,10 @@ export default function MembersPage() {
             </button>
           </div>
           <div className="flex gap-1">
-            <button
-              onClick={() => setView("list")}
-              className={`p-2 rounded ${view === "list" ? "bg-sidebar text-sidebar-accent-foreground" : "bg-muted"}`}
-            >
+            <button onClick={() => setView("list")} className={`p-2 rounded ${view === "list" ? "bg-sidebar text-sidebar-accent-foreground" : "bg-muted"}`}>
               <List className="w-4 h-4" />
             </button>
-            <button
-              onClick={() => setView("card")}
-              className={`p-2 rounded ${view === "card" ? "bg-sidebar text-sidebar-accent-foreground" : "bg-muted"}`}
-            >
+            <button onClick={() => setView("card")} className={`p-2 rounded ${view === "card" ? "bg-sidebar text-sidebar-accent-foreground" : "bg-muted"}`}>
               <LayoutGrid className="w-4 h-4" />
             </button>
           </div>
@@ -141,26 +158,14 @@ export default function MembersPage() {
                 </button>
               </div>
               <div className="p-4">
-                {/* Avatar image */}
                 <div className="w-full flex items-center justify-center mb-3 py-2">
-                  <img
-                    src={member.avatar}
-                    alt={member.name}
-                    className="w-32 h-40 object-cover rounded"
-                  />
+                  <img src={member.avatar} alt={member.name} className="w-32 h-40 object-cover rounded" />
                 </div>
                 <div className="flex items-center justify-between text-sm mb-3">
                   <span className="text-muted-foreground">{member.phone}</span>
                   <span>Due Dy: <strong>{member.dueDate}</strong></span>
                 </div>
-                <div className="flex items-center gap-2 justify-center">
-                  <button className="action-btn action-btn-danger" onClick={() => setSelectedMember(member)}><XCircle className="w-3 h-3" /></button>
-                  <button className="action-btn action-btn-primary" onClick={() => setSelectedMember(member)}><Edit className="w-3 h-3" /></button>
-                  <button className="action-btn action-btn-info"><Camera className="w-3 h-3" /></button>
-                  <button className="action-btn" style={{background: "hsl(280, 65%, 50%)", color: "white"}} onClick={() => setSelectedMember(member)}><User className="w-3 h-3" /></button>
-                  <button className="action-btn action-btn-success" onClick={() => setSelectedMember(member)}><Settings className="w-3 h-3" /></button>
-                  <button className="action-btn" style={{background: "hsl(145, 65%, 42%)", color: "white"}}><Phone className="w-3 h-3" /></button>
-                </div>
+                {actionButtons(member)}
               </div>
             </div>
           ))}
@@ -189,12 +194,7 @@ export default function MembersPage() {
                   <td>{member.phone}</td>
                   <td>{member.membership}</td>
                   <td>{member.dueDate}</td>
-                  <td>
-                    <div className="flex gap-1">
-                      <button className="action-btn action-btn-danger" onClick={() => setSelectedMember(member)}><XCircle className="w-3 h-3" /></button>
-                      <button className="action-btn action-btn-primary" onClick={() => setSelectedMember(member)}><Edit className="w-3 h-3" /></button>
-                    </div>
-                  </td>
+                  <td>{actionButtons(member)}</td>
                 </tr>
               ))}
             </tbody>
@@ -207,6 +207,30 @@ export default function MembersPage() {
         open={selectedMember !== null}
         onOpenChange={(open) => { if (!open) setSelectedMember(null); }}
       />
+
+      {/* Confirmation Dialog */}
+      <Dialog open={confirmAction !== null} onOpenChange={() => setConfirmAction(null)}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Confirmation</DialogTitle>
+            <DialogDescription>Please confirm this action.</DialogDescription>
+          </DialogHeader>
+          <div className="flex items-center gap-3 py-4">
+            <AlertTriangle className="w-6 h-6 text-[hsl(var(--warning))]" />
+            <span>
+              Are you sure you want to {confirmAction?.type === "deactivate" ? "DeActivate" : confirmAction?.type === "freeze" ? "Freeze" : "Sync"} member <strong>{confirmAction?.member.name}</strong>?
+            </span>
+          </div>
+          <DialogFooter>
+            <Button variant="secondary" onClick={() => setConfirmAction(null)}>
+              <X className="w-4 h-4 mr-1" /> No
+            </Button>
+            <Button onClick={handleConfirm} className="bg-sidebar text-sidebar-foreground">
+              <CheckCircle className="w-4 h-4 mr-1" /> Yes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </PageContainer>
   );
 }
