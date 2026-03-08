@@ -229,7 +229,7 @@ export function AppSidebar() {
                       </div>
                     )}
                   </div>
-                  <button className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+                  <button onClick={() => setLogoutOpen(true)} className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
                     <LogOut className="w-4 h-4" />
                     <span>Logout</span>
                   </button>
