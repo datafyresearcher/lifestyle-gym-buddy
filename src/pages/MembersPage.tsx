@@ -2,6 +2,7 @@ import PageContainer from "@/components/PageContainer";
 import { useState } from "react";
 import { Search, XCircle, Edit, Camera, User, Settings, MessageCircle, Phone, Plus, List, LayoutGrid } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const mockMembers = [
   { id: 122, name: "Ahmed", phone: "+923325685258", email: "ahmed@mail.com", cardNo: "C-122", dueDate: "08th Apr", membership: "Monthly" },
