@@ -150,6 +150,21 @@ export default function Dashboard() {
           </ResponsiveContainer>
         </div>
       </div>
+
+      {/* Footer */}
+      <div className="mt-8 py-6 border-t border-border text-center text-sm text-muted-foreground space-y-1">
+        <p className="font-semibold text-foreground">Powered by Lifestyle Reset</p>
+        <p>
+          <a href="https://wa.me/923042451070" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+            📱 +92-304-2451070
+          </a>
+        </p>
+        <p>
+          <a href="mailto:researcher@datafyassociates.com" className="hover:text-primary">
+            ✉️ researcher@datafyassociates.com
+          </a>
+        </p>
+      </div>
     </PageContainer>
   );
 }
