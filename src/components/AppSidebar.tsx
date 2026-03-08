@@ -143,6 +143,7 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const location = useLocation();
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
+  const [adminMenuOpen, setAdminMenuOpen] = useState(false);
 
   const isActive = (url: string) => location.pathname === url || location.pathname.startsWith(url + "/");
 
