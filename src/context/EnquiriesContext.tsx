@@ -25,6 +25,7 @@ const initialEnquiries: Enquiry[] = [
 interface EnquiriesContextType {
   enquiries: Enquiry[];
   addEnquiry: (enquiry: Enquiry) => void;
+  updateEnquiry: (index: number, enquiry: Enquiry) => void;
   removeEnquiry: (index: number) => void;
 }
 
@@ -37,12 +38,16 @@ export function EnquiriesProvider({ children }: { children: ReactNode }) {
     setEnquiries((prev) => [enquiry, ...prev]);
   };
 
+  const updateEnquiry = (index: number, enquiry: Enquiry) => {
+    setEnquiries((prev) => prev.map((e, i) => (i === index ? enquiry : e)));
+  };
+
   const removeEnquiry = (index: number) => {
     setEnquiries((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
-    <EnquiriesContext.Provider value={{ enquiries, addEnquiry, removeEnquiry }}>
+    <EnquiriesContext.Provider value={{ enquiries, addEnquiry, updateEnquiry, removeEnquiry }}>
       {children}
     </EnquiriesContext.Provider>
   );
