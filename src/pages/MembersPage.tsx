@@ -4,19 +4,15 @@ import { XCircle, Edit, Camera, User, Settings, Phone, Plus, List, LayoutGrid } 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const mockMembers = [
-  { id: 122, name: "Ahmed", phone: "+923325685258", email: "ahmed@mail.com", cardNo: "C-122", dueDate: "08th Apr", membership: "Monthly" },
-  { id: 121, name: "Uzair Ali", phone: "+923437033333", email: "uzair@mail.com", cardNo: "C-121", dueDate: "03rd Apr", membership: "Family" },
-  { id: 120, name: "Hifsa Ali", phone: "+923325682852", email: "hifsa@mail.com", cardNo: "C-120", dueDate: "03rd Apr", membership: "Monthly" },
-  { id: 118, name: "Aman", phone: "+923335852554", email: "aman@mail.com", cardNo: "C-118", dueDate: "25th Apr", membership: "VIP" },
-  { id: 117, name: "Ahmed", phone: "+923355748558", email: "ahmed2@mail.com", cardNo: "C-117", dueDate: "25th Mar", membership: "Monthly" },
-  { id: 116, name: "Ayesha", phone: "+923458547552", email: "ayesha@mail.com", cardNo: "C-116", dueDate: "20th Mar", membership: "Group" },
-  { id: 115, name: "Hussain Khan", phone: "+923325685258", email: "hussain@mail.com", cardNo: "C-115", dueDate: "15th Mar", membership: "Yearly" },
-  { id: 114, name: "Hamza", phone: "+923437033333", email: "hamza@mail.com", cardNo: "C-114", dueDate: "10th Mar", membership: "Monthly" },
+  { id: 122, name: "Ahmed", phone: "+923325685258", email: "ahmed@mail.com", cardNo: "C-122", dueDate: "08th Apr", membership: "Monthly", avatar: "/avatars/avatar-1.jpg" },
+  { id: 121, name: "Uzair Ali", phone: "+923437033333", email: "uzair@mail.com", cardNo: "C-121", dueDate: "03rd Apr", membership: "Family", avatar: "/avatars/avatar-8.jpg" },
+  { id: 120, name: "Hifsa Ali", phone: "+923325682852", email: "hifsa@mail.com", cardNo: "C-120", dueDate: "03rd Apr", membership: "Monthly", avatar: "/avatars/avatar-2.jpg" },
+  { id: 118, name: "Aman", phone: "+923335852554", email: "aman@mail.com", cardNo: "C-118", dueDate: "25th Apr", membership: "VIP", avatar: "/avatars/avatar-3.jpg" },
+  { id: 117, name: "Ahmed", phone: "+923355748558", email: "ahmed2@mail.com", cardNo: "C-117", dueDate: "25th Mar", membership: "Monthly", avatar: "/avatars/avatar-5.jpg" },
+  { id: 116, name: "Ayesha", phone: "+923458547552", email: "ayesha@mail.com", cardNo: "C-116", dueDate: "20th Mar", membership: "Group", avatar: "/avatars/avatar-4.jpg" },
+  { id: 115, name: "Hussain Khan", phone: "+923325685258", email: "hussain@mail.com", cardNo: "C-115", dueDate: "15th Mar", membership: "Yearly", avatar: "/avatars/avatar-7.jpg" },
+  { id: 114, name: "Hamza", phone: "+923437033333", email: "hamza@mail.com", cardNo: "C-114", dueDate: "10th Mar", membership: "Monthly", avatar: "/avatars/avatar-6.jpg" },
 ];
-
-function getInitials(name: string) {
-  return name.split(" ").map(n => n[0]).join("").toUpperCase();
-}
 
 export default function MembersPage() {
   const [view, setView] = useState<"card" | "list">("card");
@@ -27,12 +23,12 @@ export default function MembersPage() {
   const [searchCard, setSearchCard] = useState("");
 
   const filtered = mockMembers.filter((m) => {
-    const matchName = searchName === "" || m.name.toLowerCase().includes(searchName.toLowerCase());
-    const matchMembership = searchMembership === "" || m.membership.toLowerCase().includes(searchMembership.toLowerCase());
-    const matchMobile = searchMobile === "" || m.phone.includes(searchMobile);
-    const matchEmail = searchEmail === "" || m.email.toLowerCase().includes(searchEmail.toLowerCase());
-    const matchCard = searchCard === "" || m.cardNo.toLowerCase().includes(searchCard.toLowerCase());
-    return matchName && matchMembership && matchMobile && matchEmail && matchCard;
+    if (searchName && !m.name.toLowerCase().includes(searchName.toLowerCase())) return false;
+    if (searchMembership && !m.membership.toLowerCase().includes(searchMembership.toLowerCase())) return false;
+    if (searchMobile && !m.phone.includes(searchMobile)) return false;
+    if (searchEmail && !m.email.toLowerCase().includes(searchEmail.toLowerCase())) return false;
+    if (searchCard && !m.cardNo.toLowerCase().includes(searchCard.toLowerCase())) return false;
+    return true;
   });
 
   const clearSearch = () => {
@@ -130,7 +126,7 @@ export default function MembersPage() {
 
       {/* Card View */}
       {view === "card" ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((member) => (
             <div key={member.id} className="member-card">
               <div className="member-card-header">
@@ -138,18 +134,18 @@ export default function MembersPage() {
                   <span className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 rounded font-bold">1M</span>
                   <span className="font-medium">{member.name}-{member.id}</span>
                 </div>
-                <button className="bg-primary text-primary-foreground p-1 rounded">
+                <button className="bg-destructive text-destructive-foreground p-1 rounded">
                   <Camera className="w-3 h-3" />
                 </button>
               </div>
               <div className="p-4">
-                {/* Avatar with initials */}
-                <div className="w-full flex items-center justify-center mb-3 py-4">
-                  <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center">
-                    <span className="text-2xl font-bold text-muted-foreground">
-                      {getInitials(member.name)}
-                    </span>
-                  </div>
+                {/* Avatar image */}
+                <div className="w-full flex items-center justify-center mb-3 py-2">
+                  <img
+                    src={member.avatar}
+                    alt={member.name}
+                    className="w-32 h-40 object-cover rounded"
+                  />
                 </div>
                 <div className="flex items-center justify-between text-sm mb-3">
                   <span className="text-muted-foreground">{member.phone}</span>
@@ -184,7 +180,10 @@ export default function MembersPage() {
               {filtered.map((member) => (
                 <tr key={member.id}>
                   <td>{member.id}</td>
-                  <td>{member.name}</td>
+                  <td className="flex items-center gap-2">
+                    <img src={member.avatar} alt={member.name} className="w-8 h-8 rounded-full object-cover" />
+                    {member.name}
+                  </td>
                   <td>{member.phone}</td>
                   <td>{member.membership}</td>
                   <td>{member.dueDate}</td>
