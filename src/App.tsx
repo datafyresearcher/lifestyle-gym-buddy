@@ -31,6 +31,7 @@ import UpcomingDuesPage from "@/pages/UpcomingDuesPage";
 import ReportsPage from "@/pages/ReportsPage";
 import FeesApprovalPage from "@/pages/FeesApprovalPage";
 import ProfilePage from "@/pages/ProfilePage";
+import AnalyticsPage from "@/pages/AnalyticsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -68,7 +69,7 @@ const App = () => (
             <Route path="/products/*" element={<ProductsPage />} />
             <Route path="/training-sessions" element={<TrainingSessionsPage />} />
             <Route path="/services/*" element={<ServicesPage />} />
-            <Route path="/analytics" element={<PlaceholderPage title="Analytics" breadcrumbs={[{ label: "Analytics" }]} />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="/fees-approval" element={<FeesApprovalPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/faqs" element={<FAQsPage />} />
