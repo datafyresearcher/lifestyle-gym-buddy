@@ -1,6 +1,12 @@
 import PageContainer from "@/components/PageContainer";
 import { useState } from "react";
-import { XCircle, Edit, List, LayoutGrid, Search, Eraser } from "lucide-react";
+import { XCircle, Edit, List, LayoutGrid, Search, Eraser, CheckCircle, RefreshCw, Phone, MessageSquare } from "lucide-react";
+import MemberDetailDialog from "@/components/MemberDetailDialog";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 const mockInactiveMembers = [
   { id: 110, name: "Farhan", phone: "+923001234567", email: "farhan@mail.com", cardNo: "C-110", expiredDate: "01st Feb", membership: "Monthly", avatar: "/avatars/avatar-1.jpg" },
@@ -11,6 +17,7 @@ const mockInactiveMembers = [
 ];
 
 export default function InactiveMembersPage() {
+  const [members, setMembers] = useState(mockInactiveMembers);
   const [view, setView] = useState<"card" | "list">("list");
   const [searchName, setSearchName] = useState("");
   const [searchMembership, setSearchMembership] = useState("");
@@ -18,7 +25,13 @@ export default function InactiveMembersPage() {
   const [searchEmail, setSearchEmail] = useState("");
   const [searchCard, setSearchCard] = useState("");
 
-  const filtered = mockInactiveMembers.filter((m) => {
+  // Dialog states
+  const [selectedMember, setSelectedMember] = useState<typeof mockInactiveMembers[0] | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [activateConfirm, setActivateConfirm] = useState<typeof mockInactiveMembers[0] | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<typeof mockInactiveMembers[0] | null>(null);
+
+  const filtered = members.filter((m) => {
     if (searchName && !m.name.toLowerCase().includes(searchName.toLowerCase())) return false;
     if (searchMembership && !m.membership.toLowerCase().includes(searchMembership.toLowerCase())) return false;
     if (searchMobile && !m.phone.includes(searchMobile)) return false;
@@ -34,6 +47,54 @@ export default function InactiveMembersPage() {
     setSearchEmail("");
     setSearchCard("");
   };
+
+  const handleViewDetail = (member: typeof mockInactiveMembers[0]) => {
+    setSelectedMember(member);
+    setDetailOpen(true);
+  };
+
+  const handleActivate = (member: typeof mockInactiveMembers[0]) => {
+    setActivateConfirm(member);
+  };
+
+  const confirmActivate = () => {
+    if (activateConfirm) {
+      setMembers((prev) => prev.filter((m) => m.id !== activateConfirm.id));
+      toast.success(`${activateConfirm.name} has been activated successfully`);
+    }
+    setActivateConfirm(null);
+  };
+
+  const handleDelete = (member: typeof mockInactiveMembers[0]) => {
+    setDeleteConfirm(member);
+  };
+
+  const confirmDelete = () => {
+    if (deleteConfirm) {
+      setMembers((prev) => prev.filter((m) => m.id !== deleteConfirm.id));
+      toast.success(`${deleteConfirm.name} has been removed`);
+    }
+    setDeleteConfirm(null);
+  };
+
+  const handleWhatsApp = (member: typeof mockInactiveMembers[0]) => {
+    const rawPhone = member.phone.replace(/[^0-9]/g, "");
+    const phone = rawPhone.startsWith("0") ? "92" + rawPhone.slice(1) : rawPhone.startsWith("92") ? rawPhone : "92" + rawPhone;
+    const message = `Hi ${member.name}, we noticed your membership has expired. We'd love to have you back at Lifestyle Reset! Visit us to renew your membership.\n\nThank you!\n*Lifestyle Reset*`;
+    window.open(`https://api.whatsapp.com/send/?phone=${phone}&text=${encodeURIComponent(message)}`, "_blank");
+  };
+
+  const handleDeactivateFromDialog = (id: number) => {
+    setMembers((prev) => prev.filter((m) => m.id !== id));
+    setDetailOpen(false);
+    toast.success("Member removed successfully");
+  };
+
+  // Map for MemberDetailDialog compatibility
+  const memberForDialog = selectedMember ? {
+    ...selectedMember,
+    dueDate: selectedMember.expiredDate,
+  } : null;
 
   return (
     <PageContainer title="Inactive Members" breadcrumbs={[{ label: "Member Management" }, { label: "All Members" }]}>
@@ -105,8 +166,18 @@ export default function InactiveMembersPage() {
                   <td>{member.expiredDate}</td>
                   <td>
                     <div className="flex gap-1">
-                      <button className="action-btn action-btn-danger"><XCircle className="w-3 h-3" /></button>
-                      <button className="action-btn action-btn-primary"><Edit className="w-3 h-3" /></button>
+                      <button className="action-btn action-btn-primary" onClick={() => handleActivate(member)} title="Activate Member">
+                        <CheckCircle className="w-3 h-3" />
+                      </button>
+                      <button className="action-btn action-btn-primary" onClick={() => handleViewDetail(member)} title="View / Edit Details">
+                        <Edit className="w-3 h-3" />
+                      </button>
+                      <button className="action-btn action-btn-primary" onClick={() => handleWhatsApp(member)} title="Send WhatsApp Message">
+                        <MessageSquare className="w-3 h-3" />
+                      </button>
+                      <button className="action-btn action-btn-danger" onClick={() => handleDelete(member)} title="Delete Member">
+                        <XCircle className="w-3 h-3" />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -133,8 +204,18 @@ export default function InactiveMembersPage() {
                   <span className="text-destructive">Expired: <strong>{member.expiredDate}</strong></span>
                 </div>
                 <div className="flex items-center gap-2 justify-center">
-                  <button className="action-btn action-btn-danger"><XCircle className="w-3 h-3" /></button>
-                  <button className="action-btn action-btn-primary"><Edit className="w-3 h-3" /></button>
+                  <button className="action-btn action-btn-primary" onClick={() => handleActivate(member)} title="Activate Member">
+                    <CheckCircle className="w-3 h-3" />
+                  </button>
+                  <button className="action-btn action-btn-primary" onClick={() => handleViewDetail(member)} title="View / Edit Details">
+                    <Edit className="w-3 h-3" />
+                  </button>
+                  <button className="action-btn action-btn-primary" onClick={() => handleWhatsApp(member)} title="Send WhatsApp Message">
+                    <MessageSquare className="w-3 h-3" />
+                  </button>
+                  <button className="action-btn action-btn-danger" onClick={() => handleDelete(member)} title="Delete Member">
+                    <XCircle className="w-3 h-3" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -149,6 +230,48 @@ export default function InactiveMembersPage() {
         <button className="text-xs">&gt;</button>
         <button className="text-xs">&gt;|</button>
       </div>
+
+      {/* Member Detail Dialog */}
+      {memberForDialog && (
+        <MemberDetailDialog
+          member={memberForDialog}
+          open={detailOpen}
+          onOpenChange={setDetailOpen}
+          onDeactivate={handleDeactivateFromDialog}
+        />
+      )}
+
+      {/* Activate Confirmation */}
+      <AlertDialog open={activateConfirm !== null} onOpenChange={() => setActivateConfirm(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmation</AlertDialogTitle>
+            <AlertDialogDescription className="flex items-center gap-2">
+              <span className="text-lg">⚠</span> Are you sure you want to activate <strong>{activateConfirm?.name}</strong>?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>✕ No</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmActivate}>✓ Yes</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete Confirmation */}
+      <AlertDialog open={deleteConfirm !== null} onOpenChange={() => setDeleteConfirm(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmation</AlertDialogTitle>
+            <AlertDialogDescription className="flex items-center gap-2">
+              <span className="text-lg">⚠</span> Are you sure you want to permanently delete <strong>{deleteConfirm?.name}</strong>?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>✕ No</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">✓ Yes</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </PageContainer>
   );
 }
