@@ -553,12 +553,29 @@ function ReportView({ reportKey }: ReportViewProps) {
         {/* Summary */}
         <div className="flex border-t border-border">
           <div className="flex-1" />
-          <div className="border-l border-border">
-            <div className="px-4 py-2 font-semibold text-center border-b border-border">Summary</div>
-            <div className="flex justify-between px-4 py-2 gap-8">
-              <span className="text-sm">Total Count</span>
-              <span className="font-semibold">{filtered.length}</span>
-            </div>
+          <div className="border-l border-border min-w-[320px]">
+            <div className="px-4 py-2 font-semibold text-center border-b border-border bg-muted/30">Summary</div>
+            {(config.summaryRows || [{ label: "Total Count", key: "_count" }]).map((sr, i) => {
+              let value: number;
+              if (sr.key === "_count") {
+                value = filtered.length;
+              } else if (sr.key === "_fulfilled") {
+                value = filtered.filter((r) => String(r.status).toUpperCase() === "FULFILLED" || String(r.status) === "Received").length;
+              } else if (sr.key === "_unfulfilled") {
+                value = filtered.filter((r) => String(r.status).toUpperCase() === "UNFULFILLED" || String(r.status) === "Pending" || String(r.status) === "In Transit").length;
+              } else if (sr.key === "_avgAttendance") {
+                const vals = filtered.map((r) => parseInt(String(r.percentage)) || 0);
+                value = vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : 0;
+              } else {
+                value = filtered.reduce((s, r) => s + (typeof r[sr.key] === "number" ? Number(r[sr.key]) : 0), 0);
+              }
+              return (
+                <div key={i} className={`flex justify-between px-4 py-2 border-b border-border gap-8 ${sr.highlight ? "bg-muted/40 font-bold" : ""}`}>
+                  <span className="text-sm">{sr.label}</span>
+                  <span className="font-semibold">{sr.key === "_avgAttendance" ? `${value}%` : value.toLocaleString()}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
 
