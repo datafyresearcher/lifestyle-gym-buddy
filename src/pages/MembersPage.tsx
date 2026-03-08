@@ -207,7 +207,7 @@ export default function MembersPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((member) => (
+              {paginatedMembers.map((member) => (
                 <tr key={member.id}>
                   <td>{member.id}</td>
                   <td className="flex items-center gap-2">
