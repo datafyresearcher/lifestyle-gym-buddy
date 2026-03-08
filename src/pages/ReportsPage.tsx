@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, X, Printer, Download } from "lucide-react";
+import { Search, X, Printer, Download, MessageCircle } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import * as XLSX from "xlsx";
@@ -15,6 +15,8 @@ interface ReportConfig {
   columns: { key: string; label: string }[];
   data: Record<string, string | number>[];
   filters?: string[];
+  extraFilters?: string[];
+  emptyMessage?: string;
 }
 
 const reportConfigs: Record<string, ReportConfig> = {
@@ -31,13 +33,8 @@ const reportConfigs: Record<string, ReportConfig> = {
       { key: "date", label: "Date" },
       { key: "action", label: "Action" },
     ],
-    data: [
-      { membershipNo: 122, photo: "/avatars/avatar-1.jpg", name: "Ahmed Khan", mobile: "+923325685258", dueMonth: "February 2026", fee: 8000, date: "Mar 1, 2026, 10:00 AM" },
-      { membershipNo: 121, photo: "/avatars/avatar-2.jpg", name: "Bilal Shah", mobile: "+923437033333", dueMonth: "January 2026", fee: 5000, date: "Feb 15, 2026, 3:30 PM" },
-      { membershipNo: 118, photo: "/avatars/avatar-3.jpg", name: "Usman Ali", mobile: "+923215556677", dueMonth: "February 2026", fee: 3000, date: "Feb 20, 2026, 9:15 AM" },
-      { membershipNo: 115, photo: "/avatars/avatar-4.jpg", name: "Faisal Raza", mobile: "+923334445566", dueMonth: "January 2026", fee: 8000, date: "Feb 10, 2026, 11:45 AM" },
-      { membershipNo: 110, photo: "/avatars/avatar-5.jpg", name: "Hamza Tariq", mobile: "+923457788990", dueMonth: "February 2026", fee: 5000, date: "Feb 25, 2026, 2:00 PM" },
-    ],
+    data: [],
+    emptyMessage: "No Defaulters Found.",
   },
   "new-member": {
     title: "New Member Report",
@@ -62,24 +59,32 @@ const reportConfigs: Record<string, ReportConfig> = {
     title: "Sales Report",
     breadcrumb: "Sales",
     columns: [
-      { key: "invoice", label: "Invoice #" },
-      { key: "date", label: "Date" },
-      { key: "customer", label: "Customer" },
-      { key: "items", label: "Items" },
-      { key: "subTotal", label: "Sub Total" },
-      { key: "tax", label: "Tax" },
+      { key: "membershipNo", label: "Membership No" },
+      { key: "photo", label: "Photo" },
+      { key: "name", label: "Name" },
+      { key: "packageName", label: "Package Name" },
+      { key: "registrationFees", label: "Registration Fees" },
+      { key: "monthFees", label: "Month Fees" },
+      { key: "trainerFees", label: "Trainer Fees" },
+      { key: "totalFees", label: "Total Fees" },
       { key: "discount", label: "Discount" },
-      { key: "total", label: "Grand Total" },
-      { key: "paymentMode", label: "Payment Mode" },
+      { key: "tax", label: "Tax" },
+      { key: "totalCollectedFee", label: "Total Collected Fee" },
+      { key: "comments", label: "Comments" },
+      { key: "date", label: "Date" },
+      { key: "mode", label: "Mode" },
+      { key: "enteredBy", label: "Entered By" },
     ],
     data: [
-      { invoice: "INV-2026-3-01", date: "01/03/26", customer: "Walk-in", items: 3, subTotal: 1500, tax: 75, discount: 0, total: 1575, paymentMode: "Cash" },
-      { invoice: "INV-2026-3-02", date: "02/03/26", customer: "Ahmed Khan", items: 1, subTotal: 3500, tax: 350, discount: 0, total: 3850, paymentMode: "Bank Transfer" },
-      { invoice: "INV-2026-3-03", date: "03/03/26", customer: "Walk-in", items: 5, subTotal: 560, tax: 0, discount: 10, total: 550, paymentMode: "Cash" },
-      { invoice: "INV-2026-3-04", date: "05/03/26", customer: "Bilal Shah", items: 2, subTotal: 900, tax: 45, discount: 50, total: 895, paymentMode: "Card" },
-      { invoice: "INV-2026-3-05", date: "06/03/26", customer: "Walk-in", items: 1, subTotal: 150, tax: 0, discount: 0, total: 150, paymentMode: "Cash" },
+      { membershipNo: "0000", photo: "", name: "Kainat Arshad", packageName: "Visitor/Day Pass", registrationFees: 0, monthFees: 1000, trainerFees: 0, totalFees: 1000, discount: 0, tax: 0, totalCollectedFee: 1000, comments: "", date: "Mar 8, 2026, 10:49:02 PM", mode: "Cash-Reception", enteredBy: "Admin" },
+      { membershipNo: "0000", photo: "", name: "Ali", packageName: "Visitor/Day Pass", registrationFees: 0, monthFees: 400, trainerFees: 0, totalFees: 400, discount: 0, tax: 0, totalCollectedFee: 400, comments: "", date: "Mar 7, 2026, 5:08:44 PM", mode: "Cash-Reception", enteredBy: "Admin" },
+      { membershipNo: 122, photo: "/avatars/avatar-1.jpg", name: "ahmed", packageName: "Monthly", registrationFees: 4000, monthFees: 5000, trainerFees: 0, totalFees: 9000, discount: 100, tax: 0, totalCollectedFee: 8900, comments: "", date: "Mar 7, 2026, 4:59:53 PM", mode: "Cash-Reception", enteredBy: "Admin" },
+      { membershipNo: "0000", photo: "", name: "Walk in Customer", packageName: "POS Sales", registrationFees: 0, monthFees: 150, trainerFees: 0, totalFees: 150, discount: 0, tax: 0, totalCollectedFee: 150, comments: "", date: "Mar 6, 2026, 3:45:50 PM", mode: "Cash-Reception", enteredBy: "Admin" },
+      { membershipNo: "0000", photo: "", name: "Walk in Customer", packageName: "POS Sales", registrationFees: 0, monthFees: 3520, trainerFees: 0, totalFees: 3520, discount: 0, tax: 66, totalCollectedFee: 3586, comments: "", date: "Mar 5, 2026, 5:38:56 PM", mode: "Cash-Reception", enteredBy: "Admin" },
+      { membershipNo: "0000", photo: "", name: "Walk in Customer", packageName: "POS Sales", registrationFees: 0, monthFees: 100, trainerFees: 0, totalFees: 100, discount: 50, tax: 5, totalCollectedFee: 55, comments: "", date: "Mar 3, 2026, 10:53:53 AM", mode: "Cash-Reception", enteredBy: "Admin" },
     ],
-    filters: ["paymentMode"],
+    filters: ["packageName"],
+    extraFilters: ["enteredBy", "mode"],
   },
   billing: {
     title: "Billing Report",
@@ -313,9 +318,18 @@ function ReportView({ reportKey }: ReportViewProps) {
   const [fromDate, setFromDate] = useState("2026-03-01");
   const [toDate, setToDate] = useState("2026-03-31");
   const [filterValue, setFilterValue] = useState("all");
+  const [extraFilter1, setExtraFilter1] = useState("all");
+  const [extraFilter2, setExtraFilter2] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
 
   if (!config) return <div className="p-8 text-center text-muted-foreground">Report not found.</div>;
+
+  const extraFilterOptions1 = config.extraFilters?.[0]
+    ? [...new Set(config.data.map((r) => String(r[config.extraFilters![0]])))]
+    : [];
+  const extraFilterOptions2 = config.extraFilters?.[1]
+    ? [...new Set(config.data.map((r) => String(r[config.extraFilters![1]])))]
+    : [];
 
   const filtered = config.data.filter((row) => {
     const matchSearch = Object.values(row).some((v) =>
@@ -325,7 +339,15 @@ function ReportView({ reportKey }: ReportViewProps) {
       filterValue === "all" ||
       !config.filters?.length ||
       String(row[config.filters[0]]) === filterValue;
-    return matchSearch && matchFilter;
+    const matchExtra1 =
+      extraFilter1 === "all" ||
+      !config.extraFilters?.[0] ||
+      String(row[config.extraFilters[0]]) === extraFilter1;
+    const matchExtra2 =
+      extraFilter2 === "all" ||
+      !config.extraFilters?.[1] ||
+      String(row[config.extraFilters[1]]) === extraFilter2;
+    return matchSearch && matchFilter && matchExtra1 && matchExtra2;
   });
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
@@ -339,7 +361,7 @@ function ReportView({ reportKey }: ReportViewProps) {
     const exportData = filtered.map((row) => {
       const obj: Record<string, string | number> = {};
       config.columns.forEach((col) => {
-        if (col.key !== "photo" && col.key !== "image" && col.key !== "action") {
+        if (col.key !== "photo" && col.key !== "image" && col.key !== "action" && col.key !== "comments") {
           obj[col.label] = row[col.key];
         }
       });
@@ -352,14 +374,16 @@ function ReportView({ reportKey }: ReportViewProps) {
     toast({ title: "Exported", description: `${config.title} exported to Excel.` });
   };
 
-
   const isImageCol = (key: string) => key === "photo" || key === "image";
   const isActionCol = (key: string) => key === "action";
+  const isCommentsCol = (key: string) => key === "comments";
 
   const searchLabel = reportKey === "defaulter"
     ? "Search By Membership / Name"
     : reportKey === "new-member"
     ? "Search By Membership ID"
+    : reportKey === "sales"
+    ? "Search by Membership ID"
     : "Search";
 
   return (
@@ -370,14 +394,42 @@ function ReportView({ reportKey }: ReportViewProps) {
           <span className="text-xs text-sidebar-accent-foreground block mb-0.5">{searchLabel}</span>
           <Input placeholder="Search here!" value={search} onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }} className="w-44 h-9 bg-background" />
         </div>
+        {extraFilterOptions1.length > 0 && (
+          <div>
+            <span className="text-xs text-sidebar-accent-foreground block mb-0.5 capitalize">{config.extraFilters![0].replace(/([A-Z])/g, " $1").trim()}</span>
+            <Select value={extraFilter1} onValueChange={(v) => { setExtraFilter1(v); setCurrentPage(1); }}>
+              <SelectTrigger className="w-36 h-9 bg-background"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                {extraFilterOptions1.map((opt) => (
+                  <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         {filterOptions.length > 0 && (
           <div>
-            <span className="text-xs text-sidebar-accent-foreground block mb-0.5">Select {config.filters![0]}</span>
+            <span className="text-xs text-sidebar-accent-foreground block mb-0.5">Select {config.filters![0].replace(/([A-Z])/g, " $1").trim()}</span>
             <Select value={filterValue} onValueChange={(v) => { setFilterValue(v); setCurrentPage(1); }}>
               <SelectTrigger className="w-36 h-9 bg-background"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All</SelectItem>
                 {filterOptions.map((opt) => (
+                  <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+        {extraFilterOptions2.length > 0 && (
+          <div>
+            <span className="text-xs text-sidebar-accent-foreground block mb-0.5 capitalize">Mode Of Payment</span>
+            <Select value={extraFilter2} onValueChange={(v) => { setExtraFilter2(v); setCurrentPage(1); }}>
+              <SelectTrigger className="w-36 h-9 bg-background"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                {extraFilterOptions2.map((opt) => (
                   <SelectItem key={opt} value={opt}>{opt}</SelectItem>
                 ))}
               </SelectContent>
@@ -416,7 +468,7 @@ function ReportView({ reportKey }: ReportViewProps) {
             {paginated.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={config.columns.length} className="text-center py-8 text-muted-foreground">
-                  {reportKey === "defaulter" ? "No Defaulters Found." : "No records found."}
+                  {config.emptyMessage || "No records found."}
                 </TableCell>
               </TableRow>
             ) : (
@@ -425,12 +477,20 @@ function ReportView({ reportKey }: ReportViewProps) {
                   {config.columns.map((col) => (
                     <TableCell key={col.key}>
                       {isImageCol(col.key) ? (
-                        <Avatar className="h-14 w-14 rounded-full">
-                          <AvatarImage src={String(row[col.key])} className="object-cover" />
-                          <AvatarFallback className="bg-muted text-muted-foreground">{String(row.name || "").charAt(0).toUpperCase()}</AvatarFallback>
-                        </Avatar>
+                        String(row[col.key]) ? (
+                          <Avatar className="h-14 w-14 rounded-full">
+                            <AvatarImage src={String(row[col.key])} className="object-cover" />
+                            <AvatarFallback className="bg-muted text-muted-foreground">{String(row.name || "").charAt(0).toUpperCase()}</AvatarFallback>
+                          </Avatar>
+                        ) : (
+                          <Avatar className="h-14 w-14 rounded-full">
+                            <AvatarFallback className="bg-muted text-muted-foreground">{String(row.name || "").charAt(0).toUpperCase()}</AvatarFallback>
+                          </Avatar>
+                        )
                       ) : isActionCol(col.key) ? (
                         <Button variant="outline" size="sm" className="text-xs">View</Button>
+                      ) : isCommentsCol(col.key) ? (
+                        <MessageCircle className="h-5 w-5 text-muted-foreground" />
                       ) : col.key === "status" ? (
                         <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                           row[col.key] === "Active" || row[col.key] === "Completed" || row[col.key] === "Paid" || row[col.key] === "Received"
