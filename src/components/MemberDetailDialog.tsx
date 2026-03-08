@@ -131,11 +131,12 @@ export default function MemberDetailDialog({ member, open, onOpenChange, onDeact
             <TabsContent value="details" className="mt-4">
               {/* Profile photo */}
               <div className="flex gap-6 mb-6">
-                <img src={member.avatar} alt={member.name} className="w-36 h-44 object-cover rounded" />
+                <img src={avatarPreview || member.avatar} alt={member.name} className="w-36 h-44 object-cover rounded" />
                 <div className="flex items-center gap-2 flex-wrap self-start">
                   <span className="font-medium">Profile Picture</span>
-                  <Button size="sm" variant="default" className="bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))]">Upload Photo</Button>
-                  <Button size="sm" variant="destructive">Remove Photo</Button>
+                  <input type="file" ref={fileInputRef} accept="image/*" className="hidden" onChange={handleFileChange} />
+                  <Button size="sm" variant="default" className="bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))]" onClick={handleUploadPhoto}>Upload Photo</Button>
+                  <Button size="sm" variant="destructive" onClick={handleRemovePhoto}>Remove Photo</Button>
                 </div>
               </div>
 
