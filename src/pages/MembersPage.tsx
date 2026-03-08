@@ -154,11 +154,11 @@ export default function MembersPage() {
                   <span>Due Dy: <strong>{member.dueDate}</strong></span>
                 </div>
                 <div className="flex items-center gap-2 justify-center">
-                  <button className="action-btn action-btn-danger"><XCircle className="w-3 h-3" /></button>
-                  <button className="action-btn action-btn-primary"><Edit className="w-3 h-3" /></button>
+                  <button className="action-btn action-btn-danger" onClick={() => setSelectedMember(member)}><XCircle className="w-3 h-3" /></button>
+                  <button className="action-btn action-btn-primary" onClick={() => setSelectedMember(member)}><Edit className="w-3 h-3" /></button>
                   <button className="action-btn action-btn-info"><Camera className="w-3 h-3" /></button>
-                  <button className="action-btn" style={{background: "hsl(280, 65%, 50%)", color: "white"}}><User className="w-3 h-3" /></button>
-                  <button className="action-btn action-btn-success"><Settings className="w-3 h-3" /></button>
+                  <button className="action-btn" style={{background: "hsl(280, 65%, 50%)", color: "white"}} onClick={() => setSelectedMember(member)}><User className="w-3 h-3" /></button>
+                  <button className="action-btn action-btn-success" onClick={() => setSelectedMember(member)}><Settings className="w-3 h-3" /></button>
                   <button className="action-btn" style={{background: "hsl(145, 65%, 42%)", color: "white"}}><Phone className="w-3 h-3" /></button>
                 </div>
               </div>
