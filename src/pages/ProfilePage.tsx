@@ -55,6 +55,23 @@ export default function ProfilePage() {
   // Attendance Slots dialog
   const [slotOpen, setSlotOpen] = useState(false);
 
+  // Petty Cash dialog
+  const [pettyCashOpen, setPettyCashOpen] = useState(false);
+  const [addAmount, setAddAmount] = useState("0");
+  const [pettyCashData, setPettyCashData] = useState(mockPettyCash);
+
+  // Attendance History view
+  const [showAttendanceHistory, setShowAttendanceHistory] = useState(false);
+  const [attStartDate, setAttStartDate] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
+  });
+  const [attEndDate, setAttEndDate] = useState(() => {
+    const now = new Date();
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${lastDay}`;
+  });
+
   const handleUploadPhoto = () => fileInputRef.current?.click();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
