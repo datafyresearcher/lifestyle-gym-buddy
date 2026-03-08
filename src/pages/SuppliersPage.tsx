@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import PageContainer from "@/components/PageContainer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
-import { Search, X, XCircle, Edit, Plus, ArrowLeft, User, Phone, Mail, Calendar, AlertTriangle } from "lucide-react";
+import { Search, X, XCircle, Edit, Plus, ArrowLeft, User, Phone, Mail, Calendar, AlertTriangle, Camera, Upload } from "lucide-react";
 
 interface Supplier {
   id: number;
@@ -48,6 +48,44 @@ export default function SuppliersPage() {
   const [editGender, setEditGender] = useState<"Male" | "Female">("Male");
   const [editDate, setEditDate] = useState("");
 
+  // Photo handling
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
+
+  const handleUploadPhoto = () => fileInputRef.current?.click();
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => { setAvatarPreview(ev.target?.result as string); toast({ title: "Photo uploaded" }); };
+      reader.readAsDataURL(file);
+    }
+  };
+  const handleRemovePhoto = () => { setAvatarPreview(null); toast({ title: "Photo removed" }); };
+  const handleCaptureStart = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+      streamRef.current = stream;
+      setCameraOpen(true);
+      setTimeout(() => { if (videoRef.current) { videoRef.current.srcObject = stream; videoRef.current.play(); } }, 100);
+    } catch { toast({ title: "Unable to access camera", variant: "destructive" }); }
+  };
+  const handleCapturePhoto = () => {
+    if (videoRef.current && canvasRef.current) {
+      const canvas = canvasRef.current;
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      const ctx = canvas.getContext("2d");
+      if (ctx) { ctx.drawImage(videoRef.current, 0, 0); setAvatarPreview(canvas.toDataURL("image/png")); toast({ title: "Photo captured" }); }
+    }
+    stopCamera();
+  };
+  const stopCamera = () => { streamRef.current?.getTracks().forEach(t => t.stop()); streamRef.current = null; setCameraOpen(false); };
+
   const filtered = suppliers.filter((s) =>
     s.active && s.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -62,6 +100,7 @@ export default function SuppliersPage() {
     setEditEmail(supplier.email);
     setEditGender(supplier.gender);
     setEditDate(supplier.createdDate);
+    setAvatarPreview(supplier.avatar || null);
     setDetailOpen(true);
   };
 
@@ -240,21 +279,27 @@ export default function SuppliersPage() {
 
           {/* Profile picture section */}
           <div className="flex items-start gap-8 mt-4">
-            <Avatar className="h-40 w-40">
-              {selectedSupplier?.avatar ? (
-                <AvatarImage src={selectedSupplier.avatar} alt={selectedSupplier.name} />
-              ) : null}
-              <AvatarFallback className="bg-muted text-4xl">
+            <div className="h-40 w-40 rounded-lg border border-border bg-muted/20 flex items-center justify-center overflow-hidden">
+              {avatarPreview ? (
+                <img src={avatarPreview} alt="Preview" className="w-full h-full object-cover" />
+              ) : (
                 <User className="h-20 w-20 text-muted-foreground" />
-              </AvatarFallback>
-            </Avatar>
+              )}
+            </div>
             <div className="flex-1">
               <div className="bg-sidebar-accent p-3 rounded-lg flex items-center justify-between">
                 <span className="font-semibold text-sidebar-accent-foreground">Profile Picture</span>
                 <div className="flex gap-2">
-                  <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">📷 Capture Photo</Button>
-                  <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">⬆ Upload Photo</Button>
-                  <Button size="sm" variant="destructive">✕ Remove Photo</Button>
+                  <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={handleCaptureStart}>
+                    <Camera className="w-3 h-3 mr-1" /> Capture Photo
+                  </Button>
+                  <input type="file" ref={fileInputRef} accept="image/*" className="hidden" onChange={handleFileChange} />
+                  <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white" onClick={handleUploadPhoto}>
+                    <Upload className="w-3 h-3 mr-1" /> Upload Photo
+                  </Button>
+                  <Button size="sm" variant="destructive" onClick={handleRemovePhoto}>
+                    <X className="w-3 h-3 mr-1" /> Remove Photo
+                  </Button>
                 </div>
               </div>
             </div>
@@ -294,6 +339,26 @@ export default function SuppliersPage() {
                   <Label htmlFor="female">Female</Label>
                 </div>
               </RadioGroup>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Camera Dialog */}
+      <Dialog open={cameraOpen} onOpenChange={(o) => { if (!o) stopCamera(); }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Capture Photo</DialogTitle>
+            <DialogDescription>Position yourself and click Capture</DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col items-center gap-4">
+            <video ref={videoRef} className="w-full rounded-lg border border-border" autoPlay muted playsInline />
+            <canvas ref={canvasRef} className="hidden" />
+            <div className="flex gap-3">
+              <Button onClick={handleCapturePhoto} className="bg-green-600 hover:bg-green-700 text-white">
+                <Camera className="w-4 h-4 mr-1" /> Capture
+              </Button>
+              <Button variant="outline" onClick={stopCamera}>Cancel</Button>
             </div>
           </div>
         </DialogContent>
