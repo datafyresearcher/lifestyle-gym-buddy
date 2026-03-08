@@ -23,6 +23,7 @@ import PurchaseOrdersPage from "@/pages/PurchaseOrdersPage";
 import PointOfSalePage from "@/pages/PointOfSalePage";
 import SaleOrdersPage from "@/pages/SaleOrdersPage";
 import EnquiriesPage from "@/pages/EnquiriesPage";
+import FAQsPage from "@/pages/FAQsPage";
 import AddEnquiryPage from "@/pages/AddEnquiryPage";
 import ActivityLogsPage from "@/pages/ActivityLogsPage";
 import UpcomingDuesPage from "@/pages/UpcomingDuesPage";
@@ -67,7 +68,7 @@ const App = () => (
             <Route path="/services/*" element={<ServicesPage />} />
             <Route path="/analytics" element={<PlaceholderPage title="Analytics" breadcrumbs={[{ label: "Analytics" }]} />} />
             <Route path="/fees-approval" element={<FeesApprovalPage />} />
-            <Route path="/faqs" element={<PlaceholderPage title="FAQs" breadcrumbs={[{ label: "FAQs" }]} />} />
+            <Route path="/faqs" element={<FAQsPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AppLayout>
