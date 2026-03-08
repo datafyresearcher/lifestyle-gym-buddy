@@ -3,7 +3,15 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+import AppLayout from "@/components/AppLayout";
+import Dashboard from "@/pages/Dashboard";
+import MembersPage from "@/pages/MembersPage";
+import VisitorsPage from "@/pages/VisitorsPage";
+import PackagesPage from "@/pages/PackagesPage";
+import PettyCashPage from "@/pages/PettyCashPage";
+import AttendancePage from "@/pages/AttendancePage";
+import ServicesPage from "@/pages/ServicesPage";
+import PlaceholderPage from "@/pages/PlaceholderPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -14,11 +22,32 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AppLayout>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/members" element={<MembersPage />} />
+            <Route path="/inactive-members" element={<PlaceholderPage title="Inactive Members" breadcrumbs={[{ label: "Member Management" }, { label: "Inactive Members" }]} />} />
+            <Route path="/visitors" element={<VisitorsPage />} />
+            <Route path="/enquiries" element={<PlaceholderPage title="Enquiry Management" breadcrumbs={[{ label: "Enquiry Management" }]} />} />
+            <Route path="/activity-logs" element={<PlaceholderPage title="Activity Logs" breadcrumbs={[{ label: "Activity Logs" }]} />} />
+            <Route path="/attendance" element={<AttendancePage />} />
+            <Route path="/upcoming-dues/*" element={<PlaceholderPage title="Upcoming Dues" breadcrumbs={[{ label: "Upcoming Dues" }]} />} />
+            <Route path="/settings/*" element={<PlaceholderPage title="Settings" breadcrumbs={[{ label: "Settings" }]} />} />
+            <Route path="/reports/*" element={<PlaceholderPage title="Reports" breadcrumbs={[{ label: "Reports" }]} />} />
+            <Route path="/requests" element={<PlaceholderPage title="Requests Management" breadcrumbs={[{ label: "Requests Management" }]} />} />
+            <Route path="/packages" element={<PackagesPage />} />
+            <Route path="/petty-cash" element={<PettyCashPage />} />
+            <Route path="/sales/*" element={<PlaceholderPage title="Sales" breadcrumbs={[{ label: "Sales" }]} />} />
+            <Route path="/purchasing/*" element={<PlaceholderPage title="Purchasing" breadcrumbs={[{ label: "Purchasing" }]} />} />
+            <Route path="/products/*" element={<PlaceholderPage title="Products" breadcrumbs={[{ label: "Products" }]} />} />
+            <Route path="/training-sessions" element={<PlaceholderPage title="Training Sessions" breadcrumbs={[{ label: "Training Sessions" }]} />} />
+            <Route path="/services/*" element={<ServicesPage />} />
+            <Route path="/analytics" element={<PlaceholderPage title="Analytics" breadcrumbs={[{ label: "Analytics" }]} />} />
+            <Route path="/fees-approval" element={<PlaceholderPage title="Fees Approval" breadcrumbs={[{ label: "Fees Approval" }]} />} />
+            <Route path="/faqs" element={<PlaceholderPage title="FAQs" breadcrumbs={[{ label: "FAQs" }]} />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AppLayout>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
