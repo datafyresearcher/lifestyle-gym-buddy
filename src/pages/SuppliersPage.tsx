@@ -279,21 +279,27 @@ export default function SuppliersPage() {
 
           {/* Profile picture section */}
           <div className="flex items-start gap-8 mt-4">
-            <Avatar className="h-40 w-40">
-              {selectedSupplier?.avatar ? (
-                <AvatarImage src={selectedSupplier.avatar} alt={selectedSupplier.name} />
-              ) : null}
-              <AvatarFallback className="bg-muted text-4xl">
+            <div className="h-40 w-40 rounded-lg border border-border bg-muted/20 flex items-center justify-center overflow-hidden">
+              {avatarPreview ? (
+                <img src={avatarPreview} alt="Preview" className="w-full h-full object-cover" />
+              ) : (
                 <User className="h-20 w-20 text-muted-foreground" />
-              </AvatarFallback>
-            </Avatar>
+              )}
+            </div>
             <div className="flex-1">
               <div className="bg-sidebar-accent p-3 rounded-lg flex items-center justify-between">
                 <span className="font-semibold text-sidebar-accent-foreground">Profile Picture</span>
                 <div className="flex gap-2">
-                  <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">📷 Capture Photo</Button>
-                  <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">⬆ Upload Photo</Button>
-                  <Button size="sm" variant="destructive">✕ Remove Photo</Button>
+                  <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={handleCaptureStart}>
+                    <Camera className="w-3 h-3 mr-1" /> Capture Photo
+                  </Button>
+                  <input type="file" ref={fileInputRef} accept="image/*" className="hidden" onChange={handleFileChange} />
+                  <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white" onClick={handleUploadPhoto}>
+                    <Upload className="w-3 h-3 mr-1" /> Upload Photo
+                  </Button>
+                  <Button size="sm" variant="destructive" onClick={handleRemovePhoto}>
+                    <X className="w-3 h-3 mr-1" /> Remove Photo
+                  </Button>
                 </div>
               </div>
             </div>
