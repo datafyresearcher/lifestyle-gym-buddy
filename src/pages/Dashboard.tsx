@@ -43,7 +43,35 @@ const pieData = [
   { name: "Yearly", value: 6400, color: "hsl(280, 65%, 50%)" },
 ];
 
+const attendanceData = Array.from({ length: 31 }, (_, i) => ({
+  day: i + 1,
+  count: i === 4 ? 1 : 0,
+}));
+
+const newMembersData = [
+  { name: "Package A", value: 2, color: "hsl(205, 85%, 55%)" },
+  { name: "Package B", value: 1, color: "hsl(145, 65%, 42%)" },
+  { name: "Package C", value: 0, color: "hsl(0, 0%, 80%)" },
+];
+
+const activeMonthlyData = [
+  { month: "Jan", count: 27 },
+  { month: "Feb", count: 37 },
+  { month: "Mar", count: 34 },
+  { month: "Apr", count: 0 },
+  { month: "May", count: 0 },
+  { month: "Jun", count: 0 },
+  { month: "Jul", count: 0 },
+  { month: "Aug", count: 0 },
+  { month: "Sep", count: 0 },
+  { month: "Oct", count: 0 },
+  { month: "Nov", count: 0 },
+  { month: "Dec", count: 0 },
+];
+
 export default function Dashboard() {
+  const totalNewMembers = newMembersData.reduce((s, d) => s + d.value, 0);
+
   return (
     <PageContainer title="Dashboard" breadcrumbs={[{ label: "Dashboard" }, { label: "Dashboard" }]}>
       {/* Month/Year Selector */}
@@ -96,7 +124,7 @@ export default function Dashboard() {
                 {stat.changeType === "down" ? (
                   <TrendingDown className="w-3 h-3 text-destructive" />
                 ) : (
-                  <TrendingUp className="w-3 h-3 text-success" />
+                  <TrendingUp className="w-3 h-3 text-[hsl(var(--success))]" />
                 )}
                 <span className="text-destructive">{stat.change}</span>
                 <span className="text-muted-foreground">Change</span>
@@ -109,9 +137,8 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Bar Chart */}
+      {/* Monthly Sales & Package Wise Sales Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <div className="lg:col-span-2 bg-card rounded-lg border border-border p-4">
           <h3 className="font-heading font-bold mb-4">Monthly Sales 2024-25</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -126,20 +153,11 @@ export default function Dashboard() {
             </BarChart>
           </ResponsiveContainer>
         </div>
-
-        {/* Pie Chart */}
         <div className="bg-card rounded-lg border border-border p-4">
           <h3 className="font-heading font-bold mb-4">Package Wise Sales</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                dataKey="value"
-                label={({ name, value }) => `${(value / 1000).toFixed(1)}K`}
-              >
+              <Pie data={pieData} cx="50%" cy="50%" outerRadius={100} dataKey="value" label={({ value }) => `${(value / 1000).toFixed(1)}K`}>
                 {pieData.map((entry, index) => (
                   <Cell key={index} fill={entry.color} />
                 ))}
@@ -148,6 +166,88 @@ export default function Dashboard() {
               <Legend />
             </PieChart>
           </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Member Attendance */}
+      <div className="bg-card rounded-lg border border-border p-4 mb-6">
+        <h3 className="font-heading font-bold mb-4">Member Attendance</h3>
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart data={attendanceData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(214, 20%, 90%)" />
+            <XAxis dataKey="day" tick={{ fontSize: 10 }} />
+            <YAxis tick={{ fontSize: 12 }} />
+            <Tooltip />
+            <Bar dataKey="count" fill="hsl(205, 85%, 50%)" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* New Members Registered, Total Active Members, Frozen & Trainer Sales */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+        {/* New Members Registered - Donut */}
+        <div className="lg:col-span-5 bg-card rounded-lg border border-border p-4">
+          <h3 className="font-heading font-bold mb-4">New Members Registered</h3>
+          <ResponsiveContainer width="100%" height={280}>
+            <PieChart>
+              <Pie data={newMembersData} cx="50%" cy="50%" innerRadius={60} outerRadius={110} dataKey="value" label={({ value }) => `${value}`}>
+                {newMembersData.map((entry, index) => (
+                  <Cell key={index} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="text-2xl font-bold fill-foreground">
+                <tspan x="50%" dy="-8" fontSize="24" fontWeight="bold">{totalNewMembers}</tspan>
+                <tspan x="50%" dy="22" fontSize="14">Members</tspan>
+              </text>
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Total Active Members - Horizontal bar */}
+        <div className="lg:col-span-4 bg-card rounded-lg border border-border p-4">
+          <h3 className="font-heading font-bold mb-4">Total Active Members</h3>
+          <ResponsiveContainer width="100%" height={280}>
+            <BarChart data={activeMonthlyData} layout="vertical">
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(214, 20%, 90%)" />
+              <XAxis type="number" tick={{ fontSize: 12 }} />
+              <YAxis type="category" dataKey="month" tick={{ fontSize: 12 }} width={35} />
+              <Tooltip />
+              <Bar dataKey="count" fill="hsl(230, 100%, 50%)" label={{ position: "right", fontSize: 11 }} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Frozen Members & Trainer Sales cards */}
+        <div className="lg:col-span-3 flex flex-col gap-4">
+          <div className="bg-card rounded-lg border border-border p-4 flex-1">
+            <p className="text-xs text-muted-foreground text-center mb-1">Frozen Members</p>
+            <p className="text-3xl font-heading font-bold text-center mb-3">8</p>
+            <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center gap-1">
+                <TrendingUp className="w-3 h-3 text-[hsl(var(--success))]" />
+                <span className="text-[hsl(var(--success))]">8</span>
+                <span className="text-muted-foreground">Change</span>
+              </div>
+              <div className="text-muted-foreground">
+                0 <span className="text-[10px]">VS last Month</span>
+              </div>
+            </div>
+          </div>
+          <div className="bg-card rounded-lg border border-border p-4 flex-1">
+            <p className="text-xs text-muted-foreground text-center mb-1">Trainer Sales</p>
+            <p className="text-3xl font-heading font-bold text-center mb-3">24.5k Rs</p>
+            <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center gap-1">
+                <TrendingDown className="w-3 h-3 text-destructive" />
+                <span className="text-destructive">43.5k</span>
+                <span className="text-muted-foreground">Change</span>
+              </div>
+              <div className="text-muted-foreground">
+                68.0k <span className="text-[10px]">VS last Month</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
