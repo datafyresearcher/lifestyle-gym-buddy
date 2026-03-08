@@ -1,4 +1,5 @@
 import PageContainer from "@/components/PageContainer";
+import { useState } from "react";
 import { Edit, Download, Search, X, UserPlus } from "lucide-react";
 
 const mockVisitors = [
@@ -13,6 +14,20 @@ const mockVisitors = [
 ];
 
 export default function VisitorsPage() {
+  const [searchName, setSearchName] = useState("");
+  const [searchMobile, setSearchMobile] = useState("");
+
+  const filtered = mockVisitors.filter((v) => {
+    if (searchName && !v.name.toLowerCase().includes(searchName.toLowerCase())) return false;
+    if (searchMobile && !v.mobile.includes(searchMobile)) return false;
+    return true;
+  });
+
+  const clearSearch = () => {
+    setSearchName("");
+    setSearchMobile("");
+  };
+
   return (
     <PageContainer title="Visitors" breadcrumbs={[{ label: "Visitor Management" }, { label: "All Visitors" }]}>
       {/* Search */}
@@ -20,13 +35,13 @@ export default function VisitorsPage() {
         <div className="flex items-center gap-3 mb-0">
           <div>
             <label className="text-xs text-muted-foreground block">Search By Name</label>
-            <input className="search-input w-40" placeholder="Search here!" />
+            <input className="search-input w-40" placeholder="Search here!" value={searchName} onChange={(e) => setSearchName(e.target.value)} />
           </div>
           <div>
             <label className="text-xs text-muted-foreground block">Search By Mobile</label>
-            <input className="search-input w-40" placeholder="Search here!" />
+            <input className="search-input w-40" placeholder="Search here!" value={searchMobile} onChange={(e) => setSearchMobile(e.target.value)} />
           </div>
-          <button className="mt-4"><X className="w-4 h-4 text-muted-foreground" /></button>
+          <button className="mt-4" onClick={clearSearch}><X className="w-4 h-4 text-muted-foreground" /></button>
           <button className="mt-4"><UserPlus className="w-4 h-4 text-muted-foreground" /></button>
           <div className="flex-1" />
           <button className="mt-4"><Download className="w-4 h-4 text-muted-foreground" /></button>
@@ -51,7 +66,9 @@ export default function VisitorsPage() {
             </tr>
           </thead>
           <tbody>
-            {mockVisitors.map((v, i) => (
+            {filtered.length === 0 ? (
+              <tr><td colSpan={10} className="text-center text-muted-foreground py-4">No results found</td></tr>
+            ) : filtered.map((v, i) => (
               <tr key={i}>
                 <td>{v.name}</td>
                 <td>{v.mobile}</td>
