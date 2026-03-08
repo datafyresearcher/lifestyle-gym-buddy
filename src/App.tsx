@@ -29,6 +29,7 @@ import ActivityLogsPage from "@/pages/ActivityLogsPage";
 import UpcomingDuesPage from "@/pages/UpcomingDuesPage";
 import ReportsPage from "@/pages/ReportsPage";
 import FeesApprovalPage from "@/pages/FeesApprovalPage";
+import ProfilePage from "@/pages/ProfilePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
