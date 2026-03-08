@@ -142,6 +142,7 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
+  const navigate = useNavigate();
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
 
