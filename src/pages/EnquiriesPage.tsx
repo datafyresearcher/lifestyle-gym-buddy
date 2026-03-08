@@ -55,7 +55,7 @@ export default function EnquiriesPage() {
           </div>
           <button className="mt-4" onClick={clearSearch}><X className="w-4 h-4 text-muted-foreground" /></button>
           <div className="flex-1" />
-          <button className="mt-4"><UserPlus className="w-4 h-4 text-muted-foreground" /></button>
+          <button className="mt-4" onClick={() => navigate("/enquiries/add")}><UserPlus className="w-4 h-4 text-muted-foreground" /></button>
           <button className="mt-4"><Printer className="w-4 h-4 text-muted-foreground" /></button>
           <button className="mt-4" onClick={exportToExcel}><Download className="w-4 h-4 text-muted-foreground" /></button>
         </div>
