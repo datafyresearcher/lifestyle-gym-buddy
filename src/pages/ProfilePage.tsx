@@ -6,9 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { User, Phone, Lock, Eye, EyeOff, Camera, Upload, X, Copy, Fingerprint, Plus } from "lucide-react";
+import { User, Phone, Lock, Eye, EyeOff, Camera, Upload, X, Copy, Fingerprint, Plus, ArrowLeft, Download } from "lucide-react";
 import { toast } from "sonner";
 import adminAvatar from "@/assets/admin-avatar.png";
+import * as XLSX from "xlsx";
 
 // Mock petty cash data
 const mockPettyCash = [
@@ -53,6 +54,23 @@ export default function ProfilePage() {
 
   // Attendance Slots dialog
   const [slotOpen, setSlotOpen] = useState(false);
+
+  // Petty Cash dialog
+  const [pettyCashOpen, setPettyCashOpen] = useState(false);
+  const [addAmount, setAddAmount] = useState("0");
+  const [pettyCashData, setPettyCashData] = useState(mockPettyCash);
+
+  // Attendance History view
+  const [showAttendanceHistory, setShowAttendanceHistory] = useState(false);
+  const [attStartDate, setAttStartDate] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
+  });
+  const [attEndDate, setAttEndDate] = useState(() => {
+    const now = new Date();
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${lastDay}`;
+  });
 
   const handleUploadPhoto = () => fileInputRef.current?.click();
 
@@ -127,8 +145,64 @@ export default function ProfilePage() {
     setLeaveTo("");
   };
 
-  const currentBalance = mockPettyCash[mockPettyCash.length - 1]?.newBalance || 0;
+  const currentBalance = pettyCashData[pettyCashData.length - 1]?.newBalance || 0;
 
+  const handleAddPettyCash = () => {
+    const amt = parseInt(addAmount) || 0;
+    if (amt <= 0) { toast.error("Please enter a valid amount"); return; }
+    const newBal = currentBalance + amt;
+    const now = new Date();
+    const dateStr = `${String(now.getDate()).padStart(2, "0")}/${String(now.getMonth() + 1).padStart(2, "0")}/${now.getFullYear()}`;
+    const newTx = {
+      txNo: `T-${now.getMonth()}${now.getFullYear()}-${Math.floor(Math.random() * 9000) + 1000}`,
+      amountAdded: amt,
+      prevBalance: currentBalance,
+      newBalance: newBal,
+      addedOn: dateStr,
+    };
+    setPettyCashData([...pettyCashData, newTx]);
+    setPettyCashOpen(false);
+    setAddAmount("0");
+    toast.success("Petty cash added successfully");
+  };
+
+  const generateAttendanceData = () => {
+    const start = new Date(attStartDate);
+    const end = new Date(attEndDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const rows: { date: string; slotName: string; checkIn: string; checkOut: string; totalWorking: string; totalWorked: string }[] = [];
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      const dateStr = d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+      const isPast = d < today;
+      const isToday = d.getTime() === today.getTime();
+      rows.push({
+        date: dateStr,
+        slotName: "",
+        checkIn: "",
+        checkOut: "",
+        totalWorking: isPast || isToday ? "ABSENT" : "Future Date",
+        totalWorked: "",
+      });
+    }
+    return rows;
+  };
+
+  const handleExportAttendance = () => {
+    const data = generateAttendanceData();
+    const ws = XLSX.utils.json_to_sheet(data.map(r => ({
+      "Date": r.date,
+      "Slot Name": r.slotName,
+      "Check In Time": r.checkIn,
+      "Check out Time": r.checkOut,
+      "Total Working Hours": r.totalWorking,
+      "Total Worked Hours": r.totalWorked,
+    })));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Attendance History");
+    XLSX.writeFile(wb, "Admin_Attendance_History.xlsx");
+    toast.success("Attendance history exported");
+  };
   return (
     <PageContainer title="Admin" breadcrumbs={[{ label: "User Management" }, { label: "All Users" }, { label: "Admin" }]}>
       {/* Top Action Bar */}
@@ -139,8 +213,11 @@ export default function ProfilePage() {
         <Button className="bg-green-600 hover:bg-green-700 text-white" onClick={handleUpdate}>
           💾 Update
         </Button>
-        <Button className="bg-green-600 hover:bg-green-700 text-white">
+        <Button className="bg-green-600 hover:bg-green-700 text-white" onClick={() => setPettyCashOpen(true)}>
           💰 Add Petty Cash
+        </Button>
+        <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setShowAttendanceHistory(true)}>
+          + Go To User Attendance History
         </Button>
       </div>
 
@@ -317,7 +394,7 @@ export default function ProfilePage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {mockPettyCash.map((tx) => (
+                  {pettyCashData.map((tx) => (
                     <tr key={tx.txNo}>
                       <td>{tx.txNo}</td>
                       <td>{tx.amountAdded.toLocaleString()}</td>
@@ -499,6 +576,93 @@ export default function ProfilePage() {
                 <Camera className="w-4 h-4 mr-1" /> Capture
               </Button>
               <Button variant="outline" onClick={stopCamera}>Cancel</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+      {/* Add Petty Cash Dialog */}
+      <Dialog open={pettyCashOpen} onOpenChange={setPettyCashOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Add Petty Cash</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Label className="font-bold">Current Balance</Label>
+              <span className="font-bold">{currentBalance.toLocaleString()}</span>
+            </div>
+            <div className="flex items-center justify-between gap-4">
+              <Label className="font-medium">Add Amount</Label>
+              <Input
+                type="number"
+                value={addAmount}
+                onChange={(e) => setAddAmount(e.target.value)}
+                className="w-32 text-right"
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label className="font-bold">New Balance</Label>
+              <span className="font-bold">{(currentBalance + (parseInt(addAmount) || 0)).toLocaleString()}</span>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={handleAddPettyCash} className="bg-green-600 hover:bg-green-700 text-white w-full">
+              Add Petty Cash
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Attendance History View */}
+      <Dialog open={showAttendanceHistory} onOpenChange={setShowAttendanceHistory}>
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold">Admin Attendance History</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-end gap-4">
+              <div>
+                <Label className="text-xs text-muted-foreground">Start Date</Label>
+                <Input type="date" value={attStartDate} onChange={(e) => setAttStartDate(e.target.value)} />
+              </div>
+              <div>
+                <Label className="text-xs text-muted-foreground">End Date</Label>
+                <Input type="date" value={attEndDate} onChange={(e) => setAttEndDate(e.target.value)} />
+              </div>
+              <Button className="bg-green-600 hover:bg-green-700 text-white" size="sm">
+                Get Attendance
+              </Button>
+              <Button className="bg-green-600 hover:bg-green-700 text-white" size="sm" onClick={handleExportAttendance}>
+                <Download className="w-3 h-3 mr-1" /> Export
+              </Button>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="data-table w-full">
+                <thead>
+                  <tr className="bg-sidebar text-sidebar-foreground">
+                    <th className="text-left px-4 py-2">Date</th>
+                    <th className="text-left px-4 py-2">Slot Name</th>
+                    <th className="text-left px-4 py-2">Check In Time</th>
+                    <th className="text-left px-4 py-2">Check out Time</th>
+                    <th className="text-left px-4 py-2">Total Working Hours</th>
+                    <th className="text-left px-4 py-2">Total Worked Hours</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {generateAttendanceData().map((row, i) => (
+                    <tr key={i} className="border-b border-border">
+                      <td className="px-4 py-2 text-sm font-medium">{row.date}</td>
+                      <td className="px-4 py-2 text-sm">{row.slotName}</td>
+                      <td className="px-4 py-2 text-sm">{row.checkIn}</td>
+                      <td className="px-4 py-2 text-sm">{row.checkOut}</td>
+                      <td className={`px-4 py-2 text-sm font-medium ${row.totalWorking === "ABSENT" ? "text-destructive" : "text-muted-foreground"}`}>
+                        {row.totalWorking}
+                      </td>
+                      <td className="px-4 py-2 text-sm">{row.totalWorked}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </DialogContent>
