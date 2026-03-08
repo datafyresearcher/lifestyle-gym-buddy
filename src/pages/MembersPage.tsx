@@ -2,25 +2,42 @@ import PageContainer from "@/components/PageContainer";
 import { useState } from "react";
 import { Search, XCircle, Edit, Camera, User, Settings, MessageCircle, Phone, Plus, List, LayoutGrid } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const mockMembers = [
-  { id: 122, name: "Ahmed", phone: "+923325685258", dueDate: "08th Apr", membership: "Monthly" },
-  { id: 121, name: "Uzair Ali", phone: "+923437033333", dueDate: "03rd Apr", membership: "Family" },
-  { id: 120, name: "Hifsa Ali", phone: "+923325682852", dueDate: "03rd Apr", membership: "Monthly" },
-  { id: 118, name: "Aman", phone: "+923335852554", dueDate: "25th Apr", membership: "VIP" },
-  { id: 117, name: "Ahmed", phone: "+923355748558", dueDate: "25th Mar", membership: "Monthly" },
-  { id: 116, name: "Ayesha", phone: "+923458547552", dueDate: "20th Mar", membership: "Group" },
-  { id: 115, name: "Hussain Khan", phone: "+923325685258", dueDate: "15th Mar", membership: "Yearly" },
-  { id: 114, name: "Hamza", phone: "+923437033333", dueDate: "10th Mar", membership: "Monthly" },
+  { id: 122, name: "Ahmed", phone: "+923325685258", email: "ahmed@mail.com", cardNo: "C-122", dueDate: "08th Apr", membership: "Monthly" },
+  { id: 121, name: "Uzair Ali", phone: "+923437033333", email: "uzair@mail.com", cardNo: "C-121", dueDate: "03rd Apr", membership: "Family" },
+  { id: 120, name: "Hifsa Ali", phone: "+923325682852", email: "hifsa@mail.com", cardNo: "C-120", dueDate: "03rd Apr", membership: "Monthly" },
+  { id: 118, name: "Aman", phone: "+923335852554", email: "aman@mail.com", cardNo: "C-118", dueDate: "25th Apr", membership: "VIP" },
+  { id: 117, name: "Ahmed", phone: "+923355748558", email: "ahmed2@mail.com", cardNo: "C-117", dueDate: "25th Mar", membership: "Monthly" },
+  { id: 116, name: "Ayesha", phone: "+923458547552", email: "ayesha@mail.com", cardNo: "C-116", dueDate: "20th Mar", membership: "Group" },
+  { id: 115, name: "Hussain Khan", phone: "+923325685258", email: "hussain@mail.com", cardNo: "C-115", dueDate: "15th Mar", membership: "Yearly" },
+  { id: 114, name: "Hamza", phone: "+923437033333", email: "hamza@mail.com", cardNo: "C-114", dueDate: "10th Mar", membership: "Monthly" },
 ];
 
 export default function MembersPage() {
   const [view, setView] = useState<"card" | "list">("card");
   const [searchName, setSearchName] = useState("");
+  const [searchMembership, setSearchMembership] = useState("");
+  const [searchMobile, setSearchMobile] = useState("");
+  const [searchEmail, setSearchEmail] = useState("");
+  const [searchCard, setSearchCard] = useState("");
 
   const filtered = mockMembers.filter((m) =>
-    m.name.toLowerCase().includes(searchName.toLowerCase())
+    m.name.toLowerCase().includes(searchName.toLowerCase()) &&
+    m.membership.toLowerCase().includes(searchMembership.toLowerCase()) &&
+    m.phone.includes(searchMobile) &&
+    m.email.toLowerCase().includes(searchEmail.toLowerCase()) &&
+    m.cardNo.toLowerCase().includes(searchCard.toLowerCase())
   );
+
+  const clearSearch = () => {
+    setSearchName("");
+    setSearchMembership("");
+    setSearchMobile("");
+    setSearchEmail("");
+    setSearchCard("");
+  };
 
   return (
     <PageContainer title="Members" breadcrumbs={[{ label: "Member Management" }, { label: "All Members" }]}>
@@ -28,10 +45,10 @@ export default function MembersPage() {
       <div className="bg-card border border-border rounded-lg p-4 mb-4">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-3">
           <input placeholder="Search By Name" className="search-input" value={searchName} onChange={(e) => setSearchName(e.target.value)} />
-          <input placeholder="Search By Membership" className="search-input" />
-          <input placeholder="Search By Mobile" className="search-input" />
-          <input placeholder="Search By Email" className="search-input" />
-          <input placeholder="Search By Card Number" className="search-input" />
+          <input placeholder="Search By Membership" className="search-input" value={searchMembership} onChange={(e) => setSearchMembership(e.target.value)} />
+          <input placeholder="Search By Mobile" className="search-input" value={searchMobile} onChange={(e) => setSearchMobile(e.target.value)} />
+          <input placeholder="Search By Email" className="search-input" value={searchEmail} onChange={(e) => setSearchEmail(e.target.value)} />
+          <input placeholder="Search By Card Number" className="search-input" value={searchCard} onChange={(e) => setSearchCard(e.target.value)} />
           <Select>
             <SelectTrigger><SelectValue placeholder="Package Type: All" /></SelectTrigger>
             <SelectContent>
@@ -43,8 +60,8 @@ export default function MembersPage() {
         </div>
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
-            <button className="bg-sidebar text-sidebar-accent-foreground px-4 py-2 rounded text-sm flex items-center gap-2">
-              <Edit className="w-3 h-3" /> Clear Search
+            <button onClick={clearSearch} className="bg-sidebar text-sidebar-accent-foreground px-4 py-2 rounded text-sm flex items-center gap-2">
+              <XCircle className="w-3 h-3" /> Clear Search
             </button>
             <button className="bg-primary text-primary-foreground px-4 py-2 rounded text-sm flex items-center gap-2">
               <Plus className="w-3 h-3" /> Add New (F2)
@@ -86,8 +103,12 @@ export default function MembersPage() {
                 </button>
               </div>
               <div className="p-4">
-                <div className="w-full h-32 bg-muted rounded-lg flex items-center justify-center mb-3">
-                  <User className="w-12 h-12 text-muted-foreground" />
+                <div className="w-full flex items-center justify-center mb-3 py-4">
+                  <Avatar className="w-20 h-20">
+                    <AvatarFallback className="text-2xl font-bold bg-muted text-muted-foreground">
+                      {member.name.split(" ").map(n => n[0]).join("").toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
                 </div>
                 <div className="flex items-center justify-between text-sm mb-3">
                   <span className="text-muted-foreground">{member.phone}</span>
