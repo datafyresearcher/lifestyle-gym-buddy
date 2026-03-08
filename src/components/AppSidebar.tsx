@@ -39,8 +39,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useState } from "react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import logoImg from "@/assets/Lifestyle_Reset_Logo_Transparent.png";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import logoImg from "@/assets/Transparent_logo.png";
+import adminAvatar from "@/assets/admin-avatar.png";
 
 const menuItems = [
   { title: "Members Management", url: "/members", icon: Users },
