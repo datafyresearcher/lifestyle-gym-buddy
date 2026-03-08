@@ -468,7 +468,7 @@ function ReportView({ reportKey }: ReportViewProps) {
             {paginated.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={config.columns.length} className="text-center py-8 text-muted-foreground">
-                  {reportKey === "defaulter" ? "No Defaulters Found." : "No records found."}
+                  {config.emptyMessage || "No records found."}
                 </TableCell>
               </TableRow>
             ) : (
