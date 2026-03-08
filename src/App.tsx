@@ -16,6 +16,7 @@ import ServicesPage from "@/pages/ServicesPage";
 import PlaceholderPage from "@/pages/PlaceholderPage";
 import ProductsPage from "@/pages/ProductsPage";
 import SuppliersPage from "@/pages/SuppliersPage";
+import PurchaseOrderPage from "@/pages/PurchaseOrderPage";
 import EnquiriesPage from "@/pages/EnquiriesPage";
 import AddEnquiryPage from "@/pages/AddEnquiryPage";
 import ActivityLogsPage from "@/pages/ActivityLogsPage";
@@ -49,6 +50,7 @@ const App = () => (
             <Route path="/petty-cash" element={<PettyCashPage />} />
             <Route path="/sales/*" element={<PlaceholderPage title="Sales" breadcrumbs={[{ label: "Sales" }]} />} />
             <Route path="/purchasing/suppliers" element={<SuppliersPage />} />
+            <Route path="/purchasing/order" element={<PurchaseOrderPage />} />
             <Route path="/purchasing/*" element={<PlaceholderPage title="Purchasing" breadcrumbs={[{ label: "Purchasing" }]} />} />
             <Route path="/products/*" element={<ProductsPage />} />
             <Route path="/training-sessions" element={<PlaceholderPage title="Training Sessions" breadcrumbs={[{ label: "Training Sessions" }]} />} />
