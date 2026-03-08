@@ -100,6 +100,7 @@ export default function SuppliersPage() {
     setEditEmail(supplier.email);
     setEditGender(supplier.gender);
     setEditDate(supplier.createdDate);
+    setAvatarPreview(supplier.avatar || null);
     setDetailOpen(true);
   };
 
