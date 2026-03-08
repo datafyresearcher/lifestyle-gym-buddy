@@ -21,6 +21,9 @@ import {
   CheckCircle,
   HelpCircle,
   ChevronDown,
+  User,
+  Globe,
+  LogOut,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -140,6 +143,7 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const location = useLocation();
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
+  const [adminMenuOpen, setAdminMenuOpen] = useState(false);
 
   const isActive = (url: string) => location.pathname === url || location.pathname.startsWith(url + "/");
 
@@ -153,18 +157,40 @@ export function AppSidebar() {
         {/* User Profile */}
         {!collapsed && (
           <div className="flex flex-col items-center py-4 border-b border-sidebar-border">
-            <div className="flex flex-col items-center mb-4">
-              <img src={logoImg} alt="Lifestyle Reset Gym" className="w-44 h-44 object-contain" />
+            <div className="flex flex-col items-center mb-3">
+              <img src={logoImg} alt="Lifestyle Reset Gym" className="w-24 h-24 object-contain" />
             </div>
-            <Avatar className="w-24 h-24 mb-2 border-2 border-sidebar-accent">
+            <Avatar className="w-32 h-32 mb-2 border-2 border-sidebar-accent">
               <AvatarImage src={adminAvatar} alt="Admin" className="object-cover" />
-              <AvatarFallback className="bg-sidebar-accent text-sidebar-accent-foreground text-2xl font-bold">
+              <AvatarFallback className="bg-sidebar-accent text-sidebar-accent-foreground text-3xl font-bold">
                 A
               </AvatarFallback>
             </Avatar>
-            <div className="flex items-center gap-1 text-sidebar-foreground text-sm">
-              <span>Admin</span>
-              <ChevronDown className="w-3 h-3" />
+            <div className="relative">
+              <button
+                onClick={() => setAdminMenuOpen(!adminMenuOpen)}
+                className="flex items-center gap-1 text-sidebar-foreground text-sm hover:text-sidebar-accent-foreground transition-colors"
+              >
+                <span>Admin</span>
+                <ChevronDown className={`w-3 h-3 transition-transform ${adminMenuOpen ? "rotate-180" : ""}`} />
+              </button>
+              {adminMenuOpen && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-44 bg-sidebar border border-sidebar-border rounded-lg shadow-lg z-50 py-1">
+                  <button className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+                    <User className="w-4 h-4" />
+                    <span>Profile</span>
+                  </button>
+                  <button className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+                    <Globe className="w-4 h-4" />
+                    <span>English</span>
+                    <ChevronDown className="w-3 h-3 ml-auto" />
+                  </button>
+                  <button className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+                    <LogOut className="w-4 h-4" />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}
