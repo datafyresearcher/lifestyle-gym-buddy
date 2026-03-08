@@ -484,20 +484,6 @@ function ReportView({ reportKey }: ReportViewProps) {
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="mt-6 text-center text-sm text-muted-foreground space-y-2 border-t border-border pt-4">
-        <p className="font-semibold text-foreground">Powered By Lifestyle Reset</p>
-        <div className="flex items-center justify-center gap-1">
-          <MessageCircle className="h-4 w-4 text-green-500" />
-          <a href="https://wa.me/923042451070" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">+92-304-2451070</a>
-          <button onClick={() => copyToClipboard("+92-304-2451070")} className="ml-1"><Copy className="h-3 w-3 text-muted-foreground hover:text-foreground" /></button>
-        </div>
-        <div className="flex items-center justify-center gap-1">
-          <Mail className="h-4 w-4 text-muted-foreground" />
-          <span>Email: </span>
-          <a href="mailto:researcher@datafyassociates.com" className="text-primary hover:underline">researcher@datafyassociates.com</a>
-          <button onClick={() => copyToClipboard("researcher@datafyassociates.com")} className="ml-1"><Copy className="h-3 w-3 text-muted-foreground hover:text-foreground" /></button>
-        </div>
       </div>
     </div>
   );
