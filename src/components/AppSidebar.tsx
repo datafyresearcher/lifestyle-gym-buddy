@@ -159,7 +159,14 @@ export function AppSidebar() {
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState("English");
-  const languages = [
+  const [logoutOpen, setLogoutOpen] = useState(false);
+
+  const handleLogout = () => {
+    setLogoutOpen(false);
+    setAdminMenuOpen(false);
+    // For now just redirect to root; replace with auth logout when backend is connected
+    window.location.href = "/";
+  };
     { label: "English", value: "English" },
     { label: "عربی", value: "عربی" },
     { label: "اردو", value: "اردو" },
