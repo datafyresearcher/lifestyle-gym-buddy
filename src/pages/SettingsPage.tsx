@@ -423,40 +423,53 @@ function UserManagement() {
 // ─── Branch Management ───
 function BranchManagement() {
   const branches = [
-    { id: 1, name: "Main Branch", address: "123 Fitness St, Karachi", phone: "+92-300-1234567", manager: "John Manager", status: "Active" },
-    { id: 2, name: "North Branch", address: "456 Health Ave, Lahore", phone: "+92-301-7654321", manager: "Sara Trainer", status: "Active" },
+    { id: 1, name: "Demo Gym F11 Markaz", mobile: "+923325478182", email: "demogym@gmail.com", company: "Demo Gym", license: "(6 days remaining)" },
+    { id: 2, name: "Raiwind LDA, Lahore", mobile: "+92-304-2451070", email: "raiwind@lifestylereset.com", company: "Lifestyle Reset", license: "Active" },
   ];
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-foreground">Branches</h3>
-        <Button size="sm"><Plus className="w-4 h-4 mr-1" /> Add Branch</Button>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {branches.map((b) => (
-          <Card key={b.id}>
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base">{b.name}</CardTitle>
-                <Badge>{b.status}</Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-1 text-sm text-muted-foreground">
-              <p><span className="font-medium text-foreground">Address:</span> {b.address}</p>
-              <p><span className="font-medium text-foreground">Phone:</span> {b.phone}</p>
-              <p><span className="font-medium text-foreground">Manager:</span> {b.manager}</p>
-              <div className="flex gap-2 pt-3">
-                <Button variant="outline" size="sm"><Pencil className="w-3 h-3 mr-1" /> Edit</Button>
-                <Button variant="outline" size="sm" className="text-destructive"><Trash2 className="w-3 h-3 mr-1" /> Delete</Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      <h3 className="text-lg font-semibold text-foreground">Branches</h3>
+      <Card>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-sidebar">
+                <TableHead className="text-sidebar-foreground">Branch Name</TableHead>
+                <TableHead className="text-sidebar-foreground">Mobile</TableHead>
+                <TableHead className="text-sidebar-foreground">Email</TableHead>
+                <TableHead className="text-sidebar-foreground">Company Name</TableHead>
+                <TableHead className="text-sidebar-foreground">License</TableHead>
+                <TableHead className="text-sidebar-foreground text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {branches.map((b) => (
+                <TableRow key={b.id}>
+                  <TableCell>{b.name}</TableCell>
+                  <TableCell>{b.mobile}</TableCell>
+                  <TableCell>{b.email}</TableCell>
+                  <TableCell>{b.company}</TableCell>
+                  <TableCell>{b.license}</TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="ghost" size="icon"><Pencil className="w-4 h-4" /></Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+      {/* Pagination */}
+      <div className="flex items-center justify-center gap-2 bg-sidebar text-sidebar-foreground rounded py-2">
+        <button className="text-sidebar-foreground/60 hover:text-sidebar-foreground text-sm">⏮</button>
+        <button className="text-sidebar-foreground/60 hover:text-sidebar-foreground text-sm">◀</button>
+        <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">1</span>
+        <button className="text-sidebar-foreground/60 hover:text-sidebar-foreground text-sm">▶</button>
+        <button className="text-sidebar-foreground/60 hover:text-sidebar-foreground text-sm">⏭</button>
       </div>
     </div>
   );
 }
-
 // ─── Company Management ───
 function CompanyManagement() {
   return (
