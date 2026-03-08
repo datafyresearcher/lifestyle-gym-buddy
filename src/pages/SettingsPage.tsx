@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import PageContainer from "@/components/PageContainer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -472,112 +473,91 @@ function BranchManagement() {
 }
 // ─── Company Management ───
 function CompanyManagement() {
+  const [searchName, setSearchName] = useState("");
+  const companies = [
+    { id: 1, name: "Lifestyle Reset Gym", contact: "Admin", mobile: "+92-304-2451070", email: "admin@gmail.com" },
+  ];
+  const filtered = companies.filter(c => !searchName || c.name.toLowerCase().includes(searchName.toLowerCase()));
   return (
     <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-foreground">Companies</h3>
+      {/* Search bar */}
+      <div className="flex items-center gap-2 bg-sidebar text-sidebar-foreground rounded-t-lg px-4 py-2">
+        <div className="space-y-0.5">
+          <span className="text-xs text-sidebar-foreground/70">Search By Name</span>
+          <Input placeholder="Search here!" value={searchName} onChange={e => setSearchName(e.target.value)} className="h-7 w-40 bg-transparent border-b border-sidebar-foreground/30 rounded-none text-sidebar-foreground placeholder:text-sidebar-foreground/50 text-sm px-0 focus-visible:ring-0" />
+        </div>
+        <Button variant="ghost" size="icon" className="text-sidebar-foreground"><Search className="w-4 h-4" /></Button>
+      </div>
       <Card>
-        <CardHeader><CardTitle className="text-base">Company Information</CardTitle></CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Company Name</Label>
-            <Input defaultValue="Lifestyle Reset Gym" />
-          </div>
-          <div className="space-y-2">
-            <Label>Registration Number</Label>
-            <Input defaultValue="REG-2024-001" />
-          </div>
-          <div className="space-y-2">
-            <Label>Email</Label>
-            <Input defaultValue="info@lifestylereset.com" />
-          </div>
-          <div className="space-y-2">
-            <Label>Phone</Label>
-            <Input defaultValue="+92-304-2451070" />
-          </div>
-          <div className="space-y-2 md:col-span-2">
-            <Label>Address</Label>
-            <Input defaultValue="123 Fitness Street, Karachi, Pakistan" />
-          </div>
-          <div className="space-y-2">
-            <Label>Tax ID / NTN</Label>
-            <Input defaultValue="1234567-8" />
-          </div>
-          <div className="space-y-2">
-            <Label>Currency</Label>
-            <Select defaultValue="PKR">
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="PKR">PKR - Pakistani Rupee</SelectItem>
-                <SelectItem value="USD">USD - US Dollar</SelectItem>
-                <SelectItem value="AED">AED - UAE Dirham</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-sidebar">
+                <TableHead className="text-sidebar-foreground">Company Name</TableHead>
+                <TableHead className="text-sidebar-foreground">Contact Person</TableHead>
+                <TableHead className="text-sidebar-foreground">Mobile</TableHead>
+                <TableHead className="text-sidebar-foreground">Email</TableHead>
+                <TableHead className="text-sidebar-foreground text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.map(c => (
+                <TableRow key={c.id}>
+                  <TableCell>{c.name}</TableCell>
+                  <TableCell>{c.contact}</TableCell>
+                  <TableCell>{c.mobile}</TableCell>
+                  <TableCell>{c.email}</TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="ghost" size="icon"><Pencil className="w-4 h-4" /></Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
-      <div className="flex justify-end">
-        <Button>Save Changes</Button>
+      {/* Pagination */}
+      <div className="flex items-center justify-center gap-2 bg-sidebar text-sidebar-foreground rounded py-2">
+        <button className="text-sidebar-foreground/60 hover:text-sidebar-foreground text-sm">⏮</button>
+        <button className="text-sidebar-foreground/60 hover:text-sidebar-foreground text-sm">◀</button>
+        <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">1</span>
+        <button className="text-sidebar-foreground/60 hover:text-sidebar-foreground text-sm">▶</button>
+        <button className="text-sidebar-foreground/60 hover:text-sidebar-foreground text-sm">⏭</button>
       </div>
     </div>
   );
 }
-
 // ─── Global Settings ───
 function GlobalSettings() {
   return (
     <div className="space-y-4">
-      <Card>
-        <CardHeader><CardTitle className="text-base">General</CardTitle></CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-foreground text-sm">Enable Notifications</p>
-              <p className="text-xs text-muted-foreground">Send email and SMS notifications</p>
-            </div>
-            <Switch defaultChecked />
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-foreground text-sm">Auto-generate Member ID</p>
-              <p className="text-xs text-muted-foreground">Automatically assign membership numbers</p>
-            </div>
-            <Switch defaultChecked />
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-foreground text-sm">Allow Guest Check-in</p>
-              <p className="text-xs text-muted-foreground">Enable visitors to check in without membership</p>
-            </div>
-            <Switch />
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-foreground text-sm">Maintenance Mode</p>
-              <p className="text-xs text-muted-foreground">Temporarily disable member access</p>
-            </div>
-            <Switch />
-          </div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader><CardTitle className="text-base">Business Hours</CardTitle></CardHeader>
-        <CardContent className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Opening Time</Label>
-            <Input type="time" defaultValue="06:00" />
-          </div>
-          <div className="space-y-2">
-            <Label>Closing Time</Label>
-            <Input type="time" defaultValue="23:00" />
-          </div>
-        </CardContent>
-      </Card>
-      <div className="flex justify-end">
-        <Button>Save Settings</Button>
+      {/* Top bar */}
+      <div className="flex items-center gap-2 bg-sidebar text-sidebar-foreground rounded-lg px-4 py-2">
+        <Button size="sm" variant="outline" className="bg-sidebar-accent text-sidebar-accent-foreground">
+          <ArrowLeft className="w-3 h-3 mr-1" /> Back
+        </Button>
+        <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">
+          <Save className="w-3 h-3 mr-1" /> Update
+        </Button>
       </div>
+      <Card>
+        <CardContent className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label className="font-semibold">Default Due Date</Label>
+              <Input type="date" placeholder="Due Date" />
+            </div>
+            <div className="space-y-2">
+              <Label className="font-semibold">Gym Starting Date</Label>
+              <Input type="date" placeholder="Gym Starting Date" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
-
 // ─── Roles Management ───
 function RolesManagement() {
   const roles = [
@@ -625,137 +605,141 @@ function RolesManagement() {
 
 // ─── Permissions Management ───
 function PermissionsManagement() {
-  const modules = ["Dashboard", "Members", "Visitors", "Enquiries", "Attendance", "Reports", "Sales", "Purchasing", "Products", "Settings"];
-  const permissions = ["View", "Create", "Edit", "Delete"];
+  const [searchPage, setSearchPage] = useState("");
+  const pages = [
+    { name: "Member Management", url: "Member Management", type: "/members" },
+    { name: "Activity Logs", url: "Activity Logs", type: "/activity-logs" },
+    { name: "Visitors Management", url: "Visitors Management", type: "/visitors" },
+    { name: "Trainer Management", url: "Trainer Management", type: "/trainers" },
+    { name: "Enquiry Management", url: "Enquiry Management", type: "/enquiry" },
+    { name: "Attendance", url: "Attendance", type: "/attendance" },
+    { name: "Package Builder", url: "Package Builder", type: "/package-Builders" },
+    { name: "Upcoming Dues", url: "Reports", type: "/reports" },
+    { name: "User Management", url: "Setting", type: "/settings" },
+    { name: "Roles Management", url: "Setting", type: "/settings/roles" },
+    { name: "Branch Management", url: "Setting", type: "/settings/branches" },
+  ];
+  const filtered = pages.filter(p => !searchPage || p.name.toLowerCase().includes(searchPage.toLowerCase()));
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-foreground">Permission Matrix</h3>
-        <Select defaultValue="Admin">
-          <SelectTrigger className="w-48"><SelectValue placeholder="Select Role" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Admin">Admin</SelectItem>
-            <SelectItem value="Manager">Manager</SelectItem>
-            <SelectItem value="Trainer">Trainer</SelectItem>
-            <SelectItem value="Receptionist">Receptionist</SelectItem>
-          </SelectContent>
-        </Select>
+      <h3 className="text-lg font-semibold text-foreground">Users Role Permissions</h3>
+      {/* Search bar */}
+      <div className="flex items-center justify-between bg-sidebar text-sidebar-foreground rounded-t-lg px-4 py-2">
+        <div className="flex items-center gap-2">
+          <div className="space-y-0.5">
+            <span className="text-xs text-sidebar-foreground/70">Search By Page Name</span>
+            <Input placeholder="Search here!" value={searchPage} onChange={e => setSearchPage(e.target.value)} className="h-7 w-40 bg-transparent border-b border-sidebar-foreground/30 rounded-none text-sidebar-foreground placeholder:text-sidebar-foreground/50 text-sm px-0 focus-visible:ring-0" />
+          </div>
+          <Button variant="ghost" size="icon" className="text-sidebar-foreground"><Search className="w-4 h-4" /></Button>
+        </div>
+        <Button variant="ghost" size="icon" className="text-sidebar-foreground"><Users className="w-4 h-4" /></Button>
       </div>
       <Card>
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Module</TableHead>
-                {permissions.map((p) => <TableHead key={p} className="text-center">{p}</TableHead>)}
+              <TableRow className="bg-sidebar">
+                <TableHead className="text-sidebar-foreground">Page Name</TableHead>
+                <TableHead className="text-sidebar-foreground">Page Url</TableHead>
+                <TableHead className="text-sidebar-foreground">Page Type</TableHead>
+                <TableHead className="text-sidebar-foreground text-right">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {modules.map((m) => (
-                <TableRow key={m}>
-                  <TableCell className="font-medium">{m}</TableCell>
-                  {permissions.map((p) => (
-                    <TableCell key={p} className="text-center">
-                      <Switch defaultChecked={m === "Dashboard" || p === "View"} />
-                    </TableCell>
-                  ))}
+              {filtered.map((p, i) => (
+                <TableRow key={i} className={i % 2 === 1 ? "bg-muted/30" : ""}>
+                  <TableCell>{p.name}</TableCell>
+                  <TableCell>{p.url}</TableCell>
+                  <TableCell>{p.type}</TableCell>
+                  <TableCell className="text-right space-x-1">
+                    <Button variant="ghost" size="icon" className="text-destructive"><X className="w-4 h-4" /></Button>
+                    <Button variant="ghost" size="icon"><Pencil className="w-4 h-4" /></Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
-      <div className="flex justify-end">
-        <Button>Save Permissions</Button>
-      </div>
     </div>
   );
 }
 
 // ─── Attendance Management ───
 function AttendanceManagement() {
+  const [searchId, setSearchId] = useState("");
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   return (
     <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-foreground">Employees Attendance</h3>
+      {/* Search bar */}
+      <div className="flex items-center gap-3 bg-sidebar text-sidebar-foreground rounded-t-lg px-4 py-2">
+        <div className="space-y-0.5">
+          <span className="text-xs text-sidebar-foreground/70">Search Employee By ID</span>
+          <Input placeholder="Search here!" value={searchId} onChange={e => setSearchId(e.target.value)} className="h-7 w-36 bg-transparent border-b border-sidebar-foreground/30 rounded-none text-sidebar-foreground placeholder:text-sidebar-foreground/50 text-sm px-0 focus-visible:ring-0" />
+        </div>
+        <div className="space-y-0.5">
+          <span className="text-xs text-sidebar-foreground/70">Date</span>
+          <Input type="date" value={date} onChange={e => setDate(e.target.value)} className="h-7 w-36 bg-transparent border-b border-sidebar-foreground/30 rounded-none text-sidebar-foreground text-sm px-0 focus-visible:ring-0" />
+        </div>
+        <Button variant="ghost" size="icon" className="text-sidebar-foreground"><Search className="w-4 h-4" /></Button>
+        <Button variant="ghost" size="icon" className="text-sidebar-foreground"><X className="w-4 h-4" /></Button>
+      </div>
       <Card>
-        <CardHeader><CardTitle className="text-base">Attendance Settings</CardTitle></CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-foreground text-sm">Biometric Check-in</p>
-              <p className="text-xs text-muted-foreground">Enable fingerprint or face recognition</p>
-            </div>
-            <Switch defaultChecked />
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-foreground text-sm">QR Code Check-in</p>
-              <p className="text-xs text-muted-foreground">Allow members to scan QR code at entry</p>
-            </div>
-            <Switch defaultChecked />
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-foreground text-sm">Auto Check-out</p>
-              <p className="text-xs text-muted-foreground">Automatically mark checkout after hours</p>
-            </div>
-            <Switch />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Auto Check-out After (hours)</Label>
-              <Input type="number" defaultValue="3" />
-            </div>
-            <div className="space-y-2">
-              <Label>Grace Period (minutes)</Label>
-              <Input type="number" defaultValue="15" />
-            </div>
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-foreground text-sm">Send Late Arrival Alerts</p>
-              <p className="text-xs text-muted-foreground">Notify managers of staff late arrivals</p>
-            </div>
-            <Switch defaultChecked />
-          </div>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-sidebar">
+                <TableHead className="text-sidebar-foreground">User No</TableHead>
+                <TableHead className="text-sidebar-foreground">Name</TableHead>
+                <TableHead className="text-sidebar-foreground">Mobile</TableHead>
+                <TableHead className="text-sidebar-foreground">Slot</TableHead>
+                <TableHead className="text-sidebar-foreground">CheckIn Time</TableHead>
+                <TableHead className="text-sidebar-foreground">Checkout Time</TableHead>
+                <TableHead className="text-sidebar-foreground">Attendance Date</TableHead>
+                <TableHead className="text-sidebar-foreground text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell colSpan={8} className="text-center text-muted-foreground py-8">No attendance records found</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
-      <div className="flex justify-end">
-        <Button>Save Settings</Button>
+      {/* Pagination */}
+      <div className="flex items-center justify-center gap-2 bg-sidebar text-sidebar-foreground rounded py-2">
+        <button className="text-sidebar-foreground/60 hover:text-sidebar-foreground text-sm">⏮</button>
+        <button className="text-sidebar-foreground/60 hover:text-sidebar-foreground text-sm">◀</button>
+        <button className="text-sidebar-foreground/60 hover:text-sidebar-foreground text-sm">▶</button>
+        <button className="text-sidebar-foreground/60 hover:text-sidebar-foreground text-sm">⏭</button>
       </div>
     </div>
   );
 }
 
-// ─── Tabs config ───
-const settingsTabs = [
-  { value: "users", label: "User Management", icon: Users, component: UserManagement },
-  { value: "branches", label: "Branch Management", icon: Building2, component: BranchManagement },
-  { value: "company", label: "Company Management", icon: Building, component: CompanyManagement },
-  { value: "global", label: "Global Settings", icon: Settings, component: GlobalSettings },
-  { value: "roles", label: "Roles Management", icon: Shield, component: RolesManagement },
-  { value: "permissions", label: "Permissions Management", icon: Lock, component: PermissionsManagement },
-  { value: "attendance", label: "Attendance Management", icon: ClipboardCheck, component: AttendanceManagement },
-];
+// ─── Route-based Settings Page ───
+const settingsRoutes: Record<string, { label: string; component: React.FC }> = {
+  users: { label: "User Management", component: UserManagement },
+  branches: { label: "Branch Management", component: BranchManagement },
+  company: { label: "Company Management", component: CompanyManagement },
+  global: { label: "Global Settings", component: GlobalSettings },
+  roles: { label: "Roles Management", component: RolesManagement },
+  permissions: { label: "Permissions Management", component: PermissionsManagement },
+  attendance: { label: "Attendance Management", component: AttendanceManagement },
+};
 
 export default function SettingsPage() {
+  const location = useLocation();
+  const pathParts = location.pathname.split("/");
+  const section = pathParts[2] || "users";
+  const route = settingsRoutes[section] || settingsRoutes.users;
+  const Component = route.component;
+
   return (
-    <PageContainer title="Settings" breadcrumbs={[{ label: "Settings" }]}>
-      <Tabs defaultValue="users" className="space-y-4">
-        <TabsList className="flex flex-wrap h-auto gap-1 bg-muted p-1">
-          {settingsTabs.map((tab) => (
-            <TabsTrigger key={tab.value} value={tab.value} className="flex items-center gap-1.5 text-xs sm:text-sm">
-              <tab.icon className="w-4 h-4" />
-              <span className="hidden sm:inline">{tab.label}</span>
-              <span className="sm:hidden">{tab.label.split(" ")[0]}</span>
-            </TabsTrigger>
-          ))}
-        </TabsList>
-        {settingsTabs.map((tab) => (
-          <TabsContent key={tab.value} value={tab.value}>
-            <tab.component />
-          </TabsContent>
-        ))}
-      </Tabs>
+    <PageContainer title={route.label} breadcrumbs={[{ label: "Settings" }, { label: route.label }]}>
+      <Component />
     </PageContainer>
   );
 }

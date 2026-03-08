@@ -24,6 +24,11 @@ import {
   User,
   Globe,
   LogOut,
+  Building2,
+  Building,
+  Shield,
+  Lock,
+  type LucideIcon,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -67,13 +72,13 @@ const menuItems = [
     url: "/settings",
     icon: Settings,
     children: [
-      { title: "User Management", url: "/settings/users" },
-      { title: "Branch Management", url: "/settings/branches" },
-      { title: "Company Management", url: "/settings/company" },
-      { title: "Global Settings", url: "/settings/global" },
-      { title: "Roles Management", url: "/settings/roles" },
-      { title: "Permissions Management", url: "/settings/permissions" },
-      { title: "Attendance Management", url: "/settings/attendance" },
+      { title: "User Management", url: "/settings/users", icon: Users },
+      { title: "Branch Management", url: "/settings/branches", icon: Building2 },
+      { title: "Company Management", url: "/settings/company", icon: Building },
+      { title: "Global Settings", url: "/settings/global", icon: Settings },
+      { title: "Roles Management", url: "/settings/roles", icon: Shield },
+      { title: "Permissions Management", url: "/settings/permissions", icon: Lock },
+      { title: "Attendance Management", url: "/settings/attendance", icon: ClipboardCheck },
     ],
   },
   {
@@ -230,9 +235,10 @@ export function AppSidebar() {
                             <SidebarMenuSubItem key={child.title}>
                               <NavLink
                                 to={child.url}
-                                className="text-sidebar-foreground hover:text-sidebar-accent-foreground text-sm px-4 py-1.5 block"
+                                className="text-sidebar-foreground hover:text-sidebar-accent-foreground text-sm px-4 py-1.5 flex items-center gap-2"
                                 activeClassName="text-sidebar-primary font-medium"
                               >
+                                {(() => { const Icon = (child as any).icon; return Icon ? <Icon className="w-3.5 h-3.5" /> : null; })()}
                                 {child.title}
                               </NavLink>
                             </SidebarMenuSubItem>
