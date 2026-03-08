@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Users, Building2, Building, Settings, Shield, Lock, ClipboardCheck, Plus, Pencil, Trash2, Search, Camera, Upload, X, User, Phone, Eye, EyeOff, Save, ArrowLeft } from "lucide-react";
+import { Users, Building2, Building, Settings, Shield, Lock, ClipboardCheck, Plus, Pencil, Trash2, Search, Camera, Upload, X, User, Phone, Eye, EyeOff, Save, ArrowLeft, FileText, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 
 // ─── Add User Dialog ───
@@ -560,12 +560,26 @@ function GlobalSettings() {
 }
 // ─── Roles Management ───
 function RolesManagement() {
-  const roles = [
+  const [roles] = useState([
     { id: 1, name: "Admin", users: 1, permissions: "Full Access" },
     { id: 2, name: "Manager", users: 2, permissions: "Members, Reports, Sales" },
     { id: 3, name: "Trainer", users: 5, permissions: "Members, Attendance, Training" },
     { id: 4, name: "Receptionist", users: 3, permissions: "Members, Visitors, Attendance" },
-  ];
+  ]);
+  const [editRole, setEditRole] = useState<typeof roles[0] | null>(null);
+  const [deactivateRole, setDeactivateRole] = useState<typeof roles[0] | null>(null);
+  const [editForm, setEditForm] = useState({ name: "", url: "", pageUrl: "", group: "", sortOrder: "2", subSort: "0", type: "basic" });
+
+  const handleEdit = (role: typeof roles[0]) => {
+    setEditRole(role);
+    setEditForm({ name: role.name, url: `/${role.name.toLowerCase()}`, pageUrl: role.name, group: "group", sortOrder: "2", subSort: "0", type: "basic" });
+  };
+
+  const handleDeactivate = () => {
+    toast.success(`Permission "${deactivateRole?.name}" deactivated`);
+    setDeactivateRole(null);
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -576,11 +590,11 @@ function RolesManagement() {
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Role Name</TableHead>
-                <TableHead>Users Assigned</TableHead>
-                <TableHead>Permissions</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+              <TableRow className="bg-sidebar">
+                <TableHead className="text-sidebar-foreground">Role Name</TableHead>
+                <TableHead className="text-sidebar-foreground">Users Assigned</TableHead>
+                <TableHead className="text-sidebar-foreground">Permissions</TableHead>
+                <TableHead className="text-sidebar-foreground text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -590,8 +604,12 @@ function RolesManagement() {
                   <TableCell><Badge variant="secondary">{r.users}</Badge></TableCell>
                   <TableCell className="text-muted-foreground text-sm">{r.permissions}</TableCell>
                   <TableCell className="text-right space-x-1">
-                    <Button variant="ghost" size="icon"><Pencil className="w-4 h-4" /></Button>
-                    <Button variant="ghost" size="icon"><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                    <Button variant="ghost" size="icon" className="text-destructive" onClick={() => setDeactivateRole(r)}>
+                      <X className="w-4 h-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => handleEdit(r)}>
+                      <Pencil className="w-4 h-4" />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -599,10 +617,91 @@ function RolesManagement() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Edit Permission Dialog */}
+      <Dialog open={!!editRole} onOpenChange={(o) => { if (!o) setEditRole(null); }}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Permission</DialogTitle>
+            <DialogDescription>Edit permission details for {editRole?.name}</DialogDescription>
+          </DialogHeader>
+          {/* Top bar */}
+          <div className="flex items-center gap-2 bg-sidebar text-sidebar-foreground rounded-lg px-4 py-2">
+            <Button size="sm" variant="outline" className="bg-sidebar-accent text-sidebar-accent-foreground">
+              <Plus className="w-3 h-3 mr-1" /> New
+            </Button>
+            <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => { toast.success("Permission updated"); setEditRole(null); }}>
+              <Save className="w-3 h-3 mr-1" /> Update
+            </Button>
+          </div>
+          <Card>
+            <CardContent className="p-6">
+              <h4 className="font-semibold text-foreground mb-4">Permission</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-muted-foreground" />
+                  <Input value={editForm.name} onChange={e => setEditForm(p => ({ ...p, name: e.target.value }))} />
+                </div>
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-muted-foreground" />
+                  <Input value={editForm.group} onChange={e => setEditForm(p => ({ ...p, group: e.target.value }))} />
+                </div>
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-muted-foreground" />
+                  <Input value={editForm.url} onChange={e => setEditForm(p => ({ ...p, url: e.target.value }))} />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground text-sm">↕</span>
+                  <Input value={editForm.sortOrder} onChange={e => setEditForm(p => ({ ...p, sortOrder: e.target.value }))} />
+                </div>
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-muted-foreground" />
+                  <Input value={editForm.pageUrl} onChange={e => setEditForm(p => ({ ...p, pageUrl: e.target.value }))} />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground text-sm">↕</span>
+                  <Input value={editForm.subSort} onChange={e => setEditForm(p => ({ ...p, subSort: e.target.value }))} />
+                </div>
+                <div className="flex items-center gap-2 md:col-start-2">
+                  <span className="text-sm text-foreground font-medium">Type</span>
+                  <Select value={editForm.type} onValueChange={v => setEditForm(p => ({ ...p, type: v }))}>
+                    <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="basic">basic</SelectItem>
+                      <SelectItem value="advanced">advanced</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </DialogContent>
+      </Dialog>
+
+      {/* Deactivate Confirmation Dialog */}
+      <Dialog open={!!deactivateRole} onOpenChange={(o) => { if (!o) setDeactivateRole(null); }}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Confirmation</DialogTitle>
+            <DialogDescription className="sr-only">Deactivate confirmation</DialogDescription>
+          </DialogHeader>
+          <div className="flex items-start gap-3 py-4">
+            <span className="text-yellow-500 text-lg">⚠</span>
+            <p className="text-sm text-foreground">Are you sure you want to DeActivate Permission ?</p>
+          </div>
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setDeactivateRole(null)}>
+              <X className="w-3 h-3 mr-1" /> No
+            </Button>
+            <Button className="bg-sidebar text-sidebar-foreground hover:opacity-90" onClick={handleDeactivate}>
+              <CheckCircle className="w-3 h-3 mr-1" /> Yes
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
-
 // ─── Permissions Management ───
 function PermissionsManagement() {
   const [searchPage, setSearchPage] = useState("");
