@@ -300,6 +300,27 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      {/* Logout Confirmation Dialog */}
+      <Dialog open={logoutOpen} onOpenChange={setLogoutOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Confirmation</DialogTitle>
+          </DialogHeader>
+          <div className="py-4 flex items-center gap-3">
+            <span className="text-2xl">⚠</span>
+            <span className="text-sm">Are you sure you want to Logout?</span>
+          </div>
+          <DialogFooter className="flex gap-2 sm:gap-2">
+            <Button variant="secondary" onClick={() => setLogoutOpen(false)}>
+              <X className="w-4 h-4 mr-1" /> No
+            </Button>
+            <Button className="bg-sidebar text-sidebar-foreground hover:bg-sidebar-accent" onClick={handleLogout}>
+              ✓ Yes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Sidebar>
   );
 }
