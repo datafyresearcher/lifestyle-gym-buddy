@@ -308,6 +308,7 @@ interface ReportViewProps {
 
 function ReportView({ reportKey }: ReportViewProps) {
   const config = reportConfigs[reportKey];
+  const { toast } = useToast();
   const [search, setSearch] = useState("");
   const [fromDate, setFromDate] = useState("2026-03-01");
   const [toDate, setToDate] = useState("2026-03-31");
@@ -334,25 +335,48 @@ function ReportView({ reportKey }: ReportViewProps) {
     ? [...new Set(config.data.map((r) => String(r[config.filters![0]])))]
     : [];
 
+  const handleExport = () => {
+    const exportData = filtered.map((row) => {
+      const obj: Record<string, string | number> = {};
+      config.columns.forEach((col) => {
+        if (col.key !== "photo" && col.key !== "image" && col.key !== "action") {
+          obj[col.label] = row[col.key];
+        }
+      });
+      return obj;
+    });
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, config.title);
+    XLSX.writeFile(wb, `${config.title.replace(/\s+/g, "_")}.xlsx`);
+    toast({ title: "Exported", description: `${config.title} exported to Excel.` });
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({ title: "Copied", description: `${text} copied to clipboard.` });
+  };
+
+  const isImageCol = (key: string) => key === "photo" || key === "image";
+  const isActionCol = (key: string) => key === "action";
+
+  const searchLabel = reportKey === "defaulter"
+    ? "Search By Membership / Name"
+    : reportKey === "new-member"
+    ? "Search By Membership ID"
+    : "Search";
+
   return (
     <div>
       {/* Filters */}
       <div className="bg-sidebar-accent rounded-t-lg p-3 flex items-center gap-3 flex-wrap">
         <div>
-          <span className="text-xs text-sidebar-accent-foreground block mb-0.5">Search</span>
-          <Input placeholder="Search..." value={search} onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }} className="w-44 h-9 bg-background" />
-        </div>
-        <div>
-          <span className="text-xs text-sidebar-accent-foreground block mb-0.5">From</span>
-          <Input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} className="w-40 h-9 bg-background" />
-        </div>
-        <div>
-          <span className="text-xs text-sidebar-accent-foreground block mb-0.5">To</span>
-          <Input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} className="w-40 h-9 bg-background" />
+          <span className="text-xs text-sidebar-accent-foreground block mb-0.5">{searchLabel}</span>
+          <Input placeholder="Search here!" value={search} onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }} className="w-44 h-9 bg-background" />
         </div>
         {filterOptions.length > 0 && (
           <div>
-            <span className="text-xs text-sidebar-accent-foreground block mb-0.5 capitalize">{config.filters![0]}</span>
+            <span className="text-xs text-sidebar-accent-foreground block mb-0.5">Select {config.filters![0]}</span>
             <Select value={filterValue} onValueChange={(v) => { setFilterValue(v); setCurrentPage(1); }}>
               <SelectTrigger className="w-36 h-9 bg-background"><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -364,13 +388,21 @@ function ReportView({ reportKey }: ReportViewProps) {
             </Select>
           </div>
         )}
+        <div>
+          <span className="text-xs text-sidebar-accent-foreground block mb-0.5">From</span>
+          <Input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} className="w-40 h-9 bg-background" />
+        </div>
+        <div>
+          <span className="text-xs text-sidebar-accent-foreground block mb-0.5">To</span>
+          <Input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} className="w-40 h-9 bg-background" />
+        </div>
         <div className="flex items-end gap-1 mt-4">
           <Button variant="ghost" size="icon"><Search className="h-5 w-5 text-sidebar-accent-foreground" /></Button>
           <Button variant="ghost" size="icon" onClick={() => { setSearch(""); setFilterValue("all"); }}><X className="h-5 w-5 text-sidebar-accent-foreground" /></Button>
         </div>
         <div className="ml-auto flex items-end gap-1 mt-4">
           <Button variant="ghost" size="icon"><Printer className="h-5 w-5 text-sidebar-accent-foreground" /></Button>
-          <Button variant="ghost" size="icon"><Download className="h-5 w-5 text-sidebar-accent-foreground" /></Button>
+          <Button variant="ghost" size="icon" onClick={handleExport}><Download className="h-5 w-5 text-sidebar-accent-foreground" /></Button>
         </div>
       </div>
 
@@ -387,14 +419,23 @@ function ReportView({ reportKey }: ReportViewProps) {
           <TableBody>
             {paginated.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={config.columns.length} className="text-center py-8 text-muted-foreground">No records found.</TableCell>
+                <TableCell colSpan={config.columns.length} className="text-center py-8 text-muted-foreground">
+                  {reportKey === "defaulter" ? "No Defaulters Found." : "No records found."}
+                </TableCell>
               </TableRow>
             ) : (
               paginated.map((row, idx) => (
                 <TableRow key={idx} className="hover:bg-muted/50">
                   {config.columns.map((col) => (
-                    <TableCell key={col.key} className={typeof row[col.key] === "number" ? "font-medium" : ""}>
-                      {col.key === "status" ? (
+                    <TableCell key={col.key}>
+                      {isImageCol(col.key) ? (
+                        <Avatar className="h-14 w-14 rounded-full">
+                          <AvatarImage src={String(row[col.key])} className="object-cover" />
+                          <AvatarFallback className="bg-muted text-muted-foreground">{String(row.name || "").charAt(0).toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                      ) : isActionCol(col.key) ? (
+                        <Button variant="outline" size="sm" className="text-xs">View</Button>
+                      ) : col.key === "status" ? (
                         <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                           row[col.key] === "Active" || row[col.key] === "Completed" || row[col.key] === "Paid" || row[col.key] === "Received"
                             ? "bg-green-100 text-green-700"
@@ -405,7 +446,7 @@ function ReportView({ reportKey }: ReportViewProps) {
                           {String(row[col.key])}
                         </span>
                       ) : typeof row[col.key] === "number" ? (
-                        Number(row[col.key]).toLocaleString()
+                        <span className="font-medium">{Number(row[col.key]).toLocaleString()}</span>
                       ) : (
                         String(row[col.key])
                       )}
@@ -423,33 +464,40 @@ function ReportView({ reportKey }: ReportViewProps) {
           <div className="border-l border-border">
             <div className="px-4 py-2 font-semibold text-center border-b border-border">Summary</div>
             <div className="flex justify-between px-4 py-2 gap-8">
-              <span className="text-sm">Total Records</span>
+              <span className="text-sm">Total Count</span>
               <span className="font-semibold">{filtered.length}</span>
             </div>
           </div>
         </div>
 
         {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-1 py-3 bg-sidebar-accent">
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-sidebar-accent-foreground" disabled={currentPage === 1} onClick={() => setCurrentPage(1)}>⏮</Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-sidebar-accent-foreground" disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>◀</Button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <Button key={page} variant={currentPage === page ? "default" : "ghost"} size="icon"
-                className={`h-8 w-8 rounded-full ${currentPage === page ? "bg-primary text-primary-foreground" : "text-sidebar-accent-foreground"}`}
-                onClick={() => setCurrentPage(page)}>{page}</Button>
-            ))}
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-sidebar-accent-foreground" disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>▶</Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-sidebar-accent-foreground" disabled={currentPage === totalPages} onClick={() => setCurrentPage(totalPages)}>⏭</Button>
-          </div>
-        )}
+        <div className="flex items-center justify-center gap-1 py-3 bg-sidebar-accent">
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-sidebar-accent-foreground" disabled={currentPage === 1} onClick={() => setCurrentPage(1)}>⏮</Button>
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-sidebar-accent-foreground" disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>◀</Button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <Button key={page} variant={currentPage === page ? "default" : "ghost"} size="icon"
+              className={`h-8 w-8 rounded-full ${currentPage === page ? "bg-primary text-primary-foreground" : "text-sidebar-accent-foreground"}`}
+              onClick={() => setCurrentPage(page)}>{page}</Button>
+          ))}
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-sidebar-accent-foreground" disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>▶</Button>
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-sidebar-accent-foreground" disabled={currentPage === totalPages} onClick={() => setCurrentPage(totalPages)}>⏭</Button>
+        </div>
       </div>
 
       {/* Footer */}
-      <div className="mt-6 text-center text-xs text-muted-foreground space-y-1 border-t border-border pt-4">
-        <p className="font-semibold">Powered By Lifestyle Reset</p>
-        <p>+92-304-2451070</p>
-        <p>Email: researcher@datafyassociates.com</p>
+      <div className="mt-6 text-center text-sm text-muted-foreground space-y-2 border-t border-border pt-4">
+        <p className="font-semibold text-foreground">Powered By Lifestyle Reset</p>
+        <div className="flex items-center justify-center gap-1">
+          <MessageCircle className="h-4 w-4 text-green-500" />
+          <a href="https://wa.me/923042451070" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">+92-304-2451070</a>
+          <button onClick={() => copyToClipboard("+92-304-2451070")} className="ml-1"><Copy className="h-3 w-3 text-muted-foreground hover:text-foreground" /></button>
+        </div>
+        <div className="flex items-center justify-center gap-1">
+          <Mail className="h-4 w-4 text-muted-foreground" />
+          <span>Email: </span>
+          <a href="mailto:researcher@datafyassociates.com" className="text-primary hover:underline">researcher@datafyassociates.com</a>
+          <button onClick={() => copyToClipboard("researcher@datafyassociates.com")} className="ml-1"><Copy className="h-3 w-3 text-muted-foreground hover:text-foreground" /></button>
+        </div>
       </div>
     </div>
   );
