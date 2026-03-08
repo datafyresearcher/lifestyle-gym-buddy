@@ -23,6 +23,7 @@ import PurchaseOrdersPage from "@/pages/PurchaseOrdersPage";
 import PointOfSalePage from "@/pages/PointOfSalePage";
 import SaleOrdersPage from "@/pages/SaleOrdersPage";
 import EnquiriesPage from "@/pages/EnquiriesPage";
+import FAQsPage from "@/pages/FAQsPage";
 import AddEnquiryPage from "@/pages/AddEnquiryPage";
 import ActivityLogsPage from "@/pages/ActivityLogsPage";
 import UpcomingDuesPage from "@/pages/UpcomingDuesPage";
