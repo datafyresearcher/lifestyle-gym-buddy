@@ -352,10 +352,6 @@ function ReportView({ reportKey }: ReportViewProps) {
     toast({ title: "Exported", description: `${config.title} exported to Excel.` });
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast({ title: "Copied", description: `${text} copied to clipboard.` });
-  };
 
   const isImageCol = (key: string) => key === "photo" || key === "image";
   const isActionCol = (key: string) => key === "action";
