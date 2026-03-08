@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import PageContainer from "@/components/PageContainer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
-import { Search, X, XCircle, Edit, Plus, ArrowLeft, User, Phone, Mail, Calendar, AlertTriangle } from "lucide-react";
+import { Search, X, XCircle, Edit, Plus, ArrowLeft, User, Phone, Mail, Calendar, AlertTriangle, Camera, Upload } from "lucide-react";
 
 interface Supplier {
   id: number;
