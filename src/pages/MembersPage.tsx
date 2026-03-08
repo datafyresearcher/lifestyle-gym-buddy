@@ -18,10 +18,26 @@ const mockMembers = [
 export default function MembersPage() {
   const [view, setView] = useState<"card" | "list">("card");
   const [searchName, setSearchName] = useState("");
+  const [searchMembership, setSearchMembership] = useState("");
+  const [searchMobile, setSearchMobile] = useState("");
+  const [searchEmail, setSearchEmail] = useState("");
+  const [searchCard, setSearchCard] = useState("");
 
   const filtered = mockMembers.filter((m) =>
-    m.name.toLowerCase().includes(searchName.toLowerCase())
+    m.name.toLowerCase().includes(searchName.toLowerCase()) &&
+    m.membership.toLowerCase().includes(searchMembership.toLowerCase()) &&
+    m.phone.includes(searchMobile) &&
+    m.email.toLowerCase().includes(searchEmail.toLowerCase()) &&
+    m.cardNo.toLowerCase().includes(searchCard.toLowerCase())
   );
+
+  const clearSearch = () => {
+    setSearchName("");
+    setSearchMembership("");
+    setSearchMobile("");
+    setSearchEmail("");
+    setSearchCard("");
+  };
 
   return (
     <PageContainer title="Members" breadcrumbs={[{ label: "Member Management" }, { label: "All Members" }]}>
