@@ -15,6 +15,8 @@ interface ReportConfig {
   columns: { key: string; label: string }[];
   data: Record<string, string | number>[];
   filters?: string[];
+  extraFilters?: string[];
+  emptyMessage?: string;
 }
 
 const reportConfigs: Record<string, ReportConfig> = {
