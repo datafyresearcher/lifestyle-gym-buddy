@@ -28,6 +28,7 @@ import {
   Building,
   Shield,
   Lock,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
@@ -47,6 +48,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import logoImg from "@/assets/lifestyle_reset_logo_new.png";
 import adminAvatar from "@/assets/admin-avatar.png";
@@ -157,6 +160,14 @@ export function AppSidebar() {
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState("English");
+  const [logoutOpen, setLogoutOpen] = useState(false);
+
+  const handleLogout = () => {
+    setLogoutOpen(false);
+    setAdminMenuOpen(false);
+    // For now just redirect to root; replace with auth logout when backend is connected
+    window.location.href = "/";
+  };
   const languages = [
     { label: "English", value: "English" },
     { label: "عربی", value: "عربی" },
@@ -219,7 +230,7 @@ export function AppSidebar() {
                       </div>
                     )}
                   </div>
-                  <button className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+                  <button onClick={() => setLogoutOpen(true)} className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
                     <LogOut className="w-4 h-4" />
                     <span>Logout</span>
                   </button>
@@ -290,6 +301,27 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      {/* Logout Confirmation Dialog */}
+      <Dialog open={logoutOpen} onOpenChange={setLogoutOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Confirmation</DialogTitle>
+          </DialogHeader>
+          <div className="py-4 flex items-center gap-3">
+            <span className="text-2xl">⚠</span>
+            <span className="text-sm">Are you sure you want to Logout?</span>
+          </div>
+          <DialogFooter className="flex gap-2 sm:gap-2">
+            <Button variant="secondary" onClick={() => setLogoutOpen(false)}>
+              <X className="w-4 h-4 mr-1" /> No
+            </Button>
+            <Button className="bg-sidebar text-sidebar-foreground hover:bg-sidebar-accent" onClick={handleLogout}>
+              ✓ Yes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Sidebar>
   );
 }
