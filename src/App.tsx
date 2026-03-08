@@ -69,6 +69,7 @@ const App = () => (
             <Route path="/services/*" element={<ServicesPage />} />
             <Route path="/analytics" element={<PlaceholderPage title="Analytics" breadcrumbs={[{ label: "Analytics" }]} />} />
             <Route path="/fees-approval" element={<FeesApprovalPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/faqs" element={<FAQsPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

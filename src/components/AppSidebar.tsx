@@ -177,7 +177,7 @@ export function AppSidebar() {
               </button>
               {adminMenuOpen && (
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-44 bg-sidebar border border-sidebar-border rounded-lg shadow-lg z-50 py-1">
-                  <button className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+                  <button onClick={() => { navigate("/profile"); setAdminMenuOpen(false); }} className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
                     <User className="w-4 h-4" />
                     <span>Profile</span>
                   </button>
