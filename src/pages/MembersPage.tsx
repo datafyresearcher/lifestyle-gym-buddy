@@ -151,18 +151,25 @@ export default function MembersPage() {
 
       {/* Pagination */}
       <div className="pagination-bar mb-4">
-        <button className="text-xs">|&lt;</button>
-        <button className="text-xs">&lt;</button>
-        <span className="bg-primary text-primary-foreground w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
-        <span className="text-xs">2</span>
-        <button className="text-xs">&gt;</button>
-        <button className="text-xs">&gt;|</button>
+        <button className="text-xs" onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>|&lt;</button>
+        <button className="text-xs" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>&lt;</button>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+          <button
+            key={page}
+            onClick={() => setCurrentPage(page)}
+            className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${currentPage === page ? "bg-primary text-primary-foreground" : ""}`}
+          >
+            {page}
+          </button>
+        ))}
+        <button className="text-xs" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>&gt;</button>
+        <button className="text-xs" onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>&gt;|</button>
       </div>
 
       {/* Card View */}
       {view === "card" ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((member) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {paginatedMembers.map((member) => (
             <div key={member.id} className="member-card">
               <div className="member-card-header">
                 <div className="flex items-center gap-2">
