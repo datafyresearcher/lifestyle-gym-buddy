@@ -571,6 +571,9 @@ function ReportView({ reportKey }: ReportViewProps) {
             <div className="px-4 py-2 font-semibold text-center border-b border-border bg-muted/30">Summary</div>
             {(config.summaryRows || [{ label: "Total Count", key: "_count" }]).map((sr, i) => {
               let value: number;
+              const isSalesReport = reportKey === "sales";
+              const members = isSalesReport ? filtered.filter((r) => String(r.packageName) !== "Visitor/Day Pass" && String(r.packageName) !== "POS Sales") : [];
+              const visitors = isSalesReport ? filtered.filter((r) => String(r.packageName) === "Visitor/Day Pass") : [];
               if (sr.key === "_count") {
                 value = filtered.length;
               } else if (sr.key === "_fulfilled") {
@@ -580,6 +583,20 @@ function ReportView({ reportKey }: ReportViewProps) {
               } else if (sr.key === "_avgAttendance") {
                 const vals = filtered.map((r) => parseInt(String(r.percentage)) || 0);
                 value = vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : 0;
+              } else if (sr.key === "_memberSales") {
+                value = members.reduce((s, r) => s + (Number(r.totalFees) || 0), 0);
+              } else if (sr.key === "_memberDiscount") {
+                value = members.reduce((s, r) => s + (Number(r.discount) || 0), 0);
+              } else if (sr.key === "_memberTotalSales") {
+                value = members.reduce((s, r) => s + (Number(r.totalCollectedFee) || 0), 0);
+              } else if (sr.key === "_trainerSales" || sr.key === "_trainerDiscount" || sr.key === "_trainerTotalSales") {
+                value = 0;
+              } else if (sr.key === "_visitorSales") {
+                value = visitors.reduce((s, r) => s + (Number(r.totalFees) || 0), 0);
+              } else if (sr.key === "_visitorDiscount") {
+                value = visitors.reduce((s, r) => s + (Number(r.discount) || 0), 0);
+              } else if (sr.key === "_visitorTotalSales") {
+                value = visitors.reduce((s, r) => s + (Number(r.totalCollectedFee) || 0), 0);
               } else {
                 value = filtered.reduce((s, r) => s + (typeof r[sr.key] === "number" ? Number(r[sr.key]) : 0), 0);
               }
