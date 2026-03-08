@@ -45,10 +45,10 @@ export default function MembersPage() {
       <div className="bg-card border border-border rounded-lg p-4 mb-4">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-3">
           <input placeholder="Search By Name" className="search-input" value={searchName} onChange={(e) => setSearchName(e.target.value)} />
-          <input placeholder="Search By Membership" className="search-input" />
-          <input placeholder="Search By Mobile" className="search-input" />
-          <input placeholder="Search By Email" className="search-input" />
-          <input placeholder="Search By Card Number" className="search-input" />
+          <input placeholder="Search By Membership" className="search-input" value={searchMembership} onChange={(e) => setSearchMembership(e.target.value)} />
+          <input placeholder="Search By Mobile" className="search-input" value={searchMobile} onChange={(e) => setSearchMobile(e.target.value)} />
+          <input placeholder="Search By Email" className="search-input" value={searchEmail} onChange={(e) => setSearchEmail(e.target.value)} />
+          <input placeholder="Search By Card Number" className="search-input" value={searchCard} onChange={(e) => setSearchCard(e.target.value)} />
           <Select>
             <SelectTrigger><SelectValue placeholder="Package Type: All" /></SelectTrigger>
             <SelectContent>
