@@ -67,8 +67,13 @@ const menuItems = [
     url: "/settings",
     icon: Settings,
     children: [
-      { title: "General", url: "/settings/general" },
-      { title: "Notifications", url: "/settings/notifications" },
+      { title: "User Management", url: "/settings/users" },
+      { title: "Branch Management", url: "/settings/branches" },
+      { title: "Company Management", url: "/settings/company" },
+      { title: "Global Settings", url: "/settings/global" },
+      { title: "Roles Management", url: "/settings/roles" },
+      { title: "Permissions Management", url: "/settings/permissions" },
+      { title: "Attendance Management", url: "/settings/attendance" },
     ],
   },
   {

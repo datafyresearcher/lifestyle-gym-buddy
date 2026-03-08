@@ -14,6 +14,7 @@ import PettyCashPage from "@/pages/PettyCashPage";
 import AttendancePage from "@/pages/AttendancePage";
 import ServicesPage from "@/pages/ServicesPage";
 import PlaceholderPage from "@/pages/PlaceholderPage";
+import SettingsPage from "@/pages/SettingsPage";
 import TrainingSessionsPage from "@/pages/TrainingSessionsPage";
 import RequestsPage from "@/pages/RequestsPage";
 import ProductsPage from "@/pages/ProductsPage";
@@ -52,7 +53,7 @@ const App = () => (
             <Route path="/activity-logs" element={<ActivityLogsPage />} />
             <Route path="/attendance" element={<AttendancePage />} />
             <Route path="/upcoming-dues/*" element={<UpcomingDuesPage />} />
-            <Route path="/settings/*" element={<PlaceholderPage title="Settings" breadcrumbs={[{ label: "Settings" }]} />} />
+            <Route path="/settings/*" element={<SettingsPage />} />
             <Route path="/reports/*" element={<ReportsPage />} />
             <Route path="/requests" element={<RequestsPage />} />
             <Route path="/packages" element={<PackagesPage />} />
