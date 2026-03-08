@@ -84,8 +84,8 @@ const menuItems = [
     url: "/sales",
     icon: ShoppingCart,
     children: [
-      { title: "All Sales", url: "/sales/all" },
-      { title: "New Sale", url: "/sales/new" },
+      { title: "Point of Sales", url: "/sales/pos" },
+      { title: "Sale Orders", url: "/sales/orders" },
     ],
   },
   {
