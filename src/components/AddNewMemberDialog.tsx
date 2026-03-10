@@ -150,8 +150,15 @@ export default function AddNewMemberDialog({ open, onOpenChange, onMemberAdded }
 
   const handleProceed = () => {
     if (!validate()) return;
+    onMemberAdded?.({
+      name: form.name,
+      mobile: form.mobile,
+      email: form.email,
+      membership: selectedPkg?.name || "Monthly",
+      membershipNo: form.membershipNo,
+      avatar: avatarPreview,
+    });
     toast.success(`Member ${form.name} registered with ${selectedPkg?.name} package`);
-    onMemberAdded?.();
     handleClose();
   };
 
