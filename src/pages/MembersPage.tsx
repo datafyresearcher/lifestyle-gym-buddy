@@ -70,7 +70,7 @@ export default function MembersPage() {
     setSearchCard("");
   };
 
-  const handleWhatsApp = (member: typeof mockMembers[0]) => {
+  const handleWhatsApp = (member: MemberType) => {
     const rawPhone = member.phone.replace(/[^0-9]/g, "");
     const phone = rawPhone.startsWith("0") ? "92" + rawPhone.slice(1) : rawPhone;
     const message = `*Upcoming Payment Reminder*\n\n*Hi ${member.name}*, This is a friendly reminder that your *membership fee* is due soon. To avoid any service interruptions, we recommend completing the payment in advance.\n\nYou may pay online or visit the reception.\n\nThank you!\n*Lifestyle Reset*`;
