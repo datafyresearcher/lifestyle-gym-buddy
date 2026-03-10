@@ -36,10 +36,19 @@ const packages: PackageOption[] = [
   { id: 12, name: "Monthly Package One", color: "#ef4444", pkgFee: 10000, regFee: 1000, months: 2, description: "", ageFrom: "", ageTo: "", members: 1 },
 ];
 
+export interface NewMemberData {
+  name: string;
+  mobile: string;
+  email: string;
+  membership: string;
+  membershipNo: string;
+  avatar: string | null;
+}
+
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onMemberAdded?: () => void;
+  onMemberAdded?: (member: NewMemberData) => void;
 }
 
 export default function AddNewMemberDialog({ open, onOpenChange, onMemberAdded }: Props) {
