@@ -86,7 +86,7 @@ export default function MembersPage() {
     setConfirmAction(null);
   };
 
-  const actionButtons = (member: typeof mockMembers[0]) => (
+  const actionButtons = (member: MemberType) => (
     <TooltipProvider delayDuration={200}>
       <div className="flex items-center gap-2 justify-center">
         <Tooltip><TooltipTrigger asChild>
