@@ -36,10 +36,19 @@ const packages: PackageOption[] = [
   { id: 12, name: "Monthly Package One", color: "#ef4444", pkgFee: 10000, regFee: 1000, months: 2, description: "", ageFrom: "", ageTo: "", members: 1 },
 ];
 
+export interface NewMemberData {
+  name: string;
+  mobile: string;
+  email: string;
+  membership: string;
+  membershipNo: string;
+  avatar: string | null;
+}
+
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onMemberAdded?: () => void;
+  onMemberAdded?: (member: NewMemberData) => void;
 }
 
 export default function AddNewMemberDialog({ open, onOpenChange, onMemberAdded }: Props) {
@@ -141,8 +150,15 @@ export default function AddNewMemberDialog({ open, onOpenChange, onMemberAdded }
 
   const handleProceed = () => {
     if (!validate()) return;
+    onMemberAdded?.({
+      name: form.name,
+      mobile: form.mobile,
+      email: form.email,
+      membership: selectedPkg?.name || "Monthly",
+      membershipNo: form.membershipNo,
+      avatar: avatarPreview,
+    });
     toast.success(`Member ${form.name} registered with ${selectedPkg?.name} package`);
-    onMemberAdded?.();
     handleClose();
   };
 

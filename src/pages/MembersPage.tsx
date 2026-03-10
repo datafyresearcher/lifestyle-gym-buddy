@@ -1,6 +1,7 @@
 import PageContainer from "@/components/PageContainer";
 import MemberDetailDialog from "@/components/MemberDetailDialog";
 import AddNewMemberDialog from "@/components/AddNewMemberDialog";
+import type { NewMemberData } from "@/components/AddNewMemberDialog";
 import { useState } from "react";
 import { XCircle, Edit, Camera, User, Settings, Phone, Plus, List, LayoutGrid, CreditCard, Snowflake, RefreshCw, MessageCircle, X, CheckCircle, AlertTriangle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -9,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-const mockMembers = [
+const initialMembers = [
   // Page 1
   { id: 122, name: "Ahmed", phone: "+923325685258", email: "ahmed@mail.com", cardNo: "C-122", dueDate: "08th Apr", membership: "Monthly", avatar: "/avatars/avatar-1.jpg" },
   { id: 121, name: "Uzair Ali", phone: "+923437033333", email: "uzair@mail.com", cardNo: "C-121", dueDate: "03rd Apr", membership: "Family", avatar: "/avatars/avatar-8.jpg" },
@@ -30,23 +31,26 @@ const mockMembers = [
   { id: 74, name: "Hamza", phone: "+923458677677", email: "hamza2@mail.com", cardNo: "C-74", dueDate: "09th Jan", membership: "Monthly", avatar: "/avatars/avatar-16.jpg" },
 ];
 
+export type MemberType = typeof initialMembers[0];
+
 const ITEMS_PER_PAGE = 8;
 
-type ConfirmAction = { type: "deactivate" | "freeze" | "sync"; member: typeof mockMembers[0] } | null;
+type ConfirmAction = { type: "deactivate" | "freeze" | "sync"; member: MemberType } | null;
 
 export default function MembersPage() {
+  const [members, setMembers] = useState(initialMembers);
   const [view, setView] = useState<"card" | "list">("card");
   const [searchName, setSearchName] = useState("");
   const [searchMembership, setSearchMembership] = useState("");
   const [searchMobile, setSearchMobile] = useState("");
   const [searchEmail, setSearchEmail] = useState("");
   const [searchCard, setSearchCard] = useState("");
-  const [selectedMember, setSelectedMember] = useState<typeof mockMembers[0] | null>(null);
+  const [selectedMember, setSelectedMember] = useState<MemberType | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [addNewOpen, setAddNewOpen] = useState(false);
 
-  const filtered = mockMembers.filter((m) => {
+  const filtered = members.filter((m) => {
     if (searchName && !m.name.toLowerCase().includes(searchName.toLowerCase())) return false;
     if (searchMembership && !m.membership.toLowerCase().includes(searchMembership.toLowerCase())) return false;
     if (searchMobile && !m.phone.includes(searchMobile)) return false;
@@ -66,7 +70,7 @@ export default function MembersPage() {
     setSearchCard("");
   };
 
-  const handleWhatsApp = (member: typeof mockMembers[0]) => {
+  const handleWhatsApp = (member: MemberType) => {
     const rawPhone = member.phone.replace(/[^0-9]/g, "");
     const phone = rawPhone.startsWith("0") ? "92" + rawPhone.slice(1) : rawPhone;
     const message = `*Upcoming Payment Reminder*\n\n*Hi ${member.name}*, This is a friendly reminder that your *membership fee* is due soon. To avoid any service interruptions, we recommend completing the payment in advance.\n\nYou may pay online or visit the reception.\n\nThank you!\n*Lifestyle Reset*`;
@@ -82,7 +86,7 @@ export default function MembersPage() {
     setConfirmAction(null);
   };
 
-  const actionButtons = (member: typeof mockMembers[0]) => (
+  const actionButtons = (member: MemberType) => (
     <TooltipProvider delayDuration={200}>
       <div className="flex items-center gap-2 justify-center">
         <Tooltip><TooltipTrigger asChild>
@@ -236,7 +240,23 @@ export default function MembersPage() {
       <AddNewMemberDialog
         open={addNewOpen}
         onOpenChange={setAddNewOpen}
-        onMemberAdded={() => toast({ title: "Success", description: "New member has been registered." })}
+        onMemberAdded={(newMember: NewMemberData) => {
+          const nextId = Math.max(...members.map(m => m.id)) + 1;
+          const today = new Date();
+          const dueDate = `${String(today.getDate()).padStart(2, '0')}th ${today.toLocaleString('en', { month: 'short' })}`;
+          setMembers(prev => [{
+            id: nextId,
+            name: newMember.name,
+            phone: newMember.mobile.startsWith("+") ? newMember.mobile : `+92${newMember.mobile}`,
+            email: newMember.email || `${newMember.name.toLowerCase().replace(/\s/g, '')}@mail.com`,
+            cardNo: `C-${nextId}`,
+            dueDate,
+            membership: newMember.membership,
+            avatar: newMember.avatar || "/placeholder.svg",
+          }, ...prev]);
+          setCurrentPage(1);
+          toast({ title: "Success", description: `${newMember.name} has been registered successfully.` });
+        }}
       />
 
       {/* Confirmation Dialog */}
