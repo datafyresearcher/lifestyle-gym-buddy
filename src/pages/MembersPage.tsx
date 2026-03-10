@@ -240,7 +240,23 @@ export default function MembersPage() {
       <AddNewMemberDialog
         open={addNewOpen}
         onOpenChange={setAddNewOpen}
-        onMemberAdded={() => toast({ title: "Success", description: "New member has been registered." })}
+        onMemberAdded={(newMember: NewMemberData) => {
+          const nextId = Math.max(...members.map(m => m.id)) + 1;
+          const today = new Date();
+          const dueDate = `${String(today.getDate()).padStart(2, '0')}th ${today.toLocaleString('en', { month: 'short' })}`;
+          setMembers(prev => [{
+            id: nextId,
+            name: newMember.name,
+            phone: newMember.mobile.startsWith("+") ? newMember.mobile : `+92${newMember.mobile}`,
+            email: newMember.email || `${newMember.name.toLowerCase().replace(/\s/g, '')}@mail.com`,
+            cardNo: `C-${nextId}`,
+            dueDate,
+            membership: newMember.membership,
+            avatar: newMember.avatar || "/placeholder.svg",
+          }, ...prev]);
+          setCurrentPage(1);
+          toast({ title: "Success", description: `${newMember.name} has been registered successfully.` });
+        }}
       />
 
       {/* Confirmation Dialog */}
