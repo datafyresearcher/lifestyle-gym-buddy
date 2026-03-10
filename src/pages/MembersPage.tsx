@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-const mockMembers = [
+const initialMembers = [
   // Page 1
   { id: 122, name: "Ahmed", phone: "+923325685258", email: "ahmed@mail.com", cardNo: "C-122", dueDate: "08th Apr", membership: "Monthly", avatar: "/avatars/avatar-1.jpg" },
   { id: 121, name: "Uzair Ali", phone: "+923437033333", email: "uzair@mail.com", cardNo: "C-121", dueDate: "03rd Apr", membership: "Family", avatar: "/avatars/avatar-8.jpg" },
@@ -29,6 +29,8 @@ const mockMembers = [
   { id: 75, name: "Asad", phone: "+923335558578", email: "asad@mail.com", cardNo: "C-75", dueDate: "09th Feb", membership: "Family", avatar: "/avatars/avatar-15.jpg" },
   { id: 74, name: "Hamza", phone: "+923458677677", email: "hamza2@mail.com", cardNo: "C-74", dueDate: "09th Jan", membership: "Monthly", avatar: "/avatars/avatar-16.jpg" },
 ];
+
+export type MemberType = typeof initialMembers[0];
 
 const ITEMS_PER_PAGE = 8;
 
