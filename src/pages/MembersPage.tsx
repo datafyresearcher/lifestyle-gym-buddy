@@ -35,21 +35,22 @@ export type MemberType = typeof initialMembers[0];
 
 const ITEMS_PER_PAGE = 8;
 
-type ConfirmAction = { type: "deactivate" | "freeze" | "sync"; member: typeof mockMembers[0] } | null;
+type ConfirmAction = { type: "deactivate" | "freeze" | "sync"; member: MemberType } | null;
 
 export default function MembersPage() {
+  const [members, setMembers] = useState(initialMembers);
   const [view, setView] = useState<"card" | "list">("card");
   const [searchName, setSearchName] = useState("");
   const [searchMembership, setSearchMembership] = useState("");
   const [searchMobile, setSearchMobile] = useState("");
   const [searchEmail, setSearchEmail] = useState("");
   const [searchCard, setSearchCard] = useState("");
-  const [selectedMember, setSelectedMember] = useState<typeof mockMembers[0] | null>(null);
+  const [selectedMember, setSelectedMember] = useState<MemberType | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [addNewOpen, setAddNewOpen] = useState(false);
 
-  const filtered = mockMembers.filter((m) => {
+  const filtered = members.filter((m) => {
     if (searchName && !m.name.toLowerCase().includes(searchName.toLowerCase())) return false;
     if (searchMembership && !m.membership.toLowerCase().includes(searchMembership.toLowerCase())) return false;
     if (searchMobile && !m.phone.includes(searchMobile)) return false;
