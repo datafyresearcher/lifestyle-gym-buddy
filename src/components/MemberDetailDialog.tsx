@@ -1,36 +1,26 @@
-import { useState, useRef } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { useState, useRef, useEffect } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { AlertTriangle, X, CheckCircle, Phone, Mail, User, MapPin, CreditCard, Calendar } from "lucide-react";
+import { AlertTriangle, X, CheckCircle, Phone, Mail, User, MapPin, CreditCard, Calendar, Camera, Upload } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-
-interface Member {
-  id: number;
-  name: string;
-  phone: string;
-  email: string;
-  cardNo: string;
-  dueDate: string;
-  membership: string;
-  avatar: string;
-}
+import type { MemberType } from "@/types/member";
 
 interface MemberDetailDialogProps {
-  member: Member | null;
+  member: MemberType | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onDeactivate?: (id: number) => void;
   onFreeze?: (id: number) => void;
+  onMemberUpdated?: (member: MemberType) => void;
 }
 
-export default function MemberDetailDialog({ member, open, onOpenChange, onDeactivate, onFreeze }: MemberDetailDialogProps) {
+export default function MemberDetailDialog({ member, open, onOpenChange, onDeactivate, onFreeze, onMemberUpdated }: MemberDetailDialogProps) {
   const [activeTab, setActiveTab] = useState("details");
   const [confirmDialog, setConfirmDialog] = useState<"deactivate" | "freeze" | "sync" | null>(null);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Fee form state
@@ -43,19 +33,51 @@ export default function MemberDetailDialog({ member, open, onOpenChange, onDeact
   const [feeComment, setFeeComment] = useState("");
   const [showFeeDialog, setShowFeeDialog] = useState(false);
 
-  // Detail form state
-  const [gender, setGender] = useState("male");
-  const [idType, setIdType] = useState("cnic");
-  const [cnic, setCnic] = useState("");
-  const [dob, setDob] = useState("");
-  const [bloodGroup, setBloodGroup] = useState("");
-  const [height, setHeight] = useState("");
-  const [weight, setWeight] = useState("");
-  const [emergencyName, setEmergencyName] = useState("");
-  const [emergencyPhone, setEmergencyPhone] = useState("");
-  const [street, setStreet] = useState("");
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("Pakistan");
+  // Editable form state - initialized from member
+  const [editName, setEditName] = useState("");
+  const [editPhone, setEditPhone] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editCardNo, setEditCardNo] = useState("");
+  const [editAvatar, setEditAvatar] = useState("");
+  const [editGender, setEditGender] = useState("Male");
+  const [editIdType, setEditIdType] = useState("CNIC");
+  const [editCnic, setEditCnic] = useState("");
+  const [editDob, setEditDob] = useState("");
+  const [editBloodGroup, setEditBloodGroup] = useState("");
+  const [editHeight, setEditHeight] = useState("");
+  const [editWeight, setEditWeight] = useState("");
+  const [editEmergencyName, setEditEmergencyName] = useState("");
+  const [editEmergencyPhone, setEditEmergencyPhone] = useState("");
+  const [editStreet, setEditStreet] = useState("");
+  const [editCity, setEditCity] = useState("");
+  const [editCountry, setEditCountry] = useState("Pakistan");
+  const [editComment, setEditComment] = useState("");
+  const [editJoiningDate, setEditJoiningDate] = useState("");
+
+  // Populate form when member changes
+  useEffect(() => {
+    if (member) {
+      setEditName(member.name || "");
+      setEditPhone(member.phone || "");
+      setEditEmail(member.email || "");
+      setEditCardNo(member.cardNo || "");
+      setEditAvatar(member.avatar || "");
+      setEditGender(member.gender || "Male");
+      setEditIdType(member.idType || "CNIC");
+      setEditCnic(member.cnic || "");
+      setEditDob(member.dob || "");
+      setEditBloodGroup(member.bloodGroup || "");
+      setEditHeight(member.height || "");
+      setEditWeight(member.weight || "");
+      setEditEmergencyName(member.emergencyName || "");
+      setEditEmergencyPhone(member.emergencyMobile || "");
+      setEditStreet(member.street || "");
+      setEditCity(member.city || "");
+      setEditCountry(member.country || "Pakistan");
+      setEditComment(member.comment || "");
+      setEditJoiningDate(member.joiningDate || "");
+    }
+  }, [member]);
 
   if (!member) return null;
 
@@ -78,7 +100,7 @@ export default function MemberDetailDialog({ member, open, onOpenChange, onDeact
     if (file) {
       const reader = new FileReader();
       reader.onload = (ev) => {
-        setAvatarPreview(ev.target?.result as string);
+        setEditAvatar(ev.target?.result as string);
         toast({ title: "Photo Updated", description: "Profile photo has been updated." });
       };
       reader.readAsDataURL(file);
@@ -86,8 +108,42 @@ export default function MemberDetailDialog({ member, open, onOpenChange, onDeact
   };
 
   const handleRemovePhoto = () => {
-    setAvatarPreview(null);
+    setEditAvatar("/placeholder.svg");
     toast({ title: "Photo Removed", description: "Profile photo has been removed." });
+  };
+
+  const handleSave = () => {
+    if (!editName.trim()) {
+      toast({ title: "Error", description: "Name is required.", variant: "destructive" });
+      return;
+    }
+    if (!editPhone.trim()) {
+      toast({ title: "Error", description: "Mobile number is required.", variant: "destructive" });
+      return;
+    }
+    const updatedMember: MemberType = {
+      ...member,
+      name: editName,
+      phone: editPhone,
+      email: editEmail,
+      cardNo: editCardNo,
+      avatar: editAvatar,
+      gender: editGender,
+      idType: editIdType,
+      cnic: editCnic,
+      dob: editDob,
+      bloodGroup: editBloodGroup,
+      height: editHeight,
+      weight: editWeight,
+      emergencyName: editEmergencyName,
+      emergencyMobile: editEmergencyPhone,
+      street: editStreet,
+      city: editCity,
+      country: editCountry,
+      comment: editComment,
+      joiningDate: editJoiningDate,
+    };
+    onMemberUpdated?.(updatedMember);
   };
 
   const handleSaveFee = () => {
@@ -115,7 +171,7 @@ export default function MemberDetailDialog({ member, open, onOpenChange, onDeact
           {/* Top bar */}
           <div className="flex items-center gap-4 bg-muted p-3 rounded-lg text-sm mb-2">
             <div><span className="text-muted-foreground">Membership Number</span><div className="font-bold">{member.id}</div></div>
-            <div><span className="text-muted-foreground">Name</span><div className="font-bold">{member.name}</div></div>
+            <div><span className="text-muted-foreground">Name</span><div className="font-bold">{editName}</div></div>
             <div><span className="text-muted-foreground">Monthly Due Day</span><div className="font-bold">{member.dueDate}</div></div>
             <div><span className="text-muted-foreground">Days Left</span><div className="font-bold text-primary">Package will expire in 30 days.</div></div>
           </div>
@@ -131,12 +187,16 @@ export default function MemberDetailDialog({ member, open, onOpenChange, onDeact
             <TabsContent value="details" className="mt-4">
               {/* Profile photo */}
               <div className="flex gap-6 mb-6">
-                <img src={avatarPreview || member.avatar} alt={member.name} className="w-36 h-44 object-cover rounded" />
+                <img src={editAvatar || "/placeholder.svg"} alt={editName} className="w-36 h-44 object-cover rounded" />
                 <div className="flex items-center gap-2 flex-wrap self-start">
                   <span className="font-medium">Profile Picture</span>
                   <input type="file" ref={fileInputRef} accept="image/*" className="hidden" onChange={handleFileChange} />
-                  <Button size="sm" variant="default" className="bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))]" onClick={handleUploadPhoto}>Upload Photo</Button>
-                  <Button size="sm" variant="destructive" onClick={handleRemovePhoto}>Remove Photo</Button>
+                  <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={handleUploadPhoto}>
+                    <Upload className="w-3 h-3 mr-1" /> Upload Photo
+                  </Button>
+                  <Button size="sm" variant="destructive" onClick={handleRemovePhoto}>
+                    <X className="w-3 h-3 mr-1" /> Remove Photo
+                  </Button>
                 </div>
               </div>
 
@@ -146,62 +206,62 @@ export default function MemberDetailDialog({ member, open, onOpenChange, onDeact
                   <label className="text-sm font-medium">Name <span className="text-destructive">*</span></label>
                   <div className="flex items-center gap-2 mt-1">
                     <User className="w-4 h-4 text-muted-foreground" />
-                    <Input defaultValue={member.name} />
+                    <Input value={editName} onChange={e => setEditName(e.target.value)} />
                   </div>
                 </div>
                 <div>
                   <label className="text-sm font-medium">Joining Date</label>
                   <div className="flex items-center gap-2 mt-1">
                     <Calendar className="w-4 h-4 text-muted-foreground" />
-                    <Input type="date" defaultValue="2026-03-07" />
+                    <Input type="date" value={editJoiningDate} onChange={e => setEditJoiningDate(e.target.value)} />
                   </div>
                 </div>
                 <div>
                   <label className="text-sm font-medium">Gender</label>
                   <div className="flex items-center gap-4 mt-2">
-                    <label className="flex items-center gap-1"><input type="radio" name="gender" checked={gender === "male"} onChange={() => setGender("male")} /> Male</label>
-                    <label className="flex items-center gap-1"><input type="radio" name="gender" checked={gender === "female"} onChange={() => setGender("female")} /> Female</label>
+                    <label className="flex items-center gap-1"><input type="radio" name="edit-gender" checked={editGender === "Male"} onChange={() => setEditGender("Male")} /> Male</label>
+                    <label className="flex items-center gap-1"><input type="radio" name="edit-gender" checked={editGender === "Female"} onChange={() => setEditGender("Female")} /> Female</label>
                   </div>
                 </div>
                 <div>
                   <label className="text-sm font-medium">Date Of Birth</label>
-                  <Input type="date" className="mt-1" value={dob} onChange={e => setDob(e.target.value)} />
+                  <Input type="date" className="mt-1" value={editDob} onChange={e => setEditDob(e.target.value)} />
                 </div>
                 <div>
                   <label className="text-sm font-medium">Mobile <span className="text-destructive">*</span></label>
                   <div className="flex items-center gap-2 mt-1">
                     <Phone className="w-4 h-4 text-muted-foreground" />
-                    <Input defaultValue={member.phone} />
+                    <Input value={editPhone} onChange={e => setEditPhone(e.target.value)} />
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium">{idType === "cnic" ? "CNIC" : "Passport"}</label>
+                  <label className="text-sm font-medium">{editIdType === "CNIC" ? "CNIC" : "Passport"}</label>
                   <div className="flex items-center gap-4 mb-1">
-                    <label className="flex items-center gap-1 text-sm"><input type="radio" checked={idType === "cnic"} onChange={() => setIdType("cnic")} /> CNIC</label>
-                    <label className="flex items-center gap-1 text-sm"><input type="radio" checked={idType === "passport"} onChange={() => setIdType("passport")} /> Passport</label>
+                    <label className="flex items-center gap-1 text-sm"><input type="radio" name="edit-idtype" checked={editIdType === "CNIC"} onChange={() => setEditIdType("CNIC")} /> CNIC</label>
+                    <label className="flex items-center gap-1 text-sm"><input type="radio" name="edit-idtype" checked={editIdType === "Passport"} onChange={() => setEditIdType("Passport")} /> Passport</label>
                   </div>
                   <div className="flex items-center gap-2">
                     <CreditCard className="w-4 h-4 text-muted-foreground" />
-                    <Input placeholder={idType === "cnic" ? "CNIC" : "Passport"} value={cnic} onChange={e => setCnic(e.target.value)} />
+                    <Input placeholder={editIdType === "CNIC" ? "CNIC" : "Passport"} value={editCnic} onChange={e => setEditCnic(e.target.value)} />
                   </div>
                 </div>
                 <div>
                   <label className="text-sm font-medium">Email</label>
                   <div className="flex items-center gap-2 mt-1">
                     <Mail className="w-4 h-4 text-muted-foreground" />
-                    <Input defaultValue={member.email} />
+                    <Input value={editEmail} onChange={e => setEditEmail(e.target.value)} />
                   </div>
                 </div>
                 <div>
                   <label className="text-sm font-medium">Emergency Contact Name</label>
                   <div className="flex items-center gap-2 mt-1">
                     <User className="w-4 h-4 text-muted-foreground" />
-                    <Input placeholder="Emergency Contact Name" value={emergencyName} onChange={e => setEmergencyName(e.target.value)} />
+                    <Input placeholder="Emergency Contact Name" value={editEmergencyName} onChange={e => setEditEmergencyName(e.target.value)} />
                   </div>
                 </div>
                 <div>
                   <label className="text-sm font-medium">Blood Group</label>
-                  <Select value={bloodGroup} onValueChange={setBloodGroup}>
+                  <Select value={editBloodGroup} onValueChange={setEditBloodGroup}>
                     <SelectTrigger className="mt-1"><SelectValue placeholder="Select Blood Group" /></SelectTrigger>
                     <SelectContent>
                       {["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"].map(bg => (
@@ -214,24 +274,24 @@ export default function MemberDetailDialog({ member, open, onOpenChange, onDeact
                   <label className="text-sm font-medium">Emergency Contact Mobile</label>
                   <div className="flex items-center gap-2 mt-1">
                     <Phone className="w-4 h-4 text-muted-foreground" />
-                    <Input placeholder="Emergency Contact Mobile" value={emergencyPhone} onChange={e => setEmergencyPhone(e.target.value)} />
+                    <Input placeholder="Emergency Contact Mobile" value={editEmergencyPhone} onChange={e => setEditEmergencyPhone(e.target.value)} />
                   </div>
                 </div>
                 <div>
                   <label className="text-sm font-medium">Height</label>
-                  <Input placeholder="Enter Height" className="mt-1" value={height} onChange={e => setHeight(e.target.value)} />
+                  <Input placeholder="Enter Height" className="mt-1" value={editHeight} onChange={e => setEditHeight(e.target.value)} />
                 </div>
                 <div>
                   <label className="text-sm font-medium">Address</label>
                   <div className="space-y-2 mt-1">
-                    <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-muted-foreground" /><Input placeholder="Street" value={street} onChange={e => setStreet(e.target.value)} /></div>
-                    <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-muted-foreground" /><Input placeholder="City" value={city} onChange={e => setCity(e.target.value)} /></div>
-                    <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-muted-foreground" /><Input value={country} onChange={e => setCountry(e.target.value)} /></div>
+                    <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-muted-foreground" /><Input placeholder="Street" value={editStreet} onChange={e => setEditStreet(e.target.value)} /></div>
+                    <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-muted-foreground" /><Input placeholder="City" value={editCity} onChange={e => setEditCity(e.target.value)} /></div>
+                    <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-muted-foreground" /><Input value={editCountry} onChange={e => setEditCountry(e.target.value)} /></div>
                   </div>
                 </div>
                 <div>
                   <label className="text-sm font-medium">Weight</label>
-                  <Input placeholder="Enter Weight" className="mt-1" value={weight} onChange={e => setWeight(e.target.value)} />
+                  <Input placeholder="Enter Weight" className="mt-1" value={editWeight} onChange={e => setEditWeight(e.target.value)} />
                 </div>
                 <div>
                   <label className="text-sm font-medium">Package Name <span className="text-destructive">*</span></label>
@@ -242,16 +302,16 @@ export default function MemberDetailDialog({ member, open, onOpenChange, onDeact
                 </div>
                 <div>
                   <label className="text-sm font-medium">Card Details</label>
-                  <Input defaultValue={member.cardNo} className="mt-1" />
+                  <Input value={editCardNo} onChange={e => setEditCardNo(e.target.value)} className="mt-1" />
                 </div>
                 <div>
                   <label className="text-sm font-medium">Comment</label>
-                  <Textarea placeholder="Comment" className="mt-1" />
+                  <Textarea placeholder="Comment" className="mt-1" value={editComment} onChange={e => setEditComment(e.target.value)} />
                 </div>
               </div>
 
               <div className="flex justify-end mt-4">
-                <Button>Save</Button>
+                <Button onClick={handleSave}>Save</Button>
               </div>
             </TabsContent>
 
@@ -297,6 +357,7 @@ export default function MemberDetailDialog({ member, open, onOpenChange, onDeact
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle>Confirmation</DialogTitle>
+            <DialogDescription>Please confirm this action.</DialogDescription>
           </DialogHeader>
           <div className="flex items-center gap-3 py-4">
             <AlertTriangle className="w-6 h-6 text-[hsl(var(--warning))]" />
@@ -320,6 +381,7 @@ export default function MemberDetailDialog({ member, open, onOpenChange, onDeact
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Add Fee</DialogTitle>
+            <DialogDescription>Add fee for {member.name}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="flex items-center gap-3">
@@ -343,42 +405,42 @@ export default function MemberDetailDialog({ member, open, onOpenChange, onDeact
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-center gap-4">
-              <label className="text-sm text-muted-foreground w-32">Next Due Date</label>
-              <Input type="date" value={nextDueDate} onChange={e => setNextDueDate(e.target.value)} />
+            <div>
+              <label className="text-sm font-medium">Next Due Date</label>
+              <Input type="date" className="mt-1" value={nextDueDate} onChange={e => setNextDueDate(e.target.value)} />
             </div>
-            <div className="flex items-center gap-4">
-              <label className="text-sm text-muted-foreground w-32">Monthly Fee</label>
-              <Input type="number" value={monthlyFee} onChange={e => setMonthlyFee(e.target.value)} />
-              <span className="text-sm">.00</span>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">Monthly Fee</label>
+                <Input className="mt-1" value={monthlyFee} onChange={e => setMonthlyFee(e.target.value)} />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Monthly Discount</label>
+                <Input className="mt-1" value={monthlyDiscount} onChange={e => setMonthlyDiscount(e.target.value)} />
+              </div>
             </div>
-            <div className="flex items-center gap-4">
-              <label className="text-sm text-muted-foreground w-32">Monthly Discount</label>
-              <Input type="number" value={monthlyDiscount} onChange={e => setMonthlyDiscount(e.target.value)} />
-              <span className="text-sm">.00</span>
+            <div className="bg-muted p-3 rounded text-sm">
+              <strong>After Discount:</strong> {afterDiscount}
             </div>
-            <div className="flex items-center gap-4">
-              <label className="text-sm text-muted-foreground w-32 font-medium">After Discount Fee</label>
-              <span className="text-sm">{monthlyFee} - {monthlyDiscount} (Discount) = <strong className="text-[hsl(var(--success))]">{afterDiscount}</strong></span>
-            </div>
-            <div className="flex items-center gap-4">
-              <label className="text-sm text-muted-foreground w-32">Mode Of Payment</label>
+            <div>
+              <label className="text-sm font-medium">Payment Mode</label>
               <Select value={paymentMode} onValueChange={setPaymentMode}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="cash">Cash - Reception</SelectItem>
-                  <SelectItem value="online">Online Transfer</SelectItem>
-                  <SelectItem value="card">Card Payment</SelectItem>
+                  <SelectItem value="cash">Cash</SelectItem>
+                  <SelectItem value="card">Card</SelectItem>
+                  <SelectItem value="online">Online</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <label className="text-sm text-muted-foreground">Comment</label>
-              <Textarea className="mt-1" value={feeComment} onChange={e => setFeeComment(e.target.value)} />
+              <label className="text-sm font-medium">Comment</label>
+              <Textarea className="mt-1" value={feeComment} onChange={e => setFeeComment(e.target.value)} placeholder="Comment" />
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={handleSaveFee} className="bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))]">Save</Button>
+            <Button variant="secondary" onClick={() => setShowFeeDialog(false)}>Cancel</Button>
+            <Button onClick={handleSaveFee}>Save Fee</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

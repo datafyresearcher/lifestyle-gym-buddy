@@ -43,6 +43,20 @@ export interface NewMemberData {
   membership: string;
   membershipNo: string;
   avatar: string | null;
+  gender: string;
+  dob: string;
+  idType: string;
+  cnic: string;
+  bloodGroup: string;
+  height: string;
+  weight: string;
+  emergencyName: string;
+  emergencyMobile: string;
+  street: string;
+  city: string;
+  country: string;
+  comment: string;
+  joiningDate: string;
 }
 
 interface Props {
@@ -62,7 +76,6 @@ export default function AddNewMemberDialog({ open, onOpenChange, onMemberAdded }
   const streamRef = useRef<MediaStream | null>(null);
   const [cameraOpen, setCameraOpen] = useState(false);
 
-  // Form state
   const [form, setForm] = useState({
     membershipNo: "", name: "", gender: "Male", mobile: "", email: "",
     bloodGroup: "", height: "", weight: "", joiningDate: new Date().toISOString().split("T")[0],
@@ -157,6 +170,20 @@ export default function AddNewMemberDialog({ open, onOpenChange, onMemberAdded }
       membership: selectedPkg?.name || "Monthly",
       membershipNo: form.membershipNo,
       avatar: avatarPreview,
+      gender: form.gender,
+      dob: form.dob,
+      idType: form.idType,
+      cnic: form.cnic,
+      bloodGroup: form.bloodGroup,
+      height: form.height,
+      weight: form.weight,
+      emergencyName: form.emergencyName,
+      emergencyMobile: form.emergencyMobile,
+      street: form.street,
+      city: form.city,
+      country: form.country,
+      comment: form.comment,
+      joiningDate: form.joiningDate,
     });
     toast.success(`Member ${form.name} registered with ${selectedPkg?.name} package`);
     handleClose();
@@ -362,10 +389,9 @@ export default function AddNewMemberDialog({ open, onOpenChange, onMemberAdded }
                         <input type="radio" checked={form.idType === "Passport"} onChange={() => updateForm("idType", "Passport")} /> Passport
                       </label>
                     </div>
-                    <Label className="font-medium">{form.idType}</Label>
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="flex items-center gap-2">
                       <CreditCard className="w-4 h-4 text-muted-foreground" />
-                      <Input value={form.cnic} onChange={(e) => updateForm("cnic", e.target.value)} placeholder={form.idType} />
+                      <Input value={form.cnic} onChange={(e) => updateForm("cnic", e.target.value)} placeholder={form.idType === "CNIC" ? "CNIC Number" : "Passport Number"} />
                     </div>
                   </div>
                   <div>
@@ -378,48 +404,41 @@ export default function AddNewMemberDialog({ open, onOpenChange, onMemberAdded }
                   <div>
                     <Label className="font-medium">Emergency Contact Mobile</Label>
                     <div className="flex items-center gap-2 mt-1">
-                      <Select defaultValue="+92">
-                        <SelectTrigger className="w-28"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="+92">Pak (+92)</SelectItem>
-                          <SelectItem value="+1">US (+1)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Input value={form.emergencyMobile} onChange={(e) => updateForm("emergencyMobile", e.target.value)} placeholder="Mobile *" />
+                      <Phone className="w-4 h-4 text-muted-foreground" />
+                      <Input value={form.emergencyMobile} onChange={(e) => updateForm("emergencyMobile", e.target.value)} placeholder="Emergency Contact Mobile" />
                     </div>
                   </div>
                   <div>
                     <Label className="font-medium">Address</Label>
                     <div className="space-y-2 mt-1">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-muted-foreground" />
-                        <Input value={form.street} onChange={(e) => updateForm("street", e.target.value)} placeholder="Street" />
-                        <Input value={form.city} onChange={(e) => updateForm("city", e.target.value)} placeholder="City" />
-                        <Input value={form.country} onChange={(e) => updateForm("country", e.target.value)} />
-                      </div>
+                      <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-muted-foreground" /><Input value={form.street} onChange={(e) => updateForm("street", e.target.value)} placeholder="Street Address" /></div>
+                      <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-muted-foreground" /><Input value={form.city} onChange={(e) => updateForm("city", e.target.value)} placeholder="City" /></div>
+                      <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-muted-foreground" /><Input value={form.country} onChange={(e) => updateForm("country", e.target.value)} /></div>
                     </div>
                   </div>
                   <div>
+                    <Label className="font-medium">Package Name <span className="text-destructive">*</span></Label>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Input value={selectedPkg?.name || ""} readOnly className="bg-muted" />
+                      <Button size="sm" variant="secondary" onClick={() => setStep("packages")}>Change Package</Button>
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="font-medium">Card Details</Label>
+                    <Input value={`C-${form.membershipNo}`} readOnly className="mt-1 bg-muted" />
+                  </div>
+                  <div>
                     <Label className="font-medium">Comment</Label>
-                    <Textarea value={form.comment} onChange={(e) => updateForm("comment", e.target.value)} placeholder="Enter Your Comments Here" className="mt-1" />
-                    <p className="text-xs text-muted-foreground mt-1">Press Shift + Enter To Go To Next Line.</p>
+                    <Textarea value={form.comment} onChange={(e) => updateForm("comment", e.target.value)} placeholder="Comment" className="mt-1" />
                   </div>
                 </div>
               </div>
 
-              {/* Actions */}
-              <div className="flex flex-col items-center gap-3 mt-6">
-                <div className="flex gap-3">
-                  <Button variant="outline" onClick={() => setStep("packages")}>
-                    <ChevronLeft className="w-4 h-4 mr-1" /> Back to Packages
-                  </Button>
-                  <Button onClick={handleProceed} className="bg-sidebar text-sidebar-foreground hover:opacity-90 px-8">
-                    Proceed
-                  </Button>
-                </div>
-                <button onClick={handleProceed} className="w-full bg-green-600 hover:bg-green-700 text-white py-2.5 rounded text-sm font-medium flex items-center justify-center gap-2">
-                  ▶ Register
-                </button>
+              <div className="flex justify-between mt-6">
+                <Button variant="outline" onClick={() => setStep("packages")}>
+                  <ChevronLeft className="w-4 h-4 mr-1" /> Back to Packages
+                </Button>
+                <Button onClick={handleProceed}>Save</Button>
               </div>
             </>
           )}
@@ -427,20 +446,20 @@ export default function AddNewMemberDialog({ open, onOpenChange, onMemberAdded }
       </Dialog>
 
       {/* Camera Dialog */}
-      <Dialog open={cameraOpen} onOpenChange={(o) => { if (!o) stopCamera(); }}>
+      <Dialog open={cameraOpen} onOpenChange={() => stopCamera()}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Capture Photo</DialogTitle>
-            <DialogDescription>Position yourself and click Capture</DialogDescription>
+            <DialogDescription>Position yourself in front of the camera</DialogDescription>
           </DialogHeader>
-          <div className="flex flex-col items-center gap-4">
-            <video ref={videoRef} className="w-full rounded-lg border border-border" autoPlay muted playsInline />
+          <div className="flex flex-col items-center gap-3">
+            <video ref={videoRef} className="w-full rounded" autoPlay playsInline muted />
             <canvas ref={canvasRef} className="hidden" />
-            <div className="flex gap-3">
-              <Button onClick={handleCapturePhoto} className="bg-green-600 hover:bg-green-700 text-white">
+            <div className="flex gap-2">
+              <Button onClick={handleCapturePhoto}>
                 <Camera className="w-4 h-4 mr-1" /> Capture
               </Button>
-              <Button variant="outline" onClick={stopCamera}>Cancel</Button>
+              <Button variant="secondary" onClick={stopCamera}>Cancel</Button>
             </div>
           </div>
         </DialogContent>

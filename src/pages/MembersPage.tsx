@@ -2,6 +2,7 @@ import PageContainer from "@/components/PageContainer";
 import MemberDetailDialog from "@/components/MemberDetailDialog";
 import AddNewMemberDialog from "@/components/AddNewMemberDialog";
 import type { NewMemberData } from "@/components/AddNewMemberDialog";
+import type { MemberType } from "@/types/member";
 import { useState } from "react";
 import { XCircle, Edit, Camera, User, Settings, Phone, Plus, List, LayoutGrid, CreditCard, Snowflake, RefreshCw, MessageCircle, X, CheckCircle, AlertTriangle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -10,8 +11,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-const initialMembers = [
-  // Page 1
+const initialMembers: MemberType[] = [
   { id: 122, name: "Ahmed", phone: "+923325685258", email: "ahmed@mail.com", cardNo: "C-122", dueDate: "08th Apr", membership: "Monthly", avatar: "/avatars/avatar-1.jpg" },
   { id: 121, name: "Uzair Ali", phone: "+923437033333", email: "uzair@mail.com", cardNo: "C-121", dueDate: "03rd Apr", membership: "Family", avatar: "/avatars/avatar-8.jpg" },
   { id: 120, name: "Hifsa Ali", phone: "+923325682852", email: "hifsa@mail.com", cardNo: "C-120", dueDate: "03rd Apr", membership: "Monthly", avatar: "/avatars/avatar-2.jpg" },
@@ -20,7 +20,6 @@ const initialMembers = [
   { id: 116, name: "Ayesha", phone: "+923458547552", email: "ayesha@mail.com", cardNo: "C-116", dueDate: "20th Mar", membership: "Group", avatar: "/avatars/avatar-4.jpg" },
   { id: 115, name: "Hussain Khan", phone: "+923325685258", email: "hussain@mail.com", cardNo: "C-115", dueDate: "15th Mar", membership: "Yearly", avatar: "/avatars/avatar-7.jpg" },
   { id: 114, name: "Hamza", phone: "+923437033333", email: "hamza@mail.com", cardNo: "C-114", dueDate: "10th Mar", membership: "Monthly", avatar: "/avatars/avatar-6.jpg" },
-  // Page 2
   { id: 81, name: "Masood Ali", phone: "+923335585885", email: "masood@mail.com", cardNo: "C-81", dueDate: "12th Jan", membership: "Monthly", avatar: "/avatars/avatar-9.jpg" },
   { id: 80, name: "Mubbashir", phone: "+923164440333", email: "mubbashir@mail.com", cardNo: "C-80", dueDate: "11th Feb", membership: "Monthly", avatar: "/avatars/avatar-10.jpg" },
   { id: 79, name: "Moazzam", phone: "+923119877778", email: "moazzam@mail.com", cardNo: "C-79", dueDate: "10th Feb", membership: "VIP", avatar: "/avatars/avatar-11.jpg" },
@@ -31,14 +30,12 @@ const initialMembers = [
   { id: 74, name: "Hamza", phone: "+923458677677", email: "hamza2@mail.com", cardNo: "C-74", dueDate: "09th Jan", membership: "Monthly", avatar: "/avatars/avatar-16.jpg" },
 ];
 
-export type MemberType = typeof initialMembers[0];
-
 const ITEMS_PER_PAGE = 8;
 
 type ConfirmAction = { type: "deactivate" | "freeze" | "sync"; member: MemberType } | null;
 
 export default function MembersPage() {
-  const [members, setMembers] = useState(initialMembers);
+  const [members, setMembers] = useState<MemberType[]>(initialMembers);
   const [view, setView] = useState<"card" | "list">("card");
   const [searchName, setSearchName] = useState("");
   const [searchMembership, setSearchMembership] = useState("");
@@ -84,6 +81,12 @@ export default function MembersPage() {
     else if (type === "freeze") toast({ title: "Member Frozen", description: `${member.name} membership has been frozen.` });
     else if (type === "sync") toast({ title: "Synced", description: `${member.name} data has been synced.` });
     setConfirmAction(null);
+  };
+
+  const handleMemberUpdated = (updatedMember: MemberType) => {
+    setMembers(prev => prev.map(m => m.id === updatedMember.id ? updatedMember : m));
+    setSelectedMember(null);
+    toast({ title: "Member Updated", description: `${updatedMember.name}'s details have been saved.` });
   };
 
   const actionButtons = (member: MemberType) => (
@@ -235,6 +238,7 @@ export default function MembersPage() {
         member={selectedMember}
         open={selectedMember !== null}
         onOpenChange={(open) => { if (!open) setSelectedMember(null); }}
+        onMemberUpdated={handleMemberUpdated}
       />
 
       <AddNewMemberDialog
@@ -253,6 +257,20 @@ export default function MembersPage() {
             dueDate,
             membership: newMember.membership,
             avatar: newMember.avatar || "/placeholder.svg",
+            gender: newMember.gender,
+            dob: newMember.dob,
+            idType: newMember.idType,
+            cnic: newMember.cnic,
+            bloodGroup: newMember.bloodGroup,
+            height: newMember.height,
+            weight: newMember.weight,
+            emergencyName: newMember.emergencyName,
+            emergencyMobile: newMember.emergencyMobile,
+            street: newMember.street,
+            city: newMember.city,
+            country: newMember.country,
+            comment: newMember.comment,
+            joiningDate: newMember.joiningDate,
           }, ...prev]);
           setCurrentPage(1);
           toast({ title: "Success", description: `${newMember.name} has been registered successfully.` });
