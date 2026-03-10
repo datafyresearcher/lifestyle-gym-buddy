@@ -1,6 +1,7 @@
 import PageContainer from "@/components/PageContainer";
 import MemberDetailDialog from "@/components/MemberDetailDialog";
 import AddNewMemberDialog from "@/components/AddNewMemberDialog";
+import type { NewMemberData } from "@/components/AddNewMemberDialog";
 import { useState } from "react";
 import { XCircle, Edit, Camera, User, Settings, Phone, Plus, List, LayoutGrid, CreditCard, Snowflake, RefreshCw, MessageCircle, X, CheckCircle, AlertTriangle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
