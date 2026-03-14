@@ -64,7 +64,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sidebar-foreground/80 hover:text-success transition-colors"
                 >
-                  <img src={whatsappLogo} alt="WhatsApp" className="w-8 h-8 object-contain" />
+                  <img src={whatsappLogo} alt="WhatsApp" className="w-5 h-5 object-contain" />
                   +92-304-2451070
                 </a>
                 <a
