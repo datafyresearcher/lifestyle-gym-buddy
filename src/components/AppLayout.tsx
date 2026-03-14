@@ -41,18 +41,49 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </main>
 
           {/* Footer */}
-          <footer className="bg-muted border-t border-border py-6 px-4 text-center text-sm text-muted-foreground">
-            <p className="font-semibold text-foreground mb-1">Powered By Lifestyle Reset</p>
-            <p>
-              <a href="https://wa.me/923042451070" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[hsl(var(--success))] hover:opacity-80">
-                <MessageCircle className="w-4 h-4" /> +92-304-2451070
-              </a>
-            </p>
-            <p>
-              <a href="mailto:researcher@datafyassociates.com" className="inline-flex items-center gap-1 hover:text-primary">
-                <Mail className="w-4 h-4" /> researcher@datafyassociates.com
-              </a>
-            </p>
+          <footer className="bg-[hsl(var(--sidebar-background))] border-t border-sidebar-border py-8 px-6">
+            <div className="max-w-4xl mx-auto flex flex-col items-center gap-4">
+              {/* Logo & Brand */}
+              <div className="flex items-center gap-3">
+                <img src={finalLogo} alt="Lifestyle Reset Logo" className="w-12 h-12 object-contain" />
+                <div>
+                  <p className="font-heading text-lg font-bold text-white tracking-wide">Lifestyle Reset</p>
+                  <p className="text-xs text-sidebar-foreground/60 tracking-widest uppercase">Fitness & Wellness</p>
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="w-24 h-0.5 rounded-full bg-gradient-to-r from-transparent via-primary to-transparent" />
+
+              {/* Contact Row */}
+              <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
+                <a
+                  href="https://wa.me/923042451070"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sidebar-foreground/80 hover:text-success transition-colors"
+                >
+                  <span className="w-8 h-8 rounded-full bg-success/15 flex items-center justify-center">
+                    <MessageCircle className="w-4 h-4 text-success" />
+                  </span>
+                  +92-304-2451070
+                </a>
+                <a
+                  href="mailto:researcher@datafyassociates.com"
+                  className="flex items-center gap-2 text-sidebar-foreground/80 hover:text-primary transition-colors"
+                >
+                  <span className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center">
+                    <Mail className="w-4 h-4 text-primary" />
+                  </span>
+                  researcher@datafyassociates.com
+                </a>
+              </div>
+
+              {/* Copyright */}
+              <p className="text-[11px] text-sidebar-foreground/40 mt-1">
+                © {new Date().getFullYear()} Lifestyle Reset. All rights reserved.
+              </p>
+            </div>
           </footer>
         </div>
       </div>
