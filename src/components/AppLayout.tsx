@@ -1,7 +1,8 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { Bell, Power, MessageCircle, Mail } from "lucide-react";
+import { Bell, Power, Mail } from "lucide-react";
 import finalLogo from "@/assets/final_logo.png";
+import whatsappLogo from "@/assets/whatsapp_logo.png";
 
 interface AppLayoutProps {
   children: React.ReactNode;
