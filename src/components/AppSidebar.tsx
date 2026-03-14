@@ -51,7 +51,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import logoImg from "@/assets/lifestyle_reset_logo_new.png";
+import logoImg from "@/assets/final_logo.png";
 import adminAvatar from "@/assets/admin-avatar.png";
 
 const menuItems = [
