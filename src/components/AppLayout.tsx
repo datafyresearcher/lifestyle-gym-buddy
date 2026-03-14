@@ -64,14 +64,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sidebar-foreground/80 hover:text-success transition-colors"
                 >
-                  <img src={whatsappLogo} alt="WhatsApp" className="w-5 h-5 object-contain" />
+                  <img src={whatsappLogo} alt="WhatsApp" className="w-8 h-8 object-contain" />
                   +92-304-2451070
                 </a>
                 <a
                   href="mailto:researcher@datafyassociates.com"
                   className="flex items-center gap-2 text-sidebar-foreground/80 hover:text-primary transition-colors"
                 >
-                  <Mail className="w-5 h-5 text-primary" />
+                  <span className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center">
+                    <Mail className="w-4 h-4 text-primary" />
+                  </span>
                   researcher@datafyassociates.com
                 </a>
               </div>

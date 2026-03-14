@@ -188,7 +188,7 @@ export function AppSidebar() {
         {!collapsed && (
           <div className="flex flex-col items-center py-4 border-b border-sidebar-border">
             <div className="flex items-center justify-center gap-3 mb-3">
-              <img src={logoImg} alt="Lifestyle Reset Gym" className="w-20 h-20 rounded-full object-cover border-2 border-sidebar-accent bg-white p-1" />
+              <img src={logoImg} alt="Lifestyle Reset Gym" className="w-20 h-20 rounded-full object-contain border-2 border-sidebar-accent" />
               <Avatar className="w-20 h-20 border-2 border-sidebar-accent">
                 <AvatarImage src={adminAvatar} alt="Admin" className="object-cover" />
                 <AvatarFallback className="bg-sidebar-accent text-sidebar-accent-foreground text-2xl font-bold">
