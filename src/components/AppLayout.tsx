@@ -1,7 +1,8 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { Bell, Power, MessageCircle, Mail } from "lucide-react";
+import { Bell, Power, Mail } from "lucide-react";
 import finalLogo from "@/assets/final_logo.png";
+import whatsappLogo from "@/assets/whatsapp_logo.png";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -44,10 +45,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <footer className="bg-[hsl(var(--sidebar-background))] border-t border-sidebar-border py-8 px-6">
             <div className="max-w-4xl mx-auto flex flex-col items-center gap-4">
               {/* Logo & Brand */}
-              <div className="flex items-center gap-3">
-                <img src={finalLogo} alt="Lifestyle Reset Logo" className="w-12 h-12 object-contain" />
+              <div className="flex items-center gap-4">
+                <img src={finalLogo} alt="Lifestyle Reset Logo" className="w-20 h-20 object-contain" />
                 <div>
-                  <p className="font-heading text-lg font-bold text-white tracking-wide">Lifestyle Reset</p>
+                  <p className="font-heading text-xl font-bold text-white tracking-wide">Lifestyle Reset</p>
                   <p className="text-xs text-sidebar-foreground/60 tracking-widest uppercase">Fitness & Wellness</p>
                 </div>
               </div>
@@ -63,9 +64,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sidebar-foreground/80 hover:text-success transition-colors"
                 >
-                  <span className="w-8 h-8 rounded-full bg-success/15 flex items-center justify-center">
-                    <MessageCircle className="w-4 h-4 text-success" />
-                  </span>
+                  <img src={whatsappLogo} alt="WhatsApp" className="w-8 h-8 object-contain" />
                   +92-304-2451070
                 </a>
                 <a

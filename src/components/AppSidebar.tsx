@@ -51,7 +51,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import logoImg from "@/assets/lifestyle_reset_logo_new.png";
+import logoImg from "@/assets/final_logo.png";
 import adminAvatar from "@/assets/admin-avatar.png";
 
 const menuItems = [
@@ -187,15 +187,15 @@ export function AppSidebar() {
         {/* User Profile */}
         {!collapsed && (
           <div className="flex flex-col items-center py-4 border-b border-sidebar-border">
-            <div className="flex flex-col items-center mb-3">
-              <img src={logoImg} alt="Lifestyle Reset Gym" className="w-24 h-24 object-contain" />
+            <div className="flex items-center justify-center gap-3 mb-3">
+              <img src={logoImg} alt="Lifestyle Reset Gym" className="w-20 h-20 rounded-full object-contain border-2 border-sidebar-accent" />
+              <Avatar className="w-20 h-20 border-2 border-sidebar-accent">
+                <AvatarImage src={adminAvatar} alt="Admin" className="object-cover" />
+                <AvatarFallback className="bg-sidebar-accent text-sidebar-accent-foreground text-2xl font-bold">
+                  A
+                </AvatarFallback>
+              </Avatar>
             </div>
-            <Avatar className="w-32 h-32 mb-2 border-2 border-sidebar-accent">
-              <AvatarImage src={adminAvatar} alt="Admin" className="object-cover" />
-              <AvatarFallback className="bg-sidebar-accent text-sidebar-accent-foreground text-3xl font-bold">
-                A
-              </AvatarFallback>
-            </Avatar>
             <div className="relative">
               <button
                 onClick={() => setAdminMenuOpen(!adminMenuOpen)}
